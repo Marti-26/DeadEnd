@@ -1,0 +1,8 @@
+# Ignorar toda la carpeta interna de Godot (cache, layout, scripts, etc.)
+.godot/
+
+# Ignorar binarios exportados / builds (opcional pero recomendado)
+*.apk
+*.aab
+*.exe
+*.zip
