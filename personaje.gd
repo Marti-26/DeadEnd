@@ -1,6 +1,10 @@
 extends CharacterBody3D
 
-@export var speed = 4.0
+#@export var speed = 4.0
+@export var camara: Camera3D
+@export  var speed_caminar = 3.0
+@export var speed_sigilo = 1.5
+
 @export var gravedad = 9.8
 @export var fuerza_salto = 6.0
 @onready var anim = $Modelo/AnimationPlayer
@@ -12,25 +16,36 @@ var accion = ""             # animación de la acción; "" = ninguna
 
 
 func _physics_process(delta):
-	if not is_on_floor():
-		velocity.y -= gravedad * delta
-	elif Input.is_action_just_pressed("saltar"):
-		velocity.y = fuerza_salto
-
-	var lado = Input.get_axis("move_left", "move_right")
-	velocity.x = lado * speed * multiplicador + empuje.x
-
-	if lado != 0:
-		rotation.y = -PI / 2 * sign(lado)   # mira hacia +X o hacia -X
+	velocity += get_gravity() * delta
+	
+	var input_dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	var entrada = Vector3(input_dir.x, 0.0, input_dir.y)
+	
+	# Girar la entrada solo en el eje Y de la cámara y normalizar
+	var giro_cam = camara.global_rotation.y
+	var direction = entrada.rotated(Vector3.UP, giro_cam).normalized()
+	
+	# Detectar si se presiona la tecla se sigilo
+	var corre = Input.is_action_pressed("sigilo")
+	var speed = speed_sigilo if corre else speed_caminar
+	
+	# Aplicar velocidad respetando enchufes
+	velocity.x = direction.x * speed * multiplicador + empuje.x
+	velocity.z = direction.z * speed * multiplicador + empuje.z
+	
+	# Rotación hacia donde camina y animaciones
+	if direction.length() > 0:
+		basis = Basis.looking_at(direction)
+	
 	if accion != "":
 		anim.play(accion)
-	elif not is_on_floor():
-		anim.play("jump" if velocity.y > 0 else "fall")
-	elif lado != 0:
+	elif direction.length() > 0 and corre:
+		anim.play("sprint")
+	elif direction.length() > 0:
 		anim.play("walk")
 	else:
 		anim.play("idle")
-
+		
 	move_and_slide()
 	_prueba()
 
