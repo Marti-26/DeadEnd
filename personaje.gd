@@ -4,6 +4,7 @@ extends CharacterBody3D
 @export var camara: Camera3D
 @export  var speed_caminar = 3.0
 @export var speed_sigilo = 1.5
+@export var tiempo_arranque = 0.25
 
 @export var gravedad = 9.8
 @export var fuerza_salto = 6.0
@@ -13,7 +14,7 @@ extends CharacterBody3D
 var multiplicador = 1.0     # 1 = rapidez normal, 0.5 = la mitad, 0 = quieto
 var empuje = Vector3.ZERO   # velocidad extra en m/s (dash, retroceso)
 var accion = ""             # animación de la acción; "" = ninguna
-
+var avance = Vector3.ZERO
 
 func _physics_process(delta):
 	velocity += get_gravity() * delta
@@ -29,9 +30,14 @@ func _physics_process(delta):
 	var corre = Input.is_action_pressed("sigilo")
 	var speed = speed_sigilo if corre else speed_caminar
 	
-	# Aplicar velocidad respetando enchufes
-	velocity.x = direction.x * speed * multiplicador + empuje.x
-	velocity.z = direction.z * speed * multiplicador + empuje.z
+	#N2 Cálculo de inercia con move_toward
+	var objetivo = direction * speed * multiplicador
+	var paso = speed / tiempo_arranque * delta
+	avance = avance.move_toward(objetivo, paso)
+	
+	# Aplicar velocidad usando el avance y respetando enchufes (empuje)
+	velocity.x = avance.x + empuje.x
+	velocity.z = avance.z + empuje.z
 	
 	# Rotación hacia donde camina y animaciones
 	if direction.length() > 0:
@@ -39,9 +45,9 @@ func _physics_process(delta):
 	
 	if accion != "":
 		anim.play(accion)
-	elif direction.length() > 0 and corre:
+	elif direction.length() > speed_caminar + 0.1:
 		anim.play("sprint")
-	elif direction.length() > 0:
+	elif direction.length() > 0.1:
 		anim.play("walk")
 	else:
 		anim.play("idle")

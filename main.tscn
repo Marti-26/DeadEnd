@@ -90,6 +90,7 @@ size = 10.0
 axis_lock_linear_z = true
 script = ExtResource("1_pj")
 camara = NodePath("../Camera3D")
+prueba = 3
 accion_prueba = "sigilo"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Personaje" unique_id=1691281992]
