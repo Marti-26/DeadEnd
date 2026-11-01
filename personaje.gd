@@ -1,14 +1,22 @@
 extends CharacterBody3D
 
+#Tabla Enum
+enum Estado { QUIETO, CAMINAR, SIGILO, AIRE, ESCONDERSE, DASH }
+const RUIDO = [0.0, 3.0, 0.0, 0.0, 0.0, 8.0]
+
 #@export var speed = 4.0
 @export var camara: Camera3D
 @export  var speed_caminar = 3.0
 @export var speed_sigilo = 1.5
+@export var speed_dash = 7.5
 @export var tiempo_arranque = 0.25
+#se agrega la variable para que la animacion del dash tenga tiempo y se vea en la ejecucion
+var dash_tiempo = 0.0 
 
 @export var gravedad = 9.8
 @export var fuerza_salto = 6.0
 @onready var anim = $Modelo/AnimationPlayer
+
 
 # Enchufes: otros scripts (las acciones del juego) cambian estas tres variables.
 var multiplicador = 1.0     # 1 = rapidez normal, 0.5 = la mitad, 0 = quieto
@@ -16,7 +24,15 @@ var empuje = Vector3.ZERO   # velocidad extra en m/s (dash, retroceso)
 var accion = ""             # animación de la acción; "" = ninguna
 var avance = Vector3.ZERO
 
+# 
+var estado = Estado.QUIETO
+var ruido = 0.0
+
 func _physics_process(delta):
+	#para la resta del tiempo del dash 
+	if dash_tiempo > 0.0:
+		dash_tiempo -= delta
+
 	velocity += get_gravity() * delta
 	
 	var input_dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
@@ -28,7 +44,11 @@ func _physics_process(delta):
 	
 	# Detectar si se presiona la tecla se sigilo
 	var corre = Input.is_action_pressed("sigilo")
-	var speed = speed_sigilo if corre else speed_caminar
+	var speed = speed_caminar
+	if estado == Estado.DASH:
+		speed = speed_dash
+	elif corre:
+		speed = speed_sigilo
 	
 	#N2 Cálculo de inercia con move_toward
 	var objetivo = direction * speed * multiplicador
@@ -42,19 +62,64 @@ func _physics_process(delta):
 	# Rotación hacia donde camina y animaciones
 	if direction.length() > 0:
 		basis = Basis.looking_at(direction)
-	
-	if accion != "":
-		anim.play(accion)
-	elif direction.length() > speed_caminar + 0.1:
-		anim.play("sprint")
-	elif direction.length() > 0.1:
-		anim.play("walk")
-	else:
-		anim.play("idle")
 		
 	move_and_slide()
+	#N3 Gestion de estados
+	var antes = estado
+	estado = elegir_estado()
+	ruido = RUIDO[estado]
+	if estado != antes:
+		print("estado ", Estado.keys()[estado], " · ruido ", ruido, " m")
+	animar()
 	_prueba()
 
+func elegir_estado():
+	if not is_on_floor():
+		return Estado.AIRE
+	
+	#Si esta activo el dash por el tiempo mantenerlo
+	if dash_tiempo > 0.0:
+		return Estado.DASH
+		
+	# 1. Dash con la barra espaciadora 
+	if Input.is_action_just_pressed("dash"): 
+		dash_tiempo = 0.8 #Duracion en segundos del dash
+		return Estado.DASH
+		
+	# 2. Esconderse con una tecla 
+	if Input.is_action_pressed("esconderse"): 
+		return Estado.ESCONDERSE
+		
+	# 3. Sigilo con la tecla Shift
+	if Input.is_action_pressed("sigilo"):
+		return Estado.SIGILO
+		
+	# 4. Rapidez normal o quieto
+	var rapidez = absf(velocity.x)
+	if rapidez < 0.1:
+		return Estado.QUIETO
+	if rapidez > speed_caminar + 0.1:
+		return Estado.CAMINAR
+	return Estado.CAMINAR
+	
+func animar():
+	if accion != "":
+		anim.play(accion)
+		return
+	match estado:
+		Estado.QUIETO:
+			anim.play("idle")
+		Estado.CAMINAR:
+			anim.play("walk")
+		Estado.SIGILO:
+			anim.play("crouch")
+		Estado.AIRE:
+			anim.play("fall")
+		Estado.ESCONDERSE:
+			anim.play("sit")
+		Estado.DASH:
+			anim.play("sprint")
+			anim.speed_scale = 1.0
 
 # ---------------------------------------------------------------------------
 # PRUEBAS AUTOMÁTICAS. No hace falta entender esta parte: en el Inspector del
