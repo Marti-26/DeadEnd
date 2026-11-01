@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://personaje.gd" id="1_pj"]
 [ext_resource type="PackedScene" path="res://personaje/character-male-a.glb" id="2_modelo"]
+[ext_resource type="Script" path="res://dash.gd" id="3_dash"]
 
 [sub_resource type="ProceduralSkyMaterial" id="CieloMat"]
 
@@ -96,3 +97,6 @@ shape = SubResource("Capsula")
 
 [node name="Modelo" parent="Personaje" instance=ExtResource("2_modelo")]
 transform = Transform3D(-2.6, 0, 0, 0, 2.6, 0, 0, 0, -2.6, 0, 0, 0)
+
+[node name="Dash" type="Node" parent="Personaje"]
+script = ExtResource("3_dash")
