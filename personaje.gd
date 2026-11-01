@@ -5,11 +5,9 @@ extends CharacterBody3D
 @export var fuerza_salto = 6.0
 @onready var anim = $Modelo/AnimationPlayer
 
-# Enchufes: otros scripts (las acciones del juego) cambian estas tres variables.
-var multiplicador = 1.0     # 1 = rapidez normal, 0.5 = la mitad, 0 = quieto
-var empuje = Vector3.ZERO   # velocidad extra en m/s (dash, retroceso)
-var accion = ""             # animación de la acción; "" = ninguna
-
+var multiplicador = 1.0    
+var empuje = Vector3.ZERO   
+var accion = ""           
 
 func _physics_process(delta):
 	if not is_on_floor():
@@ -35,12 +33,7 @@ func _physics_process(delta):
 	_prueba()
 
 
-# ---------------------------------------------------------------------------
-# PRUEBAS AUTOMÁTICAS. No hace falta entender esta parte: en el Inspector del
-# Personaje elijan "Prueba" (y, si la prueba usa una acción, escriban su nombre
-# en "Accion Prueba"). Con F5 el personaje se mueve solo y escribe los números
-# en el panel Output. La última línea de _physics_process() es _prueba().
-# ---------------------------------------------------------------------------
+#
 @export_enum("Ninguna", "Avanzar 60 cuadros", "Avanzar 60 y soltar", "Avanzar y la acción desde el cuadro 30", "Mantener la acción 2 s", "Avanzar con la acción 60 cuadros", "Diagonal W+D 60 cuadros") var prueba = 0
 @export var accion_prueba = ""
 var _cuadro = 0
