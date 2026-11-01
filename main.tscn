@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://c73cyx7231cao"]
 
+[ext_resource type="Script" uid="uid://bbpwkx23dq8d2" path="res://camera_sigue.gd" id="1_h2yge"]
 [ext_resource type="Script" uid="uid://bj0372xnq02wk" path="res://personaje.gd" id="1_pj"]
 [ext_resource type="PackedScene" uid="uid://biu6tppn8ml1q" path="res://personaje/character-male-a.glb" id="2_modelo"]
 
@@ -81,15 +82,18 @@ surface_material_override/0 = SubResource("PlatMat")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Plataformas/Plataforma3" unique_id=169739065]
 shape = SubResource("PlatForma")
 
-[node name="Camera3D" type="Camera3D" parent="." unique_id=750007544]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=750007544 node_paths=PackedStringArray("objetivo")]
 transform = Transform3D(1, 0, 0, 0, 0.97504103, 0.2220248, 0, -0.2220248, 0.97504103, 0, 4.9415436, 12)
 projection = 1
 size = 10.0
+script = ExtResource("1_h2yge")
+objetivo = NodePath("../Personaje")
 
 [node name="Personaje" type="CharacterBody3D" parent="." unique_id=734133013 node_paths=PackedStringArray("camara")]
 axis_lock_linear_z = true
 script = ExtResource("1_pj")
 camara = NodePath("../Camera3D")
+prueba = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Personaje" unique_id=1691281992]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
