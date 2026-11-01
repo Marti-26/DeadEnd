@@ -17,16 +17,17 @@ func _physics_process(delta):
 	elif Input.is_action_just_pressed("saltar"):
 		velocity.y = fuerza_salto
 
-	var lado = Input.get_axis("move_left", "move_right")
-	velocity.x = lado * speed * multiplicador + empuje.x
+	var dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	velocity.x = dir.x * speed * multiplicador + empuje.x
+	velocity.z = dir.y * speed * multiplicador + empuje.z
 
-	if lado != 0:
-		rotation.y = -PI / 2 * sign(lado)   # mira hacia +X o hacia -X
+	if dir != Vector2.ZERO:
+		rotation.y = atan2(-dir.x, -dir.y)
 	if accion != "":
 		anim.play(accion)
 	elif not is_on_floor():
 		anim.play("jump" if velocity.y > 0 else "fall")
-	elif lado != 0:
+	elif dir != Vector2.ZERO:
 		anim.play("walk")
 	else:
 		anim.play("idle")
