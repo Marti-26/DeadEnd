@@ -4,6 +4,8 @@
 [ext_resource type="Script" uid="uid://bj0372xnq02wk" path="res://personaje.gd" id="1_pj"]
 [ext_resource type="PackedScene" uid="uid://biu6tppn8ml1q" path="res://personaje/character-male-a.glb" id="2_modelo"]
 [ext_resource type="Script" path="res://dash.gd" id="3_dash"]
+[ext_resource type="Script" uid="uid://cqv5bh23wl3n3" path="res://interactuar.gd" id="3_inter"]
+[ext_resource type="Script" uid="uid://bjwxkaxpj8ksj" path="res://terminal.gd" id="4_term"]
 
 [sub_resource type="ProceduralSkyMaterial" id="CieloMat"]
 
@@ -32,6 +34,25 @@ size = Vector3(3, 0.4, 4)
 [sub_resource type="CapsuleShape3D" id="Capsula"]
 radius = 0.35
 height = 1.75
+
+[sub_resource type="BoxMesh" id="TerminalMalla"]
+size = Vector3(0.7, 1.4, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="TerminalMat"]
+albedo_color = Color(0.2, 0.24, 0.28, 1)
+roughness = 0.6
+
+[sub_resource type="BoxShape3D" id="TerminalForma"]
+size = Vector3(0.7, 1.4, 0.5)
+
+[sub_resource type="BoxMesh" id="PantallaMalla"]
+size = Vector3(0.45, 0.35, 0.02)
+
+[sub_resource type="StandardMaterial3D" id="PantallaMat"]
+albedo_color = Color(0.56, 0.85, 0.69, 1)
+emission_enabled = true
+emission = Color(0.56, 0.85, 0.69, 1)
+emission_energy_multiplier = 1.5
 
 [node name="Main" type="Node3D" unique_id=804748071]
 
@@ -105,3 +126,40 @@ transform = Transform3D(-2.6, 0, 0, 0, 2.6, 0, 0, 0, -2.6, 0, 0, 0)
 
 [node name="Dash" type="Node" parent="Personaje"]
 script = ExtResource("3_dash")
+
+[node name="Interactuar" type="Node" parent="Personaje" unique_id=222382602]
+script = ExtResource("3_inter")
+
+[node name="Terminal1" type="StaticBody3D" parent="." unique_id=1291093942 node_paths=PackedStringArray("pantalla") groups=["interactivos"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.7, -1.4)
+script = ExtResource("4_term")
+pantalla = NodePath("Pantalla")
+
+[node name="Malla" type="MeshInstance3D" parent="Terminal1" unique_id=1134380542]
+mesh = SubResource("TerminalMalla")
+surface_material_override/0 = SubResource("TerminalMat")
+
+[node name="Forma" type="CollisionShape3D" parent="Terminal1" unique_id=1380413260]
+shape = SubResource("TerminalForma")
+
+[node name="Pantalla" type="MeshInstance3D" parent="Terminal1" unique_id=69003490]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0.26)
+mesh = SubResource("PantallaMalla")
+surface_material_override/0 = SubResource("PantallaMat")
+
+[node name="Terminal2" type="StaticBody3D" parent="." unique_id=1913604188 node_paths=PackedStringArray("pantalla") groups=["interactivos"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.7, -1.4)
+script = ExtResource("4_term")
+pantalla = NodePath("Pantalla")
+
+[node name="Malla" type="MeshInstance3D" parent="Terminal2" unique_id=923851040]
+mesh = SubResource("TerminalMalla")
+surface_material_override/0 = SubResource("TerminalMat")
+
+[node name="Forma" type="CollisionShape3D" parent="Terminal2" unique_id=1249063632]
+shape = SubResource("TerminalForma")
+
+[node name="Pantalla" type="MeshInstance3D" parent="Terminal2" unique_id=1385833807]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0.26)
+mesh = SubResource("PantallaMalla")
+surface_material_override/0 = SubResource("PantallaMat")

@@ -121,12 +121,7 @@ func animar():
 			anim.play("sprint")
 			anim.speed_scale = 1.0
 
-# ---------------------------------------------------------------------------
-# PRUEBAS AUTOMÁTICAS. No hace falta entender esta parte: en el Inspector del
-# Personaje elijan "Prueba" (y, si la prueba usa una acción, escriban su nombre
-# en "Accion Prueba"). Con F5 el personaje se mueve solo y escribe los números
-# en el panel Output. La última línea de _physics_process() es _prueba().
-# ---------------------------------------------------------------------------
+#
 @export_enum("Ninguna", "Avanzar 60 cuadros", "Avanzar 60 y soltar", "Avanzar y la acción desde el cuadro 30", "Mantener la acción 2 s", "Avanzar con la acción 60 cuadros", "Diagonal W+D 60 cuadros") var prueba = 0
 @export var accion_prueba = ""
 var _cuadro = 0
