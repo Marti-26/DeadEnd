@@ -111,7 +111,7 @@ size = 10.0
 script = ExtResource("1_h2yge")
 objetivo = NodePath("../Personaje")
 
-[node name="Personaje" type="CharacterBody3D" parent="." unique_id=734133013 node_paths=PackedStringArray("camara")]
+[node name="Personaje" type="CharacterBody3D" parent="." unique_id=734133013 node_paths=PackedStringArray("camara") groups=["jugador"]]
 axis_lock_linear_z = true
 script = ExtResource("1_pj")
 camara = NodePath("../Camera3D")
