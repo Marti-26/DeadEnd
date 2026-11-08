@@ -135,7 +135,7 @@ script = ExtResource("3_inter")
 [node name="Esconderse" type="Node" parent="Personaje" unique_id=301463001]
 script = ExtResource("6_5vw27")
 
-[node name="Terminal1" type="StaticBody3D" parent="." unique_id=1291093942 node_paths=PackedStringArray("pantalla") groups=["interactivos"]]
+[node name="Terminal1" type="StaticBody3D" parent="." unique_id=1291093942 node_paths=PackedStringArray("pantalla")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.7, -1.4)
 script = ExtResource("4_term")
 pantalla = NodePath("Pantalla")
