@@ -169,3 +169,4 @@ surface_material_override/0 = SubResource("PantallaMat")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
 axis_lock_linear_z = true
 objetivo = NodePath("../Personaje")
+rapidez = 3.8
