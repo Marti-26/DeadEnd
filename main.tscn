@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://bh2bylh8kjoo8" path="res://dash.gd" id="3_dash"]
 [ext_resource type="Script" uid="uid://cqv5bh23wl3n3" path="res://interactuar.gd" id="3_inter"]
 [ext_resource type="Script" uid="uid://bjwxkaxpj8ksj" path="res://terminal.gd" id="4_term"]
+[ext_resource type="Script" uid="uid://6l6v2g14wi" path="res://esconderse.gd" id="6_5vw27"]
 [ext_resource type="PackedScene" uid="uid://dwqlda3vqu0ys" path="res://chico.tscn" id="7_272bh"]
 
 [sub_resource type="ProceduralSkyMaterial" id="CieloMat"]
@@ -130,6 +131,9 @@ script = ExtResource("3_dash")
 
 [node name="Interactuar" type="Node" parent="Personaje" unique_id=222382602]
 script = ExtResource("3_inter")
+
+[node name="Esconderse" type="Node" parent="Personaje" unique_id=301463001]
+script = ExtResource("6_5vw27")
 
 [node name="Terminal1" type="StaticBody3D" parent="." unique_id=1291093942 node_paths=PackedStringArray("pantalla") groups=["interactivos"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.7, -1.4)
