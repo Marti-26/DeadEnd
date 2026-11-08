@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://dwqlda3vqu0ys"]
+
+[ext_resource type="Script" uid="uid://cqlevsq6l1hot" path="res://chico.gd" id="1_ee3dv"]
+[ext_resource type="PackedScene" uid="uid://b3vnx6dprague" path="res://personaje/character-female-b.glb" id="2_ojh2r"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1vivr"]
+radius = 0.35
+height = 1.75
+
+[node name="Chico" type="CharacterBody3D" unique_id=421136641]
+script = ExtResource("1_ee3dv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1065560910]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
+shape = SubResource("CapsuleShape3D_1vivr")
+
+[node name="Modelo" parent="." unique_id=1967526049 instance=ExtResource("2_ojh2r")]
+transform = Transform3D(-2.6, 0, -2.2729921e-07, 0, 2.6, 0, 2.2729921e-07, 0, -2.6, 0, 0, 0)
