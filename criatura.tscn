@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://twjt23gel8cv"]
+
+[ext_resource type="Script" uid="uid://diqaqnykw61iw" path="res://criatura.gd" id="1_e43qq"]
+[ext_resource type="PackedScene" uid="uid://biu6tppn8ml1q" path="res://personaje/character-male-a.glb" id="2_gqgnk"]
+[ext_resource type="PackedScene" uid="uid://dtcyho4e2mmyw" path="res://personaje/character-female-e.glb" id="3_gqgnk"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3lpp0"]
+radius = 0.35
+height = 1.0
+
+[node name="Criatura" type="CharacterBody3D" unique_id=383791410]
+script = ExtResource("1_e43qq")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2072182395]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3497032, 0)
+shape = SubResource("CapsuleShape3D_3lpp0")
+
+[node name="Modelo" parent="." unique_id=1649002059 instance=ExtResource("2_gqgnk")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+
+[node name="character-female-e2" parent="Modelo" unique_id=1261822380 instance=ExtResource("3_gqgnk")]

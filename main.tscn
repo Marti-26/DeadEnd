@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://bh2bylh8kjoo8" path="res://dash.gd" id="3_dash"]
 [ext_resource type="Script" uid="uid://cqv5bh23wl3n3" path="res://interactuar.gd" id="3_inter"]
 [ext_resource type="Script" uid="uid://bjwxkaxpj8ksj" path="res://terminal.gd" id="4_term"]
+[ext_resource type="PackedScene" uid="uid://twjt23gel8cv" path="res://criatura.tscn" id="7_272bh"]
 
 [sub_resource type="ProceduralSkyMaterial" id="CieloMat"]
 
@@ -163,3 +164,6 @@ shape = SubResource("TerminalForma")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0.26)
 mesh = SubResource("PantallaMalla")
 surface_material_override/0 = SubResource("PantallaMat")
+
+[node name="Criatura" parent="." unique_id=383791410 instance=ExtResource("7_272bh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.970829, 0.34565663, 0.21286201)

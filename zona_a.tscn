@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://bxa6xd257qjgl" path="res://sistema_sol.gd" id="1_rsxdq"]
 [ext_resource type="Script" uid="uid://nn8eqb0lgaie" path="res://ciclo_dia.gd" id="2_l7qun"]
-[ext_resource type="Script" uid="uid://ckk6v8l7e3b3j" path="res://fotometro.gd" id="3_fntjl"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fntjl"]
 albedo_color = Color(0.20392157, 0.3137255, 0.43137255, 1)
@@ -53,6 +52,3 @@ entorno = NodePath("../WorldEnvironment")
 script = ExtResource("2_l7qun")
 hora = 12.0
 duracion_dia = 12.0
-
-[node name="Fotometro" type="Node" parent="." unique_id=1763124773]
-script = ExtResource("3_fntjl")
