@@ -137,7 +137,7 @@ script = ExtResource("3_inter")
 
 [node name="Ruido" type="Node" parent="Personaje" unique_id=583705880]
 script = ExtResource("8_ruido")
-radio = 3.0
+radio = 4.0
 
 [node name="Esconderse" type="Node" parent="Personaje" unique_id=301463001]
 script = ExtResource("6_5vw27")

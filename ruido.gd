@@ -3,7 +3,7 @@ extends Node
 ## Va como hijo del Personaje (no se toca personaje.gd).
 ## Quien hace el ruido avisa UNA vez a los del grupo "oyentes" que están cerca.
 ##  · Tecla hacer_ruido (R): ruido de prueba con el Radio del Inspector.
-##  · En el juego, además, suenan solos: los pasos (3 u), el dash (8 u) y el
+##  · En el juego, además, suenan solos: los pasos (radio de la estación), el dash (8 u) y el
 ##    jadeo al llegar a 100 de estrés (10 u). El sigilo no suena: ruido 0.
 
 @export var tecla = "hacer_ruido"
@@ -13,6 +13,8 @@ extends Node
 @export_group("Ruido del juego")
 @export var ruido_del_personaje = true   # pasos y dash según el estado del Personaje
 @export var cada_paso = 0.5              # s entre un ruido de pasos y el siguiente
+# Taller 4: los pasos se oyen al radio de la estación (E1 3 u, E2 4 u, E3 5 u).
+@export var radio_pasos = 4.0
 @export var radio_jadeo = 10.0           # u, el jadeo alerta a todo en 10 u
 
 @onready var pj = get_parent()
@@ -54,6 +56,8 @@ func _ruido_del_juego(delta):
 	if not "ruido" in pj:
 		return
 	var r = pj.ruido
+	if r > 0.0 and r < 8.0:
+		r = radio_pasos   # caminar: el radio de la estación; el dash sigue en 8
 	_reloj_paso = maxf(_reloj_paso - delta, 0.0)
 	if r > _ruido_antes:
 		# Empezó algo más fuerte (por ejemplo el dash): suena ya.

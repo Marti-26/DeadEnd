@@ -7,12 +7,12 @@ extends CharacterBody3D
 
 enum Estado { EN_PUESTO, INVESTIGAR, MIRAR, VOLVER }
 
-@export var rapidez = 1.5          # u/s
+@export var rapidez = 1.2          # u/s, patrulla de la Estación 2 (Taller 4)
 @export var tiempo_mirar = 5.0     # s, los 5 s de alerta del documento
 # Se detiene antes del punto: ahí puede estar el jugador, y chocarían.
 @export var llega_a = 1.0          # u
 @export var radio_aviso = 5.0      # u, hasta dónde avisa a otras criaturas
-@export var radio_audicion = 7.0   # u, lo máximo que oye (el vacío que llena la tarea)
+@export var radio_audicion = 8.0   # u, lo máximo que oye: llega al dash en todas las estaciones
 
 var estado = Estado.EN_PUESTO
 var puesto = Vector3.ZERO
