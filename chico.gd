@@ -18,14 +18,14 @@ func _physics_process(delta):
 	var distancia = global_position.distance_to(objetivo.global_position)
 	match estado:
 		Estado.PATRULLA:
-			if distancia < radio_ver:
+			if distancia < radio_ver and not objetivo.is_in_group("escondidos"):
 				estado = Estado.PERSEGUIR
 				print("lo vio a ", snappedf(distancia, 0.01), " m")
 			ir_a(puntos[punto], rapidez_patrulla)
 			if global_position.distance_to(puntos[punto]) < 0.3:
 				punto = (punto + 1) % puntos.size()
 		Estado.PERSEGUIR:
-			if distancia > radio_perder:
+			if distancia > radio_perder or objetivo.is_in_group("escondidos"):
 				estado = Estado.PATRULLA
 				print("lo perdió a ", snappedf(distancia, 0.01), " m")
 			ir_a(objetivo.global_position, rapidez_perseguir)
