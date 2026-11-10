@@ -1,0 +1,260 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://bj0372xnq02wk" path="res://personaje.gd" id="1_pj"]
+[ext_resource type="PackedScene" uid="uid://biu6tppn8ml1q" path="res://personaje/character-male-a.glb" id="2_modelo"]
+[ext_resource type="Script" uid="uid://bh2bylh8kjoo8" path="res://dash.gd" id="3_dash"]
+[ext_resource type="Script" uid="uid://cqv5bh23wl3n3" path="res://interactuar.gd" id="4_inter"]
+[ext_resource type="Script" uid="uid://bh3ei7hjfvyk5" path="res://ruido.gd" id="5_ruido"]
+[ext_resource type="Script" uid="uid://6l6v2g14wi" path="res://esconderse.gd" id="6_escon"]
+[ext_resource type="Script" path="res://camara_fija.gd" id="7_camara"]
+[ext_resource type="Script" path="res://zona_segura.gd" id="8_sala"]
+[ext_resource type="Script" path="res://estacion_carga.gd" id="9_carga"]
+[ext_resource type="PackedScene" path="res://chico_amable.tscn" id="10_chico"]
+[ext_resource type="Script" path="res://llegada.gd" id="11_llegada"]
+[ext_resource type="Script" path="res://puerta_escena.gd" id="12_puerta"]
+
+[sub_resource type="Environment" id="Entorno"]
+background_mode = 1
+background_color = Color(0.05, 0.03, 0.07, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.24, 0.15, 0.24, 1)
+ambient_light_energy = 1.0
+tonemap_mode = 2
+glow_enabled = true
+glow_levels/2 = 1.0
+glow_levels/3 = 1.0
+glow_levels/4 = 1.0
+glow_levels/5 = 1.0
+glow_levels/6 = 1.0
+glow_intensity = 1.0
+glow_strength = 1.1
+glow_bloom = 0.03
+glow_hdr_threshold = 0.8
+fog_enabled = true
+fog_light_color = Color(0.2, 0.1, 0.18, 1)
+fog_density = 0.006
+adjustment_enabled = true
+adjustment_contrast = 1.2
+adjustment_saturation = 1.2
+
+[sub_resource type="CapsuleShape3D" id="Capsula"]
+radius = 0.35
+height = 1.75
+
+[sub_resource type="BoxMesh" id="CuerpoCarga"]
+size = Vector3(1.4, 1.7, 0.6)
+
+[sub_resource type="StandardMaterial3D" id="MatCuerpoCarga"]
+albedo_color = Color(0.2, 0.33, 0.35, 1)
+metallic = 0.3
+roughness = 0.4
+
+[sub_resource type="BoxShape3D" id="FormaCarga"]
+size = Vector3(1.4, 1.7, 0.6)
+
+[sub_resource type="BoxMesh" id="PantallaCarga"]
+size = Vector3(1.0, 0.35, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="MatPantallaCarga"]
+albedo_color = Color(0.05, 0.08, 0.08, 1)
+emission_enabled = true
+emission = Color(0.45, 1, 0.75, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="BoxMesh" id="Casillero"]
+size = Vector3(0.38, 0.26, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="MatCasillero"]
+albedo_color = Color(0.85, 0.88, 0.9, 1)
+metallic = 0.6
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="LuzCasillero"]
+size = Vector3(0.05, 0.05, 0.02)
+
+[sub_resource type="StandardMaterial3D" id="MatLuzCasillero"]
+albedo_color = Color(1, 0.42, 0.7, 1)
+emission_enabled = true
+emission = Color(1, 0.42, 0.7, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="BoxShape3D" id="FormaBajada"]
+size = Vector3(2.9, 2, 2.6)
+
+[node name="SegundoPiso" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Entorno")
+
+[node name="LuzLuna" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.906308, -0.346189, 0.242404, 0, 0.573576, 0.819152, -0.422618, -0.742404, 0.519837, 0, 8, 0)
+light_color = Color(0.88, 0.72, 0.88, 1)
+light_energy = 0.45
+shadow_enabled = true
+
+[node name="Decorado" type="Node3D" parent="."]
+script = ExtResource("8_sala")
+
+[node name="Personaje" type="CharacterBody3D" parent="." node_paths=PackedStringArray("camara") groups=["jugador"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.05, 0.6)
+script = ExtResource("1_pj")
+camara = NodePath("../Camara")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Personaje"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
+shape = SubResource("Capsula")
+
+[node name="Modelo" parent="Personaje" instance=ExtResource("2_modelo")]
+transform = Transform3D(-2.6, 0, 0, 0, 2.6, 0, 0, 0, -2.6, 0, 0, 0)
+
+[node name="Dash" type="Node" parent="Personaje"]
+script = ExtResource("3_dash")
+
+[node name="Interactuar" type="Node" parent="Personaje"]
+script = ExtResource("4_inter")
+
+[node name="Ruido" type="Node" parent="Personaje"]
+script = ExtResource("5_ruido")
+radio = 4.0
+
+[node name="Esconderse" type="Node" parent="Personaje"]
+script = ExtResource("6_escon")
+
+[node name="Camara" type="Camera3D" parent="." node_paths=PackedStringArray("objetivo")]
+transform = Transform3D(1, 0, 0, 0, 0.76604444, 0.6427876, 0, -0.6427876, 0.76604444, -5.2, 14.141328, 16.052977)
+projection = 1
+current = true
+size = 11.0
+script = ExtResource("7_camara")
+objetivo = NodePath("../Personaje")
+limite_x = 5.2
+limite_z = Vector2(-1.2, 2.5)
+
+[node name="EstacionCarga" type="StaticBody3D" parent="." node_paths=PackedStringArray("pantalla", "aviso")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0, -3.6)
+script = ExtResource("9_carga")
+pantalla = NodePath("Pantalla")
+aviso = NodePath("Aviso")
+
+[node name="Cuerpo" type="MeshInstance3D" parent="EstacionCarga"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+mesh = SubResource("CuerpoCarga")
+surface_material_override/0 = SubResource("MatCuerpoCarga")
+
+[node name="Forma" type="CollisionShape3D" parent="EstacionCarga"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+shape = SubResource("FormaCarga")
+
+[node name="Pantalla" type="MeshInstance3D" parent="EstacionCarga"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0.31)
+mesh = SubResource("PantallaCarga")
+surface_material_override/0 = SubResource("MatPantallaCarga")
+
+[node name="Casillero0" type="MeshInstance3D" parent="EstacionCarga"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.42, 0.45, 0.31)
+mesh = SubResource("Casillero")
+surface_material_override/0 = SubResource("MatCasillero")
+
+[node name="Piloto0" type="MeshInstance3D" parent="EstacionCarga"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.29, 0.53, 0.33)
+mesh = SubResource("LuzCasillero")
+surface_material_override/0 = SubResource("MatLuzCasillero")
+
+[node name="Casillero1" type="MeshInstance3D" parent="EstacionCarga"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0.31)
+mesh = SubResource("Casillero")
+surface_material_override/0 = SubResource("MatCasillero")
+
+[node name="Piloto1" type="MeshInstance3D" parent="EstacionCarga"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.13, 0.53, 0.33)
+mesh = SubResource("LuzCasillero")
+surface_material_override/0 = SubResource("MatLuzCasillero")
+
+[node name="Casillero2" type="MeshInstance3D" parent="EstacionCarga"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.42, 0.45, 0.31)
+mesh = SubResource("Casillero")
+surface_material_override/0 = SubResource("MatCasillero")
+
+[node name="Piloto2" type="MeshInstance3D" parent="EstacionCarga"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55, 0.53, 0.33)
+mesh = SubResource("LuzCasillero")
+surface_material_override/0 = SubResource("MatLuzCasillero")
+
+[node name="Casillero3" type="MeshInstance3D" parent="EstacionCarga"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.42, 0.79, 0.31)
+mesh = SubResource("Casillero")
+surface_material_override/0 = SubResource("MatCasillero")
+
+[node name="Piloto3" type="MeshInstance3D" parent="EstacionCarga"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.29, 0.87, 0.33)
+mesh = SubResource("LuzCasillero")
+surface_material_override/0 = SubResource("MatLuzCasillero")
+
+[node name="Casillero4" type="MeshInstance3D" parent="EstacionCarga"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.79, 0.31)
+mesh = SubResource("Casillero")
+surface_material_override/0 = SubResource("MatCasillero")
+
+[node name="Piloto4" type="MeshInstance3D" parent="EstacionCarga"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.13, 0.87, 0.33)
+mesh = SubResource("LuzCasillero")
+surface_material_override/0 = SubResource("MatLuzCasillero")
+
+[node name="Casillero5" type="MeshInstance3D" parent="EstacionCarga"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.42, 0.79, 0.31)
+mesh = SubResource("Casillero")
+surface_material_override/0 = SubResource("MatCasillero")
+
+[node name="Piloto5" type="MeshInstance3D" parent="EstacionCarga"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55, 0.87, 0.33)
+mesh = SubResource("LuzCasillero")
+surface_material_override/0 = SubResource("MatLuzCasillero")
+
+[node name="Rotulo" type="Label3D" parent="EstacionCarga"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85, 0.32)
+pixel_size = 0.006
+modulate = Color(0.45, 1, 0.75, 1)
+outline_modulate = Color(0.03, 0.05, 0.06, 1)
+text = "CARGA"
+font_size = 48
+outline_size = 8
+
+[node name="Aviso" type="Label3D" parent="EstacionCarga"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0.6)
+visible = false
+pixel_size = 0.006
+billboard = 1
+no_depth_test = true
+modulate = Color(1, 0.95, 0.85, 1)
+outline_modulate = Color(0.05, 0.05, 0.1, 1)
+text = "GUARDADO"
+font_size = 56
+outline_size = 12
+
+[node name="Luz" type="OmniLight3D" parent="EstacionCarga"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0.8)
+light_color = Color(0.45, 1, 0.75, 1)
+light_energy = 1.2
+omni_range = 3.0
+
+[node name="PuntoGuardado" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0.1, -2.4)
+script = ExtResource("11_llegada")
+
+[node name="DesdeEstacion" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.1, 0.6)
+script = ExtResource("11_llegada")
+
+[node name="Bajada" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -0.5, 3.3)
+collision_layer = 0
+script = ExtResource("12_puerta")
+destino = "res://zona_b.tscn"
+llegada = "DesdeSegundoPiso"
+
+[node name="Forma" type="CollisionShape3D" parent="Bajada"]
+shape = SubResource("FormaBajada")
+
+[node name="ChicoAmable" parent="." node_paths=PackedStringArray("senalar") instance=ExtResource("10_chico")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0.8)
+senalar = NodePath("../EstacionCarga")
