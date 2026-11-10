@@ -13,8 +13,9 @@ extends Node
 @export_group("Ruido del juego")
 @export var ruido_del_personaje = true   # pasos y dash según el estado del Personaje
 @export var cada_paso = 0.5              # s entre un ruido de pasos y el siguiente
-# Taller 4: los pasos se oyen al radio de la estación (E1 3 u, E2 4 u, E3 5 u).
-@export var radio_pasos = 4.0
+# Tabla de tareas (clase 2): caminando se oye a menos de 3 m, igual que RUIDO
+# de personaje.gd. (Antes: radio de la estación del Taller 4, E2 = 4 u.)
+@export var radio_pasos = 3.0
 @export var radio_jadeo = 10.0           # u, el jadeo alerta a todo en 10 u
 
 @onready var pj = get_parent()
