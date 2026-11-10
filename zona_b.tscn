@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://cut6u3dpgatay" path="res://sistema_eventos.gd" id="5_eyatn"]
 [ext_resource type="Script" uid="uid://bj0372xnq02wk" path="res://personaje.gd" id="6_r0ps7"]
 [ext_resource type="PackedScene" uid="uid://biu6tppn8ml1q" path="res://personaje/character-male-a.glb" id="7_61dqb"]
+[ext_resource type="PackedScene" uid="uid://twjt23gel8cv" path="res://criatura.tscn" id="8_n70iv"]
 
 [sub_resource type="Environment" id="Environment_dpv7s"]
 background_mode = 1
@@ -1337,7 +1338,7 @@ script = ExtResource("5_eyatn")
 luz_evento = NodePath("../LuzEvento")
 luz_variable = NodePath("../LuzEstres")
 
-[node name="Personaje" type="CharacterBody3D" parent="." unique_id=241134809 node_paths=PackedStringArray("camara")]
+[node name="Personaje" type="CharacterBody3D" parent="." unique_id=241134809 node_paths=PackedStringArray("camara") groups=["jugador"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.05, 0.8)
 script = ExtResource("6_r0ps7")
 camara = NodePath("../Camara")
@@ -1356,3 +1357,5 @@ current = true
 size = 11.0
 script = SubResource("GDScript_phwha")
 objetivo = NodePath("../Personaje")
+
+[node name="Criatura2" parent="." unique_id=383791410 instance=ExtResource("8_n70iv")]
