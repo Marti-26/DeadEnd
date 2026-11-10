@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://chico_amable.gd" id="1_amable"]
+[ext_resource type="PackedScene" uid="uid://b3vnx6dprague" path="res://personaje/character-female-b.glb" id="2_modelo"]
+
+[sub_resource type="CapsuleShape3D" id="CapsulaChico"]
+radius = 0.35
+height = 1.75
+
+[node name="ChicoAmable" type="CharacterBody3D"]
+script = ExtResource("1_amable")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
+shape = SubResource("CapsulaChico")
+
+[node name="Modelo" parent="." instance=ExtResource("2_modelo")]
+transform = Transform3D(-2.6, 0, -2.2729921e-07, 0, 2.6, 0, 2.2729921e-07, 0, -2.6, 0, 0, 0)
+
+[node name="Bocadillo" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
+visible = false
+pixel_size = 0.006
+billboard = 1
+no_depth_test = true
+modulate = Color(1, 0.95, 0.88, 1)
+outline_modulate = Color(0.08, 0.05, 0.12, 1)
+text = "..."
+font_size = 40
+outline_size = 12
+autowrap_mode = 3
+width = 420.0

@@ -15,6 +15,9 @@
 [ext_resource type="PackedScene" path="res://criatura_oido.tscn" id="14_oido"]
 [ext_resource type="Script" uid="uid://c6bfglccmjtlq" path="res://metro.gd" id="15_metro"]
 [ext_resource type="Script" uid="uid://fqgq0ua6b3dp" path="res://zona_fuera_alcance.gd" id="16_fuera"]
+[ext_resource type="Script" path="res://camara_fija.gd" id="17_camara"]
+[ext_resource type="Script" path="res://puerta_escena.gd" id="18_puerta"]
+[ext_resource type="Script" path="res://llegada.gd" id="19_llegada"]
 
 [sub_resource type="Environment" id="Environment_dpv7s"]
 background_mode = 1
@@ -600,24 +603,6 @@ size = Vector3(1.75, 0.07, 0.09)
 [sub_resource type="CapsuleShape3D" id="Capsula"]
 radius = 0.35
 height = 1.75
-
-[sub_resource type="GDScript" id="GDScript_phwha"]
-script/source = "extends Camera3D
-
-@export var objetivo: Node3D
-@export var desfase := Vector3(0, 14.141, 15.253)
-@export var limite_x := 10.2
-@export var limite_z := Vector2(-1.2, 3.7)
-@export var suavizado := 4.0
-
-
-func _process(delta: float) -> void:
-	if objetivo == null:
-		return
-	var p := objetivo.global_position
-	var meta := Vector3(clampf(p.x, -limite_x, limite_x), 0.0, clampf(p.z, limite_z.x, limite_z.y)) + desfase
-	global_position = global_position.lerp(meta, 1.0 - exp(-suavizado * delta))
-"
 
 [sub_resource type="BoxMesh" id="TerminalMalla"]
 size = Vector3(0.7, 1.4, 0.5)
@@ -1630,7 +1615,7 @@ transform = Transform3D(1, 0, 0, 0, 0.76604444, 0.6427876, 0, -0.6427876, 0.7660
 projection = 1
 current = true
 size = 11.0
-script = SubResource("GDScript_phwha")
+script = ExtResource("17_camara")
 objetivo = NodePath("../Personaje")
 
 [node name="Criatura2" parent="." unique_id=383791410 instance=ExtResource("8_n70iv")]
@@ -1851,6 +1836,9 @@ omni_attenuation = 1.4
 [node name="SubidaSegundoPiso" type="Area3D" parent="Escalera" unique_id=1909875944]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7, 4.9, -7.9)
 collision_layer = 0
+script = ExtResource("18_puerta")
+destino = "res://segundo_piso.tscn"
+llegada = "DesdeEstacion"
 
 [node name="Forma" type="CollisionShape3D" parent="Escalera/SubidaSegundoPiso" unique_id=2080232248]
 shape = SubResource("FormaSubida")
@@ -1879,3 +1867,7 @@ shape = SubResource("MuroEnemigosAnden")
 [node name="Escalera" type="CollisionShape3D" parent="MurosEnemigos" unique_id=1497063649]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.7, 1.5, -2.525)
 shape = SubResource("MuroEnemigosEscalera")
+
+[node name="DesdeSegundoPiso" type="Marker3D" parent="Escalera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7, 3.8, -6.4)
+script = ExtResource("19_llegada")

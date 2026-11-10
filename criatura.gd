@@ -109,6 +109,8 @@ func la_ve(radio):
 
 func golpear():
 	print(name, " golpea")
+	if distancia() <= rango_ataque + 0.3:
+		Partida.perder()
 
 
 func ir_a(destino):
