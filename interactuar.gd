@@ -3,8 +3,6 @@ extends Node
 @export var tecla = "usar"
 @export var alcance = 1.8
 @export var tiempo_necesario = 3.0
-# Solo la primera vez que arranca el juego; después manda Partida (partida.gd),
-# así la batería no vuelve a este valor al cambiar de escena.
 @export var bateria_inicial = 25.0
 
 var bateria:

@@ -86,9 +86,6 @@ func elegir_estado():
 		dash_tiempo = 0.8 #Duracion en segundos del dash
 		return Estado.DASH
 		
-	# 2. Esconderse con una tecla 
-	if Input.is_action_pressed("esconderse"): 
-		return Estado.ESCONDERSE
 		
 	# 3. Sigilo con la tecla Shift
 	if Input.is_action_pressed("sigilo"):

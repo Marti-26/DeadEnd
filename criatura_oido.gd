@@ -4,7 +4,8 @@ extends CharacterBody3D
 ## alguien la llama con oir(punto). Entonces va a donde sonó, mira 5 s
 ## (la alerta del documento) y vuelve. Si estaba tranquila, avisa a las
 ## criaturas que tenga a menos de radio_aviso (alerta en cadena).
-## Mientras investiga y mira muestra un "!" gris (el rojo es de la criatura que ve).
+
+signal evento(posicion: Vector3)
 
 enum Estado { EN_PUESTO, INVESTIGAR, MIRAR, VOLVER }
 
@@ -14,6 +15,7 @@ enum Estado { EN_PUESTO, INVESTIGAR, MIRAR, VOLVER }
 @export var llega_a = 1.0          # u
 @export var radio_aviso = 5.0      # u, hasta dónde avisa a otras criaturas
 @export var radio_audicion = 8.0   # u, lo máximo que oye: llega al dash en todas las estaciones
+@export var tiempo_max_investigar = 8.0
 
 var estado = Estado.EN_PUESTO
 var puesto = Vector3.ZERO
@@ -23,9 +25,14 @@ var reloj = 0.0
 @onready var exclamacion = get_node_or_null("Exclamacion")
 
 
+func _enter_tree():
+	add_to_group("disparadores")
+
+
 func _ready():
 	add_to_group("oyentes")
 	puesto = global_position
+	collision_mask |= 4
 	mostrar_alerta()
 
 
@@ -50,7 +57,7 @@ func _physics_process(delta):
 func decidir():
 	match estado:
 		Estado.INVESTIGAR:
-			if distancia_a(ruido_en) < llega_a:
+			if distancia_a(ruido_en) < llega_a or reloj <= 0.001:
 				return Estado.MIRAR
 		Estado.MIRAR:
 			if reloj <= 0.001:
@@ -68,10 +75,11 @@ func cambiar_a(nuevo):
 		global_position.snappedf(0.01))
 	if estado == Estado.MIRAR:
 		reloj = tiempo_mirar
+	elif estado == Estado.INVESTIGAR:
+		reloj = tiempo_max_investigar
 	mostrar_alerta()
 
 
-# "!" gris desde que oye hasta que empieza a volver a su puesto.
 func mostrar_alerta():
 	if exclamacion:
 		exclamacion.visible = estado == Estado.INVESTIGAR or estado == Estado.MIRAR
@@ -86,6 +94,7 @@ func oir(punto):
 	if estado != Estado.INVESTIGAR:
 		cambiar_a(Estado.INVESTIGAR)
 	if estaba_en_puesto:
+		evento.emit(global_position)
 		avisar_a_vecinos(punto)
 
 
