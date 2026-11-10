@@ -3,7 +3,15 @@ extends Node
 @export var tecla = "usar"
 @export var alcance = 1.8
 @export var tiempo_necesario = 3.0
-@export var bateria = 25.0
+# Solo la primera vez que arranca el juego; después manda Partida (partida.gd),
+# así la batería no vuelve a este valor al cambiar de escena.
+@export var bateria_inicial = 25.0
+
+var bateria:
+	get:
+		return Partida.bateria
+	set(valor):
+		Partida.bateria = valor
 
 @onready var pj = get_parent()
 
@@ -13,6 +21,9 @@ var actual = null
 
 func _ready():
 	add_to_group("bateria")
+	if Partida.bateria < 0.0:
+		Partida.bateria = bateria_inicial
+	print("batería al cargar la escena: ", snappedf(bateria, 0.1), " %")
 
 
 func _physics_process(delta):

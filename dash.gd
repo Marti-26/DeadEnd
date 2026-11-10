@@ -15,8 +15,17 @@ enum Estado { LISTA, ACTIVA, RECARGA }
 
 var estado = Estado.LISTA
 var tiempo = 0.0
-var estres = 0.0
-var recuperando = false
+# El estrés vive en Partida (partida.gd) para que no vuelva a 0 al cambiar de escena.
+var estres:
+	get:
+		return Partida.estres
+	set(valor):
+		Partida.estres = valor
+var recuperando:
+	get:
+		return Partida.recuperando
+	set(valor):
+		Partida.recuperando = valor
 
 
 func _physics_process(delta):

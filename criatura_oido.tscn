@@ -16,3 +16,15 @@ shape = SubResource("CapsulaOido")
 
 [node name="Modelo" parent="." instance=ExtResource("2_modelo")]
 transform = Transform3D(-2.6, 0, 0, 0, 2.6, 0, 0, 0, -2.6, 0, 0, 0)
+
+[node name="Exclamacion" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, 0)
+visible = false
+pixel_size = 0.01
+billboard = 1
+no_depth_test = true
+modulate = Color(0.62, 0.64, 0.66, 1)
+outline_modulate = Color(0.05, 0.05, 0.06, 1)
+text = "!"
+font_size = 96
+outline_size = 16

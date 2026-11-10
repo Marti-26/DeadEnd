@@ -1,39 +1,49 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bj7vxhxra5fw1"]
 
-[ext_resource type="Shader" path="res://zona_b/ladrillo.gdshader" id="1_ltrp7"]
-[ext_resource type="Shader" path="res://zona_b/cono_luz.gdshader" id="2_n70iv"]
-[ext_resource type="Script" path="res://luz_parpadeante.gd" id="3_r8jko"]
-[ext_resource type="Script" path="res://disparador.gd" id="4_ltugl"]
-[ext_resource type="Script" path="res://sistema_eventos.gd" id="5_eyatn"]
-[ext_resource type="Script" path="res://personaje.gd" id="6_r0ps7"]
-[ext_resource type="PackedScene" path="res://personaje/character-male-a.glb" id="7_61dqb"]
+[ext_resource type="Shader" uid="uid://f3mgq7yukk58" path="res://zona_b/ladrillo.gdshader" id="1_ltrp7"]
+[ext_resource type="Shader" uid="uid://d15gbpli8cw4r" path="res://zona_b/cono_luz.gdshader" id="2_n70iv"]
+[ext_resource type="Script" uid="uid://djty86m4dgy4m" path="res://luz_parpadeante.gd" id="3_r8jko"]
+[ext_resource type="Script" uid="uid://boiq4yhuv08d0" path="res://disparador.gd" id="4_ltugl"]
+[ext_resource type="Script" uid="uid://cut6u3dpgatay" path="res://sistema_eventos.gd" id="5_eyatn"]
+[ext_resource type="Script" uid="uid://bj0372xnq02wk" path="res://personaje.gd" id="6_r0ps7"]
+[ext_resource type="PackedScene" uid="uid://biu6tppn8ml1q" path="res://personaje/character-male-a.glb" id="7_61dqb"]
+[ext_resource type="PackedScene" uid="uid://twjt23gel8cv" path="res://criatura.tscn" id="8_n70iv"]
+[ext_resource type="Script" uid="uid://bh2bylh8kjoo8" path="res://dash.gd" id="9_dash"]
+[ext_resource type="Script" uid="uid://cqv5bh23wl3n3" path="res://interactuar.gd" id="10_inter"]
+[ext_resource type="Script" uid="uid://bh3ei7hjfvyk5" path="res://ruido.gd" id="11_ruido"]
+[ext_resource type="Script" uid="uid://6l6v2g14wi" path="res://esconderse.gd" id="12_escon"]
+[ext_resource type="Script" uid="uid://bjwxkaxpj8ksj" path="res://terminal.gd" id="13_term"]
+[ext_resource type="PackedScene" path="res://criatura_oido.tscn" id="14_oido"]
 
 [sub_resource type="Environment" id="Environment_dpv7s"]
 background_mode = 1
-background_color = Color(0.015, 0.035, 0.035, 1)
+background_color = Color(0.008, 0.02, 0.022, 1)
 ambient_light_source = 2
-ambient_light_color = Color(0.05490196, 0.08627451, 0.14901961, 1)
+ambient_light_color = Color(0.035, 0.07, 0.08, 1)
+ambient_light_energy = 1.1
 tonemap_mode = 2
-tonemap_exposure = 1.1
 glow_enabled = true
 glow_levels/2 = 1.0
 glow_levels/3 = 1.0
 glow_levels/4 = 1.0
 glow_levels/5 = 1.0
 glow_levels/6 = 1.0
-glow_intensity = 0.8
+glow_intensity = 1.0
 glow_strength = 1.1
-glow_bloom = 0.02
-glow_hdr_threshold = 0.85
+glow_bloom = 0.03
+glow_hdr_threshold = 0.8
+fog_enabled = true
+fog_light_color = Color(0.05, 0.11, 0.11, 1)
+fog_density = 0.006
 adjustment_enabled = true
-adjustment_contrast = 1.1
-adjustment_saturation = 1.15
+adjustment_contrast = 1.2
+adjustment_saturation = 1.2
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ayegb"]
 render_priority = 0
 shader = ExtResource("1_ltrp7")
-shader_parameter/color_ladrillo = Color(0.3, 0.4, 0.4, 1)
-shader_parameter/color_junta = Color(0.16, 0.22, 0.22, 1)
+shader_parameter/color_ladrillo = Color(0.2, 0.28, 0.29, 1)
+shader_parameter/color_junta = Color(0.09, 0.13, 0.14, 1)
 shader_parameter/tamano = Vector2(1, 1)
 shader_parameter/desfase = 0.0
 shader_parameter/junta = 0.035
@@ -91,31 +101,40 @@ render_priority = 0
 shader = ExtResource("1_ltrp7")
 shader_parameter/color_ladrillo = Color(0.22, 0.34, 0.33, 1)
 shader_parameter/color_junta = Color(0.08, 0.13, 0.13, 1)
-shader_parameter/tamano = null
-shader_parameter/desfase = null
-shader_parameter/junta = null
-shader_parameter/variacion = null
-shader_parameter/pixel = null
-shader_parameter/rugosidad = null
-shader_parameter/en_piso = null
+shader_parameter/tamano = Vector2(0.5, 0.22)
+shader_parameter/desfase = 0.5
+shader_parameter/junta = 0.07
+shader_parameter/variacion = 0.12
+shader_parameter/pixel = 0.045
+shader_parameter/rugosidad = 0.85
+shader_parameter/en_piso = false
 shader_parameter/manchas = 0.072
 
-[sub_resource type="BoxMesh" id="BoxMesh_5ae7h"]
-size = Vector3(30, 4.6, 0.4)
+[sub_resource type="BoxMesh" id="ParedIzq"]
+size = Vector3(26.25, 4.6, 0.4)
+
+[sub_resource type="BoxMesh" id="ParedDer"]
+size = Vector3(0.85, 4.6, 0.4)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0kvga"]
 albedo_color = Color(0.10215686, 0.13196078, 0.19156864, 1)
 roughness = 0.6
 
-[sub_resource type="BoxMesh" id="BoxMesh_nvaji"]
-size = Vector3(30, 0.4, 0.06)
+[sub_resource type="BoxMesh" id="ZocaloIzq"]
+size = Vector3(26.25, 0.4, 0.06)
+
+[sub_resource type="BoxMesh" id="ZocaloDer"]
+size = Vector3(0.85, 0.4, 0.06)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c70ak"]
 albedo_color = Color(0.05490196, 0.08627451, 0.14901961, 1)
 roughness = 0.7
 
-[sub_resource type="BoxMesh" id="BoxMesh_58kpb"]
-size = Vector3(30, 0.16, 0.2)
+[sub_resource type="BoxMesh" id="CornisaIzq"]
+size = Vector3(26.25, 0.16, 0.2)
+
+[sub_resource type="BoxMesh" id="CornisaDer"]
+size = Vector3(0.85, 0.16, 0.2)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6jwjv"]
 albedo_color = Color(0, 0, 0, 1)
@@ -204,23 +223,17 @@ size = Vector3(1.7, 1.1, 0.04)
 [sub_resource type="BoxMesh" id="BoxMesh_22t8e"]
 size = Vector3(0.06, 1.1, 0.06)
 
-[sub_resource type="BoxMesh" id="BoxMesh_18f5e"]
-size = Vector3(1.7, 1.1, 0.04)
+[sub_resource type="BoxMesh" id="TravesanoIzq"]
+size = Vector3(26.25, 0.06, 0.06)
 
-[sub_resource type="BoxMesh" id="BoxMesh_a5ejb"]
-size = Vector3(0.06, 1.1, 0.06)
+[sub_resource type="BoxMesh" id="TravesanoDer"]
+size = Vector3(0.85, 0.06, 0.06)
 
-[sub_resource type="BoxMesh" id="BoxMesh_yalt2"]
-size = Vector3(1.7, 1.1, 0.04)
+[sub_resource type="BoxShape3D" id="MuroFondoIzq"]
+size = Vector3(26.25, 4, 0.4)
 
-[sub_resource type="BoxMesh" id="BoxMesh_pwwpq"]
-size = Vector3(0.06, 1.1, 0.06)
-
-[sub_resource type="BoxMesh" id="BoxMesh_pdl8p"]
-size = Vector3(30, 0.06, 0.06)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_mb0d3"]
-size = Vector3(30, 4, 0.4)
+[sub_resource type="BoxShape3D" id="MuroFondoDer"]
+size = Vector3(0.85, 4, 0.4)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aawr5"]
 albedo_color = Color(0.09270588, 0.12282354, 0.18305883, 1)
@@ -239,9 +252,9 @@ shader_parameter/desfase = 0.0
 shader_parameter/junta = 0.5
 shader_parameter/variacion = 0.0
 shader_parameter/pixel = 0.04
-shader_parameter/rugosidad = null
-shader_parameter/en_piso = null
-shader_parameter/manchas = null
+shader_parameter/rugosidad = 0.85
+shader_parameter/en_piso = false
+shader_parameter/manchas = 0.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_nfi3g"]
 size = Vector3(30, 0.32, 0.05)
@@ -262,6 +275,7 @@ size = Vector3(0.08, 0.84, 0.08)
 transform_format = 1
 instance_count = 13
 mesh = SubResource("BoxMesh_kxeo3")
+buffer = PackedFloat32Array(1, 0, 0, -15, 0, 1, 0, 0.42, 0, 0, 1, 3.35, 1, 0, 0, -12.5, 0, 1, 0, 0.42, 0, 0, 1, 3.35, 1, 0, 0, -10, 0, 1, 0, 0.42, 0, 0, 1, 3.35, 1, 0, 0, -7.5, 0, 1, 0, 0.42, 0, 0, 1, 3.35, 1, 0, 0, -5, 0, 1, 0, 0.42, 0, 0, 1, 3.35, 1, 0, 0, -2.5, 0, 1, 0, 0.42, 0, 0, 1, 3.35, 1, 0, 0, 0, 0, 1, 0, 0.42, 0, 0, 1, 3.35, 1, 0, 0, 2.5, 0, 1, 0, 0.42, 0, 0, 1, 3.35, 1, 0, 0, 5, 0, 1, 0, 0.42, 0, 0, 1, 3.35, 1, 0, 0, 7.5, 0, 1, 0, 0.42, 0, 0, 1, 3.35, 1, 0, 0, 10, 0, 1, 0, 0.42, 0, 0, 1, 3.35, 1, 0, 0, 12.5, 0, 1, 0, 0.42, 0, 0, 1, 3.35, 1, 0, 0, 15, 0, 1, 0, 0.42, 0, 0, 1, 3.35)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_egj32"]
 size = Vector3(30, 2, 0.3)
@@ -289,6 +303,7 @@ size = Vector3(0.28, 0.08, 2)
 transform_format = 1
 instance_count = 92
 mesh = SubResource("BoxMesh_3e641")
+buffer = PackedFloat32Array(1, 0, 0, -16.5, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -15.7667, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -15.0333, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -14.3, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -13.5667, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -12.8333, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -12.1, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -11.3667, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -10.6333, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -9.9, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -9.1667, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -8.4333, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -7.7, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -6.9667, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -6.2333, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -5.5, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -4.7667, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -4.0333, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -3.3, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -2.5667, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -1.8333, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -1.1, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -0.3667, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 0.3667, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 1.1, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 1.8333, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 2.5667, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 3.3, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 4.0333, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 4.7667, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 5.5, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 6.2333, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 6.9667, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 7.7, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 8.4333, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 9.1667, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 9.9, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 10.6333, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 11.3667, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 12.1, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 12.8333, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 13.5667, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 14.3, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 15.0333, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 15.7667, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, 16.5, 0, 1, 0, -0.86, 0, 0, 1, 5.9, 1, 0, 0, -16.5, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, -15.7667, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, -15.0333, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, -14.3, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, -13.5667, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, -12.8333, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, -12.1, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, -11.3667, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, -10.6333, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, -9.9, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, -9.1667, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, -8.4333, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, -7.7, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, -6.9667, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, -6.2333, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, -5.5, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, -4.7667, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, -4.0333, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, -3.3, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, -2.5667, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, -1.8333, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, -1.1, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, -0.3667, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 0.3667, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 1.1, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 1.8333, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 2.5667, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 3.3, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 4.0333, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 4.7667, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 5.5, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 6.2333, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 6.9667, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 7.7, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 8.4333, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 9.1667, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 9.9, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 10.6333, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 11.3667, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 12.1, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 12.8333, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 13.5667, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 14.3, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 15.0333, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 15.7667, 0, 1, 0, -0.86, 0, 0, 1, 8.9, 1, 0, 0, 16.5, 0, 1, 0, -0.86, 0, 0, 1, 8.9)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pr2nv"]
 albedo_color = Color(0.55, 0.6, 0.68, 1)
@@ -309,16 +324,6 @@ size = Vector3(34, 0.09, 0.08)
 
 [sub_resource type="BoxMesh" id="BoxMesh_mkyrm"]
 size = Vector3(34, 0.09, 0.08)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4mysw"]
-albedo_color = Color(0.03, 0.05, 0.08, 1)
-roughness = 0.5
-emission_enabled = true
-emission = Color(0.22500001, 0.3, 0.264, 0.3)
-emission_energy_multiplier = 0.6
-
-[sub_resource type="BoxMesh" id="BoxMesh_u1g0j"]
-size = Vector3(3.5, 0.7, 0.04)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5xjol"]
 albedo_color = Color(0.26, 0.33, 0.32, 1)
@@ -365,7 +370,8 @@ size = Vector3(1.1, 2, 0.7)
 albedo_color = Color(0, 0, 0, 1)
 roughness = 0.2
 emission_enabled = true
-emission = Color(0.56078434, 0.8509804, 0.6901961, 1)
+emission = Color(1, 0.8, 0.58, 1)
+emission_energy_multiplier = 1.1
 
 [sub_resource type="BoxMesh" id="BoxMesh_bt4f1"]
 size = Vector3(0.82, 1.2, 0.03)
@@ -382,6 +388,7 @@ size = Vector3(0.78, 0.04, 0.02)
 transform_format = 1
 instance_count = 4
 mesh = SubResource("BoxMesh_ylnbe")
+buffer = PackedFloat32Array(1, 0, 0, -0.08, 0, 1, 0, 0.8, 0, 0, 1, 0.33, 1, 0, 0, -0.08, 0, 1, 0, 1.1, 0, 0, 1, 0.33, 1, 0, 0, -0.08, 0, 1, 0, 1.4, 0, 0, 1, 0.33, 1, 0, 0, -0.08, 0, 1, 0, 1.7, 0, 0, 1, 0.33)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uc7jt"]
 albedo_color = Color(0.1, 0.12, 0.15, 1)
@@ -432,6 +439,7 @@ size = Vector3(0.78, 0.04, 0.02)
 transform_format = 1
 instance_count = 4
 mesh = SubResource("BoxMesh_hrntr")
+buffer = PackedFloat32Array(1, 0, 0, -0.08, 0, 1, 0, 0.8, 0, 0, 1, 0.33, 1, 0, 0, -0.08, 0, 1, 0, 1.1, 0, 0, 1, 0.33, 1, 0, 0, -0.08, 0, 1, 0, 1.4, 0, 0, 1, 0.33, 1, 0, 0, -0.08, 0, 1, 0, 1.7, 0, 0, 1, 0.33)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l6v84"]
 albedo_color = Color(0.1, 0.12, 0.15, 1)
@@ -486,8 +494,8 @@ shader = ExtResource("2_n70iv")
 shader_parameter/color = Color(0.56078434, 0.8509804, 0.6901961, 1)
 shader_parameter/intensidad = 0.22
 shader_parameter/altura = 2.9
-shader_parameter/pixel = null
-shader_parameter/trama = null
+shader_parameter/pixel = 3.0
+shader_parameter/trama = 0.65
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_4hwbu"]
 top_radius = 0.45
@@ -520,8 +528,8 @@ shader = ExtResource("2_n70iv")
 shader_parameter/color = Color(0.56078434, 0.8509804, 0.6901961, 1)
 shader_parameter/intensidad = 0.22
 shader_parameter/altura = 2.9
-shader_parameter/pixel = null
-shader_parameter/trama = null
+shader_parameter/pixel = 3.0
+shader_parameter/trama = 0.65
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_d2qcw"]
 top_radius = 0.45
@@ -554,8 +562,8 @@ shader = ExtResource("2_n70iv")
 shader_parameter/color = Color(0.56078434, 0.8509804, 0.6901961, 1)
 shader_parameter/intensidad = 0.22
 shader_parameter/altura = 2.9
-shader_parameter/pixel = null
-shader_parameter/trama = null
+shader_parameter/pixel = 3.0
+shader_parameter/trama = 0.65
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_nmmvb"]
 top_radius = 0.45
@@ -657,10 +665,125 @@ func _process(delta: float) -> void:
 	global_position = global_position.lerp(meta, 1.0 - exp(-suavizado * delta))
 "
 
+[sub_resource type="BoxMesh" id="TerminalMalla"]
+size = Vector3(0.7, 1.4, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="TerminalMat"]
+albedo_color = Color(0.2, 0.24, 0.28, 1)
+roughness = 0.6
+
+[sub_resource type="BoxShape3D" id="TerminalForma"]
+size = Vector3(0.7, 1.4, 0.5)
+
+[sub_resource type="BoxMesh" id="PantallaMalla"]
+size = Vector3(0.45, 0.35, 0.02)
+
+[sub_resource type="StandardMaterial3D" id="PantallaMat"]
+albedo_color = Color(0.56, 0.85, 0.69, 1)
+emission_enabled = true
+emission = Color(0.56, 0.85, 0.69, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="StandardMaterial3D" id="MatSodio"]
+albedo_color = Color(1, 0.8, 0.6, 1)
+emission_enabled = true
+emission = Color(1, 0.76, 0.52, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="BoxMesh" id="BoxLampara"]
+size = Vector3(0.5, 0.1, 0.22)
+
+[sub_resource type="StandardMaterial3D" id="MatRojo"]
+albedo_color = Color(0.9, 0.12, 0.08, 1)
+emission_enabled = true
+emission = Color(1, 0.12, 0.06, 1)
+emission_energy_multiplier = 6.0
+
+[sub_resource type="SphereMesh" id="EsferaPiloto"]
+radius = 0.06
+height = 0.12
+
+[sub_resource type="BoxMesh" id="BoxPosteSenal"]
+size = Vector3(0.1, 2.6, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxCabezaSenal"]
+size = Vector3(0.3, 0.6, 0.2)
+
+[sub_resource type="SphereMesh" id="EsferaSenal"]
+radius = 0.09
+height = 0.18
+
+[sub_resource type="StandardMaterial3D" id="MatEscalera"]
+albedo_color = Color(0.13, 0.16, 0.17, 1)
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="CuboUnidad"]
+
+[sub_resource type="MultiMesh" id="MultiMeshPeldanos"]
+transform_format = 1
+instance_count = 16
+mesh = SubResource("CuboUnidad")
+buffer = PackedFloat32Array(2.88, 0, 0, 12.7, 0, 0.25, 0, 0.125, 0, 0, 0.35, -1.775, 2.88, 0, 0, 12.7, 0, 0.5, 0, 0.25, 0, 0, 0.35, -2.125, 2.88, 0, 0, 12.7, 0, 0.75, 0, 0.375, 0, 0, 0.35, -2.475, 2.88, 0, 0, 12.7, 0, 1, 0, 0.5, 0, 0, 0.35, -2.825, 2.88, 0, 0, 12.7, 0, 1.25, 0, 0.625, 0, 0, 0.35, -3.175, 2.88, 0, 0, 12.7, 0, 1.5, 0, 0.75, 0, 0, 0.35, -3.525, 2.88, 0, 0, 12.7, 0, 1.75, 0, 0.875, 0, 0, 0.35, -3.875, 2.88, 0, 0, 12.7, 0, 2, 0, 1, 0, 0, 0.35, -4.225, 2.88, 0, 0, 12.7, 0, 2.25, 0, 1.125, 0, 0, 0.35, -4.575, 2.88, 0, 0, 12.7, 0, 2.5, 0, 1.25, 0, 0, 0.35, -4.925, 2.88, 0, 0, 12.7, 0, 2.75, 0, 1.375, 0, 0, 0.35, -5.275, 2.88, 0, 0, 12.7, 0, 3, 0, 1.5, 0, 0, 0.35, -5.625, 2.88, 0, 0, 12.7, 0, 3.25, 0, 1.625, 0, 0, 0.35, -5.975, 2.88, 0, 0, 12.7, 0, 3.5, 0, 1.75, 0, 0, 0.35, -6.325, 2.88, 0, 0, 12.7, 0, 3.75, 0, 1.875, 0, 0, 0.35, -6.675, 2.88, 0, 0, 12.7, 0, 4, 0, 2, 0, 0, 0.35, -7.025)
+
+[sub_resource type="StandardMaterial3D" id="MatBordeAmbar"]
+albedo_color = Color(0.9, 0.72, 0.5, 1)
+emission_enabled = true
+emission = Color(1, 0.78, 0.55, 1)
+emission_energy_multiplier = 0.8
+
+[sub_resource type="BoxMesh" id="BoxBorde"]
+size = Vector3(2.88, 0.025, 0.06)
+
+[sub_resource type="MultiMesh" id="MultiMeshBordes"]
+transform_format = 1
+instance_count = 16
+mesh = SubResource("BoxBorde")
+buffer = PackedFloat32Array(1, 0, 0, 12.7, 0, 1, 0, 0.262, 0, 0, 1, -1.63, 1, 0, 0, 12.7, 0, 1, 0, 0.512, 0, 0, 1, -1.98, 1, 0, 0, 12.7, 0, 1, 0, 0.762, 0, 0, 1, -2.33, 1, 0, 0, 12.7, 0, 1, 0, 1.012, 0, 0, 1, -2.68, 1, 0, 0, 12.7, 0, 1, 0, 1.262, 0, 0, 1, -3.03, 1, 0, 0, 12.7, 0, 1, 0, 1.512, 0, 0, 1, -3.38, 1, 0, 0, 12.7, 0, 1, 0, 1.762, 0, 0, 1, -3.73, 1, 0, 0, 12.7, 0, 1, 0, 2.012, 0, 0, 1, -4.08, 1, 0, 0, 12.7, 0, 1, 0, 2.262, 0, 0, 1, -4.43, 1, 0, 0, 12.7, 0, 1, 0, 2.512, 0, 0, 1, -4.78, 1, 0, 0, 12.7, 0, 1, 0, 2.762, 0, 0, 1, -5.13, 1, 0, 0, 12.7, 0, 1, 0, 3.012, 0, 0, 1, -5.48, 1, 0, 0, 12.7, 0, 1, 0, 3.262, 0, 0, 1, -5.83, 1, 0, 0, 12.7, 0, 1, 0, 3.512, 0, 0, 1, -6.18, 1, 0, 0, 12.7, 0, 1, 0, 3.762, 0, 0, 1, -6.53, 1, 0, 0, 12.7, 0, 1, 0, 4.012, 0, 0, 1, -6.88)
+
+[sub_resource type="BoxMesh" id="BoxDescanso"]
+size = Vector3(2.88, 4, 1.3)
+
+[sub_resource type="StandardMaterial3D" id="MatPozo"]
+albedo_color = Color(0.07, 0.09, 0.1, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMuroPozo"]
+size = Vector3(0.3, 6, 4.95)
+
+[sub_resource type="BoxMesh" id="BoxFondoPozo"]
+size = Vector3(3.5, 6, 0.3)
+
+[sub_resource type="BoxShape3D" id="FormaRampa"]
+size = Vector3(2.88, 0.2, 6.8819)
+
+[sub_resource type="BoxShape3D" id="FormaDescanso"]
+size = Vector3(2.88, 0.2, 1.3)
+
+[sub_resource type="BoxShape3D" id="FormaMuroPozo"]
+size = Vector3(0.3, 10, 4.95)
+
+[sub_resource type="BoxShape3D" id="FormaFondoPozo"]
+size = Vector3(2.9, 10, 0.3)
+
+[sub_resource type="BoxMesh" id="BoxPasamanos"]
+size = Vector3(0.05, 0.05, 6.8819)
+
+[sub_resource type="BoxMesh" id="BoxFranjaSalida"]
+size = Vector3(1.6, 0.08, 0.03)
+
+[sub_resource type="BoxShape3D" id="FormaSubida"]
+size = Vector3(2.88, 1.8, 1)
+
 [node name="ZonaB" type="Node3D" unique_id=1602302891]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=961972260]
 environment = SubResource("Environment_dpv7s")
+
+[node name="LuzLuna" type="DirectionalLight3D" parent="." unique_id=1005726734]
+transform = Transform3D(0.906308, -0.346189, 0.242404, 0, 0.573576, 0.819152, -0.422618, -0.742404, 0.519837, 0, 8, 0)
+light_color = Color(0.6, 0.82, 0.84, 1)
+light_energy = 0.55
+shadow_enabled = true
 
 [node name="Estacion" type="Node3D" parent="." unique_id=1373757006]
 
@@ -731,21 +854,38 @@ cast_shadow = 0
 mesh = SubResource("BoxMesh_0slvj")
 
 [node name="Pared" type="MeshInstance3D" parent="Estacion" unique_id=1110714268]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, -3.9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.875, 2.3, -3.9)
 material_override = SubResource("ShaderMaterial_bvosb")
-mesh = SubResource("BoxMesh_5ae7h")
+mesh = SubResource("ParedIzq")
+
+[node name="ParedDer" type="MeshInstance3D" parent="Estacion" unique_id=1646781466]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.575, 2.3, -3.9)
+material_override = SubResource("ShaderMaterial_bvosb")
+mesh = SubResource("ParedDer")
 
 [node name="Zocalo" type="MeshInstance3D" parent="Estacion" unique_id=1979795183]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -3.68)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.875, 0.2, -3.68)
 material_override = SubResource("StandardMaterial3D_0kvga")
 cast_shadow = 0
-mesh = SubResource("BoxMesh_nvaji")
+mesh = SubResource("ZocaloIzq")
+
+[node name="ZocaloDer" type="MeshInstance3D" parent="Estacion" unique_id=1885593068]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.575, 0.2, -3.68)
+material_override = SubResource("StandardMaterial3D_0kvga")
+cast_shadow = 0
+mesh = SubResource("ZocaloDer")
 
 [node name="Cornisa" type="MeshInstance3D" parent="Estacion" unique_id=1245095296]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, -3.62)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.875, 3.2, -3.62)
 material_override = SubResource("StandardMaterial3D_c70ak")
 cast_shadow = 0
-mesh = SubResource("BoxMesh_58kpb")
+mesh = SubResource("CornisaIzq")
+
+[node name="CornisaDer" type="MeshInstance3D" parent="Estacion" unique_id=557196911]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.575, 3.2, -3.62)
+material_override = SubResource("StandardMaterial3D_c70ak")
+cast_shadow = 0
+mesh = SubResource("CornisaDer")
 
 [node name="Ventana0" type="MeshInstance3D" parent="Estacion" unique_id=1438979823]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 3.95, -3.68)
@@ -891,41 +1031,28 @@ material_override = SubResource("StandardMaterial3D_qnp7s")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_22t8e")
 
-[node name="Ventana12" type="MeshInstance3D" parent="Estacion" unique_id=2077170275]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 3.95, -3.68)
-material_override = SubResource("StandardMaterial3D_6jwjv")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_18f5e")
-
-[node name="Parteluz12" type="MeshInstance3D" parent="Estacion" unique_id=823557761]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 3.95, -3.66)
-material_override = SubResource("StandardMaterial3D_qnp7s")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_a5ejb")
-
-[node name="Ventana13" type="MeshInstance3D" parent="Estacion" unique_id=757392846]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 3.95, -3.68)
-material_override = SubResource("StandardMaterial3D_6jwjv")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_yalt2")
-
-[node name="Parteluz13" type="MeshInstance3D" parent="Estacion" unique_id=1608125533]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 3.95, -3.66)
-material_override = SubResource("StandardMaterial3D_qnp7s")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_pwwpq")
-
 [node name="Travesano" type="MeshInstance3D" parent="Estacion" unique_id=969226057]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.15, -3.66)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.875, 4.15, -3.66)
 material_override = SubResource("StandardMaterial3D_qnp7s")
 cast_shadow = 0
-mesh = SubResource("BoxMesh_pdl8p")
+mesh = SubResource("TravesanoIzq")
+
+[node name="TravesanoDer" type="MeshInstance3D" parent="Estacion" unique_id=501860281]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.575, 4.15, -3.66)
+material_override = SubResource("StandardMaterial3D_qnp7s")
+cast_shadow = 0
+mesh = SubResource("TravesanoDer")
 
 [node name="MuroFondo" type="StaticBody3D" parent="Estacion" unique_id=826283085]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -3.6)
 
 [node name="Forma" type="CollisionShape3D" parent="Estacion/MuroFondo" unique_id=1400900828]
-shape = SubResource("BoxShape3D_mb0d3")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.875, 0, 0)
+shape = SubResource("MuroFondoIzq")
+
+[node name="FormaDer" type="CollisionShape3D" parent="Estacion/MuroFondo" unique_id=1933236778]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.575, 0, 0)
+shape = SubResource("MuroFondoDer")
 
 [node name="Borde" type="MeshInstance3D" parent="Estacion" unique_id=1180423711]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.55, 3.65)
@@ -996,19 +1123,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.77, 9.6)
 material_override = SubResource("StandardMaterial3D_pr2nv")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_mkyrm")
-
-[node name="Letrero" type="Label3D" parent="Estacion" unique_id=2009283728]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.55, -3.6)
-pixel_size = 0.0065
-modulate = Color(0.75, 1, 0.88, 1)
-text = "ESTACIÓN 2"
-font_size = 64
-
-[node name="PlacaLetrero" type="MeshInstance3D" parent="Estacion" unique_id=2024557248]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.55, -3.68)
-material_override = SubResource("StandardMaterial3D_4mysw")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_u1g0j")
 
 [node name="Banca1" type="Node3D" parent="Estacion" unique_id=1409859490]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, -3.25)
@@ -1105,14 +1219,14 @@ shape = SubResource("BoxShape3D_2o4mg")
 
 [node name="Luz" type="OmniLight3D" parent="Estacion/Expendedora1" unique_id=576779893]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0.9)
-light_color = Color(0.56078434, 0.8509804, 0.6901961, 1)
-light_energy = 1.2
+light_color = Color(1, 0.8, 0.6, 1)
+light_energy = 1.8
 light_specular = 0.3
 omni_range = 2.8
 omni_attenuation = 2.0
 
 [node name="ExpendedoraApagada" type="Node3D" parent="Estacion" unique_id=1415881746]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0, -3.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -3.2)
 
 [node name="Cuerpo" type="MeshInstance3D" parent="Estacion/ExpendedoraApagada" unique_id=931098359]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -1326,23 +1440,39 @@ omni_attenuation = 2.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 1)
 light_color = Color(0.36, 0.62, 0.72, 1)
 light_specular = 0.2
-omni_range = 22.0
+omni_range = 13.0
+omni_attenuation = 1.6
 
 [node name="SistemaEventos" type="Node" parent="." unique_id=321016260 node_paths=PackedStringArray("luz_evento", "luz_variable")]
 script = ExtResource("5_eyatn")
 luz_evento = NodePath("../LuzEvento")
 luz_variable = NodePath("../LuzEstres")
 
-[node name="Personaje" type="CharacterBody3D" parent="." unique_id=241134809]
+[node name="Personaje" type="CharacterBody3D" parent="." unique_id=241134809 node_paths=PackedStringArray("camara") groups=["jugador"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.05, 0.8)
 script = ExtResource("6_r0ps7")
+camara = NodePath("../Camara")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Personaje" unique_id=1801526638]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
 shape = SubResource("Capsula")
 
-[node name="Modelo" type="Node3D" parent="Personaje" unique_id=677901553 instance=ExtResource("7_61dqb")]
-transform = Transform3D(-2.6, 0, 0, 0, 2.6, 0, 0, 0, -2.6, 0, 0, 0)
+[node name="Modelo" parent="Personaje" unique_id=677901553 instance=ExtResource("7_61dqb")]
+transform = Transform3D(-2.5879235, 0, -0.2502995, 0, 2.5999997, 0, 0.2502995, 0, -2.5879235, 0, 0, 0)
+
+[node name="Dash" type="Node" parent="Personaje" unique_id=1769768472]
+script = ExtResource("9_dash")
+
+[node name="Interactuar" type="Node" parent="Personaje" unique_id=1152520143]
+script = ExtResource("10_inter")
+
+[node name="Ruido" type="Node" parent="Personaje" unique_id=822150098]
+script = ExtResource("11_ruido")
+radio = 4.0
+
+[node name="Esconderse" type="Node" parent="Personaje" unique_id=1816471655]
+script = ExtResource("12_escon")
+tecla = "esconderse"
 
 [node name="Camara" type="Camera3D" parent="." unique_id=567095934 node_paths=PackedStringArray("objetivo")]
 transform = Transform3D(1, 0, 0, 0, 0.76604444, 0.6427876, 0, -0.6427876, 0.76604444, -5.2, 14.141328, 16.052977)
@@ -1351,7 +1481,212 @@ current = true
 size = 11.0
 script = SubResource("GDScript_phwha")
 objetivo = NodePath("../Personaje")
-desfase = Vector3(0, 14.141, 15.253)
-limite_x = 5.2
-limite_z = Vector2(-1.2, 1.2)
-suavizado = 4.0
+
+[node name="Criatura2" parent="." unique_id=383791410 instance=ExtResource("8_n70iv")]
+transform = Transform3D(-0.99733615, 0, 0.07294283, 0, 1, 0, -0.07294283, 0, -0.99733615, 8.67766, -0.0066976547, -1.4108136)
+
+[node name="Terminal1" type="StaticBody3D" parent="." unique_id=1321867158 node_paths=PackedStringArray("pantalla") groups=["interactivos"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0.7, -3.15)
+script = ExtResource("13_term")
+pantalla = NodePath("Pantalla")
+
+[node name="Malla" type="MeshInstance3D" parent="Terminal1" unique_id=926359297]
+mesh = SubResource("TerminalMalla")
+surface_material_override/0 = SubResource("TerminalMat")
+
+[node name="Forma" type="CollisionShape3D" parent="Terminal1" unique_id=674898061]
+shape = SubResource("TerminalForma")
+
+[node name="Pantalla" type="MeshInstance3D" parent="Terminal1" unique_id=922071152]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0.26)
+mesh = SubResource("PantallaMalla")
+surface_material_override/0 = SubResource("PantallaMat")
+
+[node name="Oido1" parent="." unique_id=109917073 instance=ExtResource("14_oido")]
+transform = Transform3D(-0.9291808, 0, 0.36962554, 0, 1, 0, -0.36962554, 0, -0.9291808, -13.762889, -0.20189095, -2.829544)
+
+[node name="AcentosCalidos" type="Node3D" parent="." unique_id=1949269111]
+
+[node name="LamparaSodioIzq" type="MeshInstance3D" parent="AcentosCalidos" unique_id=2093410172]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5, 3.05, -3.45)
+material_override = SubResource("MatSodio")
+cast_shadow = 0
+mesh = SubResource("BoxLampara")
+
+[node name="LuzSodioIzq" type="OmniLight3D" parent="AcentosCalidos" unique_id=1840256681]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5, 2.8, -3)
+light_color = Color(1, 0.76, 0.52, 1)
+light_energy = 2.4
+omni_attenuation = 1.6
+
+[node name="PilotoBarrera0" type="MeshInstance3D" parent="AcentosCalidos" unique_id=643357421]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.25, 0.88, 3.35)
+material_override = SubResource("MatRojo")
+cast_shadow = 0
+mesh = SubResource("EsferaPiloto")
+
+[node name="PilotoBarrera1" type="MeshInstance3D" parent="AcentosCalidos" unique_id=2123428173]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.75, 0.88, 3.35)
+material_override = SubResource("MatRojo")
+cast_shadow = 0
+mesh = SubResource("EsferaPiloto")
+
+[node name="PilotoBarrera2" type="MeshInstance3D" parent="AcentosCalidos" unique_id=1078368362]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.75, 0.88, 3.35)
+material_override = SubResource("MatRojo")
+cast_shadow = 0
+mesh = SubResource("EsferaPiloto")
+
+[node name="PilotoBarrera3" type="MeshInstance3D" parent="AcentosCalidos" unique_id=2097616057]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.25, 0.88, 3.35)
+material_override = SubResource("MatRojo")
+cast_shadow = 0
+mesh = SubResource("EsferaPiloto")
+
+[node name="SenalIzq" type="Node3D" parent="AcentosCalidos" unique_id=98393425]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.2, -0.9, 4.3)
+
+[node name="Poste" type="MeshInstance3D" parent="AcentosCalidos/SenalIzq" unique_id=599876652]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0)
+material_override = SubResource("StandardMaterial3D_43od4")
+mesh = SubResource("BoxPosteSenal")
+
+[node name="Cabeza" type="MeshInstance3D" parent="AcentosCalidos/SenalIzq" unique_id=1972164569]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0.05)
+material_override = SubResource("StandardMaterial3D_43od4")
+mesh = SubResource("BoxCabezaSenal")
+
+[node name="Foco" type="MeshInstance3D" parent="AcentosCalidos/SenalIzq" unique_id=457719395]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.62, 0.16)
+material_override = SubResource("MatRojo")
+cast_shadow = 0
+mesh = SubResource("EsferaSenal")
+
+[node name="Luz" type="OmniLight3D" parent="AcentosCalidos/SenalIzq" unique_id=1356178696]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0.5)
+light_color = Color(1, 0.12, 0.08, 1)
+light_energy = 2.0
+omni_range = 4.5
+omni_attenuation = 1.6
+
+[node name="SenalDer" type="Node3D" parent="AcentosCalidos" unique_id=1089374873]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.2, -0.9, 4.3)
+
+[node name="Poste" type="MeshInstance3D" parent="AcentosCalidos/SenalDer" unique_id=2040189292]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0)
+material_override = SubResource("StandardMaterial3D_43od4")
+mesh = SubResource("BoxPosteSenal")
+
+[node name="Cabeza" type="MeshInstance3D" parent="AcentosCalidos/SenalDer" unique_id=1570234029]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0.05)
+material_override = SubResource("StandardMaterial3D_43od4")
+mesh = SubResource("BoxCabezaSenal")
+
+[node name="Foco" type="MeshInstance3D" parent="AcentosCalidos/SenalDer" unique_id=173279512]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.62, 0.16)
+material_override = SubResource("MatSodio")
+cast_shadow = 0
+mesh = SubResource("EsferaSenal")
+
+[node name="Luz" type="OmniLight3D" parent="AcentosCalidos/SenalDer" unique_id=771611520]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0.5)
+light_color = Color(1, 0.74, 0.5, 1)
+light_energy = 2.0
+omni_range = 4.5
+omni_attenuation = 1.6
+
+[node name="Escalera" type="Node3D" parent="." unique_id=375393562]
+
+[node name="Peldanos" type="MultiMeshInstance3D" parent="Escalera" unique_id=416102514]
+material_override = SubResource("MatEscalera")
+multimesh = SubResource("MultiMeshPeldanos")
+
+[node name="BordesAmbar" type="MultiMeshInstance3D" parent="Escalera" unique_id=221644784]
+material_override = SubResource("MatBordeAmbar")
+cast_shadow = 0
+multimesh = SubResource("MultiMeshBordes")
+
+[node name="Descanso" type="MeshInstance3D" parent="Escalera" unique_id=887179425]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7, 2, -7.85)
+material_override = SubResource("MatEscalera")
+mesh = SubResource("BoxDescanso")
+
+[node name="MuroIzq" type="MeshInstance3D" parent="Escalera" unique_id=723652484]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1, 3, -6.175)
+material_override = SubResource("MatPozo")
+mesh = SubResource("BoxMuroPozo")
+
+[node name="MuroDer" type="MeshInstance3D" parent="Escalera" unique_id=1096422176]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.3, 3, -6.175)
+material_override = SubResource("MatPozo")
+mesh = SubResource("BoxMuroPozo")
+
+[node name="MuroFin" type="MeshInstance3D" parent="Escalera" unique_id=1461273328]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7, 3, -8.8)
+material_override = SubResource("MatPozo")
+mesh = SubResource("BoxFondoPozo")
+
+[node name="Choque" type="StaticBody3D" parent="Escalera" unique_id=475704527]
+
+[node name="Rampa" type="CollisionShape3D" parent="Escalera/Choque" unique_id=582596439]
+transform = Transform3D(1, 0, 0, 0, 0.81373, -0.58124, 0, 0.58124, 0.81373, 12.7, 1.91863, -4.45812)
+shape = SubResource("FormaRampa")
+
+[node name="Descanso" type="CollisionShape3D" parent="Escalera/Choque" unique_id=1286414033]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7, 3.9, -7.85)
+shape = SubResource("FormaDescanso")
+
+[node name="LadoIzq" type="CollisionShape3D" parent="Escalera/Choque" unique_id=1065687401]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1, 5, -6.175)
+shape = SubResource("FormaMuroPozo")
+
+[node name="LadoDer" type="CollisionShape3D" parent="Escalera/Choque" unique_id=219379359]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.3, 5, -6.175)
+shape = SubResource("FormaMuroPozo")
+
+[node name="Fin" type="CollisionShape3D" parent="Escalera/Choque" unique_id=609017238]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7, 5, -8.8)
+shape = SubResource("FormaFondoPozo")
+
+[node name="PasamanosIzq" type="MeshInstance3D" parent="Escalera" unique_id=658020817]
+transform = Transform3D(1, 0, 0, 0, 0.81373, -0.58124, 0, 0.58124, 0.81373, 11.31, 2.9, -4.4)
+material_override = SubResource("StandardMaterial3D_43od4")
+mesh = SubResource("BoxPasamanos")
+
+[node name="PasamanosDer" type="MeshInstance3D" parent="Escalera" unique_id=1964508417]
+transform = Transform3D(1, 0, 0, 0, 0.81373, -0.58124, 0, 0.58124, 0.81373, 14.09, 2.9, -4.4)
+material_override = SubResource("StandardMaterial3D_43od4")
+mesh = SubResource("BoxPasamanos")
+
+[node name="LamparaSodio" type="MeshInstance3D" parent="Escalera" unique_id=1464867633]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 11.3, 3.6, -5)
+material_override = SubResource("MatSodio")
+cast_shadow = 0
+mesh = SubResource("BoxLampara")
+
+[node name="LuzSodio" type="OmniLight3D" parent="Escalera" unique_id=769867110]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7, 3.4, -4.6)
+light_color = Color(1, 0.76, 0.52, 1)
+light_energy = 2.6
+omni_range = 6.0
+omni_attenuation = 1.4
+
+[node name="FranjaSalida" type="MeshInstance3D" parent="Escalera" unique_id=1343309009]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7, 6.2, -8.67)
+material_override = SubResource("MatRojo")
+cast_shadow = 0
+mesh = SubResource("BoxFranjaSalida")
+
+[node name="LuzSalida" type="OmniLight3D" parent="Escalera" unique_id=1703414537]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7, 5.8, -8.05)
+light_color = Color(1, 0.15, 0.1, 1)
+light_energy = 1.8
+omni_range = 3.5
+omni_attenuation = 1.4
+
+[node name="SubidaSegundoPiso" type="Area3D" parent="Escalera" unique_id=1909875944]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7, 4.9, -7.9)
+collision_layer = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Escalera/SubidaSegundoPiso" unique_id=2080232248]
+shape = SubResource("FormaSubida")

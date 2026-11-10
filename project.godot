@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="Juego del equipo (2.5D)"
-run/main_scene="res://main.tscn"
+run/main_scene="res://zona_b.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+Partida="*res://partida.gd"
 
 [input]
 

@@ -4,6 +4,7 @@ extends CharacterBody3D
 ## alguien la llama con oir(punto). Entonces va a donde sonó, mira 5 s
 ## (la alerta del documento) y vuelve. Si estaba tranquila, avisa a las
 ## criaturas que tenga a menos de radio_aviso (alerta en cadena).
+## Mientras investiga y mira muestra un "!" gris (el rojo es de la criatura que ve).
 
 enum Estado { EN_PUESTO, INVESTIGAR, MIRAR, VOLVER }
 
@@ -19,11 +20,13 @@ var puesto = Vector3.ZERO
 var ruido_en = Vector3.ZERO
 var reloj = 0.0
 @onready var anim = $Modelo/AnimationPlayer
+@onready var exclamacion = get_node_or_null("Exclamacion")
 
 
 func _ready():
 	add_to_group("oyentes")
 	puesto = global_position
+	mostrar_alerta()
 
 
 func _physics_process(delta):
@@ -65,6 +68,13 @@ func cambiar_a(nuevo):
 		global_position.snappedf(0.01))
 	if estado == Estado.MIRAR:
 		reloj = tiempo_mirar
+	mostrar_alerta()
+
+
+# "!" gris desde que oye hasta que empieza a volver a su puesto.
+func mostrar_alerta():
+	if exclamacion:
+		exclamacion.visible = estado == Estado.INVESTIGAR or estado == Estado.MIRAR
 
 
 # La llama quien hace el ruido (o una criatura vecina). Un ruido nuevo la
