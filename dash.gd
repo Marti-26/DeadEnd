@@ -2,32 +2,31 @@ extends Node
 
 enum Estado { LISTA, ACTIVA, RECARGA }
 
-@export var tecla = "dash"
-@export var duracion = 0.8
-@export var recarga = 3.0
-@export var rapidez = 7.5
-@export var animacion = "sprint"
-@export var estres_por_dash = 15.0
-@export var estres_tras_jadeo = 70.0
-@export var bajada_tras_jadeo = 2.0
+@export var tecla: String = "dash"
+@export var duracion: float = 0.8
+@export var recarga: float = 3.0
+@export var rapidez: float = 7.5
+@export var animacion: String = "sprint"
+@export var estres_por_dash: float = 15.0
 
-@onready var pj = get_parent()
+@onready var pj: CharacterBody3D = get_parent() as CharacterBody3D
 
-var estado = Estado.LISTA
-var tiempo = 0.0
-var estres:
+var estado: Estado = Estado.LISTA
+var tiempo: float = 0.0
+var estres: float:
 	get:
+		if pj != null and "estres" in pj:
+			return float(pj.get("estres"))
 		return Partida.estres
 	set(valor):
-		Partida.estres = valor
-var recuperando:
-	get:
-		return Partida.recuperando
-	set(valor):
-		Partida.recuperando = valor
+		var limitado: float = clampf(valor, 0.0, 100.0)
+		if pj != null and "estres" in pj:
+			pj.set("estres", limitado)
+		else:
+			Partida.estres = limitado
 
 
-func _physics_process(delta):
+func _physics_process(delta: float) -> void:
 	tiempo -= delta
 	match estado:
 		Estado.LISTA:
@@ -39,18 +38,13 @@ func _physics_process(delta):
 		Estado.RECARGA:
 			if tiempo <= 0.001:
 				estado = Estado.LISTA
-	if recuperando and estado != Estado.ACTIVA:
-		estres = maxf(0.0, estres - bajada_tras_jadeo * delta)
-		if estres <= 0.0:
-			recuperando = false
-			print("estrés de vuelta en 0")
 
 
-func puede():
-	return pj.is_on_floor() and not pj.is_in_group("escondidos")
+func puede() -> bool:
+	return pj != null and pj.is_on_floor() and not pj.is_in_group("escondidos")
 
 
-func empezar():
+func empezar() -> void:
 	estado = Estado.ACTIVA
 	tiempo = duracion
 	pj.empuje = -pj.basis.z * rapidez
@@ -60,7 +54,7 @@ func empezar():
 	subir_estres()
 
 
-func terminar():
+func terminar() -> void:
 	estado = Estado.RECARGA
 	tiempo = recarga
 	pj.empuje = Vector3.ZERO
@@ -69,11 +63,9 @@ func terminar():
 	print("termina: ", tecla)
 
 
-func subir_estres():
-	estres = minf(100.0, estres + estres_por_dash)
+func subir_estres() -> void:
+	if pj != null and pj.has_method("sumar_estres"):
+		pj.call("sumar_estres", estres_por_dash)
+	else:
+		estres = minf(100.0, estres + estres_por_dash)
 	print("estrés: ", snappedf(estres, 0.1))
-	if estres >= 100.0:
-		print("jadeo: alerta en 10 u")
-		estres = estres_tras_jadeo
-		recuperando = true
-		print("estrés después del jadeo: ", snappedf(estres, 0.1))

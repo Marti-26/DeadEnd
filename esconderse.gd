@@ -1,31 +1,34 @@
 extends Node
 
-@export var tecla = "esconderse"
-@export var grupo = "escondites"
-@export var alcance = 1.5
-@export var baja_estres = 1.0
-@export var hundir_modelo = 0.45
-@export var animacion = "crouch"
+@export var tecla: String = "esconderse"
+@export var grupo: String = "escondites"
+@export var alcance: float = 1.5
+@export var baja_estres: float = 1.0
+@export var hundir_modelo: float = 0.45
+@export var animacion: String = "crouch"
 
-@onready var pj = get_parent()
-@onready var modelo = pj.get_node_or_null("Sprite") if pj.has_node("Sprite") else pj.get_node_or_null("Modelo")
-@onready var forma = pj.get_node_or_null("CollisionShape3D")
+@onready var pj: CharacterBody3D = get_parent() as CharacterBody3D
+@onready var modelo: Node3D = (pj.get_node_or_null("Sprite") if pj.has_node("Sprite") else pj.get_node_or_null("Modelo")) as Node3D
+@onready var forma: CollisionShape3D = pj.get_node_or_null("CollisionShape3D") as CollisionShape3D
 
-var escondido = false
-var banca = null
-var _modelo_y = 0.0
+var escondido: bool = false
+var banca: Node3D = null
+var _modelo_y: float = 0.0
 
 
-func _physics_process(delta):
+func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed(tecla):
 		if escondido:
 			salir()
 		else:
-			var b = mas_cercana()
+			var b: Node3D = mas_cercana() as Node3D
 			if b != null:
 				entrar(b)
 	if escondido:
-		Partida.estres = maxf(0.0, Partida.estres - baja_estres * delta)
+		if pj != null and pj.has_method("sumar_estres"):
+			pj.call("sumar_estres", -baja_estres * delta)
+		else:
+			Partida.estres = maxf(0.0, Partida.estres - baja_estres * delta)
 
 
 func entrar(b):
