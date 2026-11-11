@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dga2dwsua3d2x"
-path="res://.godot/imported/gatita_caminar.png-3761de3733f4fc738e4fc9de5129385a.ctex"
+uid="uid://cljtncuc3u47x"
+path="res://.godot/imported/gatita_caminar_derecha_3.png-b6db1388abcbce965079e617d443a11b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/gatita_caminar.png"
-dest_files=["res://.godot/imported/gatita_caminar.png-3761de3733f4fc738e4fc9de5129385a.ctex"]
+source_file="res://assets/gatita/gatita_caminar_derecha_3.png"
+dest_files=["res://.godot/imported/gatita_caminar_derecha_3.png-b6db1388abcbce965079e617d443a11b.ctex"]
 
 [params]
 

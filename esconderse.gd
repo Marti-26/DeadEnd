@@ -8,7 +8,7 @@ extends Node
 @export var animacion = "crouch"
 
 @onready var pj = get_parent()
-@onready var modelo = pj.get_node_or_null("Modelo")
+@onready var modelo = pj.get_node_or_null("Sprite") if pj.has_node("Sprite") else pj.get_node_or_null("Modelo")
 @onready var forma = pj.get_node_or_null("CollisionShape3D")
 
 var escondido = false
@@ -43,7 +43,10 @@ func entrar(b):
 	if modelo:
 		_modelo_y = modelo.position.y
 		modelo.position.y = _modelo_y - hundir_modelo
-	pj.anim.play(animacion)
+	if pj.sprite:
+		pj.reproducir("sigilo", 0.0)
+	else:
+		pj.anim.play(animacion)
 	print("escondida bajo ", b.name, " · estrés ", snappedf(Partida.estres, 0.1))
 
 
