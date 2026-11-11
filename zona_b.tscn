@@ -18,6 +18,7 @@
 [ext_resource type="Script" uid="uid://bvblnav03id4i" path="res://camara_fija.gd" id="17_camara"]
 [ext_resource type="Script" uid="uid://cmaoevvcsdw4y" path="res://puerta_escena.gd" id="18_puerta"]
 [ext_resource type="Script" uid="uid://chlx4hyqucufu" path="res://llegada.gd" id="19_llegada"]
+[ext_resource type="PackedScene" path="res://zona_segura.tscn" id="20_zona_segura"]
 
 [sub_resource type="Environment" id="Environment_dpv7s"]
 background_mode = 1
@@ -1871,3 +1872,6 @@ shape = SubResource("MuroEnemigosAnden")
 [node name="Escalera" type="CollisionShape3D" parent="MurosEnemigos" unique_id=1497063649]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.7, 1.5, -2.525)
 shape = SubResource("MuroEnemigosEscalera")
+
+[node name="ZonaSegura" parent="." instance=ExtResource("20_zona_segura")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.7, 4, -11.75)

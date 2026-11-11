@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://cxjnco3eeyjf7" path="res://zona_segura.gd" id="1_zona"]
+
+[node name="ZonaSegura" type="Node3D"]
+script = ExtResource("1_zona")
