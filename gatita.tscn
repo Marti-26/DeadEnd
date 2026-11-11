@@ -28,6 +28,26 @@
 [ext_resource type="Texture2D" path="res://assets/gatita/gatita_sigilo_izquierda_1.png" id="26_sigizq1"]
 [ext_resource type="Texture2D" path="res://assets/gatita/gatita_sigilo_izquierda_2.png" id="27_sigizq2"]
 [ext_resource type="Texture2D" path="res://assets/gatita/gatita_sigilo_izquierda_3.png" id="28_sigizq3"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_frente_1.png" id="29_dasfre1"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_frente_2.png" id="30_dasfre2"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_frente_3.png" id="31_dasfre3"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_frente_4.png" id="32_dasfre4"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_frente_5.png" id="33_dasfre5"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_espalda_1.png" id="34_dasesp1"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_espalda_2.png" id="35_dasesp2"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_espalda_3.png" id="36_dasesp3"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_espalda_4.png" id="37_dasesp4"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_espalda_5.png" id="38_dasesp5"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_derecha_1.png" id="39_dasder1"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_derecha_2.png" id="40_dasder2"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_derecha_3.png" id="41_dasder3"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_derecha_4.png" id="42_dasder4"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_derecha_5.png" id="43_dasder5"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_izquierda_1.png" id="44_dasizq1"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_izquierda_2.png" id="45_dasizq2"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_izquierda_3.png" id="46_dasizq3"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_izquierda_4.png" id="47_dasizq4"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_izquierda_5.png" id="48_dasizq5"]
 
 [sub_resource type="SpriteFrames" id="AnimacionesGatita"]
 animations = [{
@@ -174,6 +194,86 @@ animations = [{
 "loop": true,
 "name": &"sigilo_izquierda",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("29_dasfre1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_dasfre2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_dasfre3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_dasfre4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_dasfre5")
+}],
+"loop": false,
+"name": &"dash_frente",
+"speed": 6.5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("34_dasesp1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_dasesp2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_dasesp3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_dasesp4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("38_dasesp5")
+}],
+"loop": false,
+"name": &"dash_espalda",
+"speed": 6.5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("39_dasder1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("40_dasder2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("41_dasder3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("42_dasder4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("43_dasder5")
+}],
+"loop": false,
+"name": &"dash_derecha",
+"speed": 6.5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("44_dasizq1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("45_dasizq2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("46_dasizq3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("47_dasizq4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("48_dasizq5")
+}],
+"loop": false,
+"name": &"dash_izquierda",
+"speed": 6.5
 }]
 
 [node name="Gatita" type="AnimatedSprite3D"]

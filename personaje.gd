@@ -384,7 +384,7 @@ func animar_2d():
 		Estado.CAMINAR:
 			reproducir("caminar")
 		Estado.DASH:
-			reproducir("caminar", 2.0)
+			reproducir("dash")
 		Estado.SIGILO:
 			reproducir("sigilo", 1.0 if moviendo else 0.0)
 		Estado.AIRE:
@@ -399,7 +399,8 @@ func reproducir(accion_2d, velocidad = 1.0):
 	var nombre = accion_2d + "_" + direccion
 	if not sprite.sprite_frames.has_animation(nombre):
 		nombre = "idle_" + direccion
-	if sprite.animation != nombre or not sprite.is_playing():
+	var repetir = sprite.sprite_frames.get_animation_loop(nombre)
+	if sprite.animation != nombre or (repetir and not sprite.is_playing()):
 		sprite.play(nombre)
 	sprite.speed_scale = velocidad
 
