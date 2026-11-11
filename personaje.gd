@@ -28,13 +28,82 @@ var avance = Vector3.ZERO
 
 # 
 const ESCENA_HUD: PackedScene = preload("res://hud.tscn")
+const TASA_BATERIA_REPOSO: float = 1.0 / 6.0
+const TASA_BATERIA_LINTERNA: float = 1.0 / 4.0
+
+@export var linterna: Light3D
+
+var linterna_encendida: bool = false
+var _bateria: float = 100.0
+var bateria: float = 100.0:
+	get:
+		return Partida.bateria if Partida.bateria >= 0.0 else _bateria
+	set(valor):
+		_bateria = clampf(valor, 0.0, 100.0)
+		Partida.bateria = _bateria
 
 var estado = Estado.QUIETO
 var ruido = 0.0
 
 
+func _enter_tree() -> void:
+	if Partida.bateria < 0.0:
+		Partida.bateria = _bateria
+
+
 func _ready() -> void:
+	_preparar_linterna()
 	_asegurar_hud.call_deferred()
+
+
+func _process(delta: float) -> void:
+	_consumir_bateria(delta)
+	_actualizar_linterna()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		var tecla: InputEventKey = event as InputEventKey
+		if tecla.pressed and not tecla.echo and tecla.physical_keycode == KEY_F:
+			alternar_linterna()
+
+
+func alternar_linterna() -> void:
+	if bateria <= 0.0:
+		linterna_encendida = false
+	else:
+		linterna_encendida = not linterna_encendida
+	_actualizar_linterna()
+
+
+func _preparar_linterna() -> void:
+	if linterna == null:
+		linterna = get_node_or_null("Linterna") as Light3D
+	if linterna == null:
+		var foco: SpotLight3D = SpotLight3D.new()
+		foco.name = "Linterna"
+		foco.position = Vector3(0.0, 1.1, -0.2)
+		foco.spot_range = 8.0
+		foco.light_energy = 2.5
+		add_child(foco)
+		linterna = foco
+	_actualizar_linterna()
+
+
+func _consumir_bateria(delta: float) -> void:
+	if bateria <= 0.0:
+		linterna_encendida = false
+		return
+	var tasa: float = TASA_BATERIA_LINTERNA if linterna_encendida else TASA_BATERIA_REPOSO
+	bateria = maxf(0.0, bateria - tasa * delta)
+	if bateria <= 0.0:
+		bateria = 0.0
+		linterna_encendida = false
+
+
+func _actualizar_linterna() -> void:
+	if linterna != null:
+		linterna.visible = linterna_encendida and bateria > 0.0
 
 
 func _asegurar_hud() -> void:
