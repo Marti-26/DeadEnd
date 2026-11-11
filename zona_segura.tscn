@@ -2,5 +2,19 @@
 
 [ext_resource type="Script" uid="uid://cxjnco3eeyjf7" path="res://zona_segura.gd" id="1_zona"]
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_zona_segura"]
+size = Vector3(30, 5, 9.6)
+
 [node name="ZonaSegura" type="Node3D"]
 script = ExtResource("1_zona")
+
+[node name="AreaZonaSegura" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 1
+
+[node name="Forma" type="CollisionShape3D" parent="AreaZonaSegura"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, 0.8)
+shape = SubResource("BoxShape3D_zona_segura")
+
+[connection signal="body_entered" from="AreaZonaSegura" to="." method="_on_area_zona_segura_body_entered"]
+[connection signal="body_exited" from="AreaZonaSegura" to="." method="_on_area_zona_segura_body_exited"]

@@ -1873,4 +1873,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.7, 1.5, -2.525)
 shape = SubResource("MuroEnemigosEscalera")
 
 [node name="ZonaSegura" parent="." instance=ExtResource("20_zona_segura")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.7, 4, -11.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.7, 4, -12.3)
+bloquear_frente_hueco = false

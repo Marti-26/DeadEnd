@@ -1,6 +1,12 @@
 @tool
 extends Node3D
 
+signal jugador_entro(cuerpo: Node3D)
+signal jugador_salio(cuerpo: Node3D)
+
+@export var grupo: String = "fuera_de_alcance"
+@export var bloquear_frente_hueco: bool = true
+
 const ANCHO: float = 30.0
 const Z_FONDO: float = -4.0
 const Z_FRENTE: float = 5.0
@@ -55,6 +61,13 @@ func _ready() -> void:
 	_mural(sala)
 	_viga_luz(sala)
 	_detalles(sala)
+	if not Engine.is_editor_hint():
+		var area: Area3D = get_node_or_null("AreaZonaSegura") as Area3D
+		if area != null:
+			if not area.body_entered.is_connected(_on_area_zona_segura_body_entered):
+				area.body_entered.connect(_on_area_zona_segura_body_entered)
+			if not area.body_exited.is_connected(_on_area_zona_segura_body_exited):
+				area.body_exited.connect(_on_area_zona_segura_body_exited)
 
 
 func _piso(p: Node3D) -> void:
@@ -135,7 +148,8 @@ func _baranda(p: Node3D) -> void:
 		_caja(p, Vector3(lx, 0.9, 0.04), Vector3(cx, 0.5, Z_FRENTE - 0.1), vidrio)
 		_caja(p, Vector3(lx, 0.06, 0.08), Vector3(cx, 0.98, Z_FRENTE - 0.1), metal)
 		_forma(Vector3(lx, 2.0, 0.2), Vector3(cx, 1.0, Z_FRENTE - 0.1))
-	_forma(Vector3(HUECO_X.y - HUECO_X.x, 2.0, 0.2), Vector3((HUECO_X.x + HUECO_X.y) / 2.0, 1.0, Z_FRENTE + 0.1))
+	if bloquear_frente_hueco:
+		_forma(Vector3(HUECO_X.y - HUECO_X.x, 2.0, 0.2), Vector3((HUECO_X.x + HUECO_X.y) / 2.0, 1.0, Z_FRENTE + 0.1))
 	var lados_hueco: Array[float] = [HUECO_X.x - 0.05, HUECO_X.y + 0.05]
 	for x: float in lados_hueco:
 		var zc: float = (HUECO_Z.x + HUECO_Z.y) / 2.0
@@ -392,3 +406,29 @@ func _vidrio(color: Color) -> StandardMaterial3D:
 	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	m.cull_mode = BaseMaterial3D.CULL_DISABLED
 	return m
+
+
+func _on_area_zona_segura_body_entered(cuerpo: Node3D) -> void:
+	if cuerpo.is_in_group("jugador"):
+		if grupo != "":
+			cuerpo.add_to_group(grupo)
+		jugador_entro.emit(cuerpo)
+
+
+func _on_area_zona_segura_body_exited(cuerpo: Node3D) -> void:
+	if cuerpo.is_in_group("jugador"):
+		if grupo != "" and not _sigue_en_otra_zona(cuerpo):
+			cuerpo.remove_from_group(grupo)
+		jugador_salio.emit(cuerpo)
+
+
+func _sigue_en_otra_zona(cuerpo: Node3D) -> bool:
+	var area_propia: Area3D = get_node_or_null("AreaZonaSegura") as Area3D
+	var escena: Node = get_tree().current_scene
+	if escena == null:
+		return false
+	for nodo: Node in escena.find_children("*", "Area3D", true, false):
+		var area: Area3D = nodo as Area3D
+		if area != null and area != area_propia and "grupo" in area and str(area.get("grupo")) == grupo and area.overlaps_body(cuerpo):
+			return true
+	return false
