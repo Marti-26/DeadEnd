@@ -1,0 +1,55 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://hud.gd" id="1_hud"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFondo"]
+bg_color = Color(0.08, 0.1, 0.12, 0.8)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxBateria"]
+bg_color = Color(0.45, 0.85, 0.69, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxEstres"]
+bg_color = Color(0.85, 0.27, 0.27, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="Contenedor" type="VBoxContainer" parent="."]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 260.0
+offset_bottom = 128.0
+theme_override_constants/separation = 6
+
+[node name="EtiquetaBateria" type="Label" parent="Contenedor"]
+layout_mode = 2
+text = "Batería"
+
+[node name="BarraBateria" type="ProgressBar" parent="Contenedor"]
+custom_minimum_size = Vector2(240, 22)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFondo")
+theme_override_styles/fill = SubResource("StyleBoxBateria")
+value = 100.0
+
+[node name="EtiquetaEstres" type="Label" parent="Contenedor"]
+layout_mode = 2
+text = "Estrés"
+
+[node name="BarraEstres" type="ProgressBar" parent="Contenedor"]
+custom_minimum_size = Vector2(240, 22)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFondo")
+theme_override_styles/fill = SubResource("StyleBoxEstres")

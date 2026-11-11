@@ -16,15 +16,24 @@ extends Node
 @export var radio_pasos = 3.0
 @export var radio_jadeo = 10.0           # u, el jadeo alerta a todo en 10 u
 
-@onready var pj = get_parent()
-@onready var dash = pj.get_node_or_null("Dash")
+@onready var pj: Node3D = get_parent() as Node3D
 
-var _ruido_antes = 0.0
-var _reloj_paso = 0.0
-var _jadeo_antes = false
+var _ruido_antes: float = 0.0
+var _reloj_paso: float = 0.0
 
 
-func _physics_process(delta):
+func _ready() -> void:
+	if pj != null and pj.has_signal("jadeo"):
+		var cb: Callable = Callable(self, "_on_jadeo")
+		if not pj.is_connected("jadeo", cb):
+			pj.connect("jadeo", cb)
+
+
+func _on_jadeo(_posicion: Vector3) -> void:
+	sonar(radio_jadeo, true, false)
+
+
+func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed(tecla):
 		sonar()
 	if ruido_del_personaje:
@@ -67,8 +76,3 @@ func _ruido_del_juego(delta):
 		sonar(r, false)
 		_reloj_paso = cada_paso
 	_ruido_antes = r
-	# El jadeo: lo dispara dash.gd al llegar a 100 de estrés.
-	if dash != null and "recuperando" in dash:
-		if dash.recuperando and not _jadeo_antes:
-			sonar(radio_jadeo, true, false)
-		_jadeo_antes = dash.recuperando
