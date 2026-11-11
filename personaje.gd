@@ -27,8 +27,22 @@ var accion = ""             # animación de la acción; "" = ninguna
 var avance = Vector3.ZERO
 
 # 
+const ESCENA_HUD: PackedScene = preload("res://hud.tscn")
+
 var estado = Estado.QUIETO
 var ruido = 0.0
+
+
+func _ready() -> void:
+	_asegurar_hud.call_deferred()
+
+
+func _asegurar_hud() -> void:
+	if get_tree() == null or get_tree().get_first_node_in_group("hud") != null:
+		return
+	var hud: Node = ESCENA_HUD.instantiate()
+	var destino: Node = get_parent() if get_parent() != null else self
+	destino.add_child(hud)
 
 func _physics_process(delta):
 	#para la resta del tiempo del dash 

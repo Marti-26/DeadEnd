@@ -19,6 +19,7 @@
 [ext_resource type="Script" uid="uid://cmaoevvcsdw4y" path="res://puerta_escena.gd" id="18_puerta"]
 [ext_resource type="Script" uid="uid://chlx4hyqucufu" path="res://llegada.gd" id="19_llegada"]
 [ext_resource type="PackedScene" path="res://zona_segura.tscn" id="20_zona_segura"]
+[ext_resource type="PackedScene" path="res://hud.tscn" id="21_hud"]
 
 [sub_resource type="Environment" id="Environment_dpv7s"]
 background_mode = 1
@@ -1872,6 +1873,8 @@ shape = SubResource("MuroEnemigosAnden")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.7, 1.5, -2.525)
 shape = SubResource("MuroEnemigosEscalera")
 
-[node name="ZonaSegura" parent="." instance=ExtResource("20_zona_segura")]
+[node name="ZonaSegura" parent="." unique_id=1075724460 instance=ExtResource("20_zona_segura")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.7, 4, -12.3)
 bloquear_frente_hueco = false
+
+[node name="HUD" parent="." instance=ExtResource("21_hud")]
