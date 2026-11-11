@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b83irk30btqdv"
-path="res://.godot/imported/gatita_sigilo.png-e860bdcd47b0086481b5e25712cd13b3.ctex"
+uid="uid://pwyjew62obq1"
+path="res://.godot/imported/gatita_idle_frente_2.png-971e1ac24101322eb1a1264c8cea28b2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/gatita_sigilo.png"
-dest_files=["res://.godot/imported/gatita_sigilo.png-e860bdcd47b0086481b5e25712cd13b3.ctex"]
+source_file="res://assets/gatita/gatita_idle_frente_2.png"
+dest_files=["res://.godot/imported/gatita_idle_frente_2.png-971e1ac24101322eb1a1264c8cea28b2.ctex"]
 
 [params]
 

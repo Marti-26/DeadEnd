@@ -15,7 +15,9 @@ var dash_tiempo = 0.0
 
 @export var gravedad = 9.8
 @export var fuerza_salto = 6.0
-@onready var anim = $Modelo/AnimationPlayer
+@onready var anim = get_node_or_null("Modelo/AnimationPlayer")
+@onready var sprite = get_node_or_null("Sprite")
+var direccion = "frente"
 
 
 # Enchufes: otros scripts (las acciones del juego) cambian estas tres variables.
@@ -92,7 +94,7 @@ func elegir_estado():
 		return Estado.SIGILO
 		
 	# 4. Rapidez normal o quieto
-	var rapidez = absf(velocity.x)
+	var rapidez = Vector2(velocity.x, velocity.z).length()
 	if rapidez < 0.1:
 		return Estado.QUIETO
 	if rapidez > speed_caminar + 0.1:
@@ -100,6 +102,9 @@ func elegir_estado():
 	return Estado.CAMINAR
 	
 func animar():
+	if sprite:
+		animar_2d()
+		return
 	if accion != "":
 		anim.play(accion)
 		return
@@ -117,6 +122,37 @@ func animar():
 		Estado.DASH:
 			anim.play("sprint")
 			anim.speed_scale = 1.0
+
+func animar_2d():
+	var v = Vector2(velocity.x, velocity.z)
+	var moviendo = v.length() > 0.1
+	if moviendo:
+		if absf(v.x) >= absf(v.y):
+			direccion = "derecha" if v.x > 0.0 else "izquierda"
+		else:
+			direccion = "frente" if v.y > 0.0 else "espalda"
+	match estado:
+		Estado.CAMINAR:
+			reproducir("caminar")
+		Estado.DASH:
+			reproducir("caminar", 2.0)
+		Estado.SIGILO:
+			reproducir("sigilo", 1.0 if moviendo else 0.0)
+		Estado.AIRE:
+			reproducir("caminar", 0.0)
+		_:
+			reproducir("idle")
+
+
+func reproducir(accion_2d, velocidad = 1.0):
+	if sprite == null:
+		return
+	var nombre = accion_2d + "_" + direccion
+	if not sprite.sprite_frames.has_animation(nombre):
+		nombre = "idle_" + direccion
+	if sprite.animation != nombre or not sprite.is_playing():
+		sprite.play(nombre)
+	sprite.speed_scale = velocidad
 
 #
 @export_enum("Ninguna", "Avanzar 60 cuadros", "Avanzar 60 y soltar", "Avanzar y la acción desde el cuadro 30", "Mantener la acción 2 s", "Avanzar con la acción 60 cuadros", "Diagonal W+D 60 cuadros") var prueba = 0
@@ -177,7 +213,7 @@ func _resumen():
 	var t = "posición " + str(global_position.snappedf(0.01))
 	t += " · rapidez " + str(snappedf(absf(velocity.x), 0.01))
 	t += " · y " + str(snappedf(global_position.y, 0.01))
-	t += " · animación " + str(anim.current_animation)
+	t += " · animación " + str(sprite.animation if sprite else anim.current_animation)
 	for nodo in _con_estado():
 		t += " · " + str(nodo.name) + ".estado " + _nombre(nodo)
 	return t

@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://djty86m4dgy4m" path="res://luz_parpadeante.gd" id="3_r8jko"]
 [ext_resource type="Script" uid="uid://cut6u3dpgatay" path="res://sistema_eventos.gd" id="5_eyatn"]
 [ext_resource type="Script" uid="uid://bj0372xnq02wk" path="res://personaje.gd" id="6_r0ps7"]
-[ext_resource type="PackedScene" uid="uid://biu6tppn8ml1q" path="res://personaje/character-male-a.glb" id="7_61dqb"]
+[ext_resource type="PackedScene" path="res://gatita.tscn" id="7_61dqb"]
 [ext_resource type="PackedScene" uid="uid://twjt23gel8cv" path="res://criatura.tscn" id="8_n70iv"]
 [ext_resource type="Script" uid="uid://bh2bylh8kjoo8" path="res://dash.gd" id="9_dash"]
 [ext_resource type="Script" uid="uid://cqv5bh23wl3n3" path="res://interactuar.gd" id="10_inter"]
@@ -15,9 +15,9 @@
 [ext_resource type="PackedScene" path="res://criatura_oido.tscn" id="14_oido"]
 [ext_resource type="Script" uid="uid://c6bfglccmjtlq" path="res://metro.gd" id="15_metro"]
 [ext_resource type="Script" uid="uid://fqgq0ua6b3dp" path="res://zona_fuera_alcance.gd" id="16_fuera"]
-[ext_resource type="Script" path="res://camara_fija.gd" id="17_camara"]
-[ext_resource type="Script" path="res://puerta_escena.gd" id="18_puerta"]
-[ext_resource type="Script" path="res://llegada.gd" id="19_llegada"]
+[ext_resource type="Script" uid="uid://bvblnav03id4i" path="res://camara_fija.gd" id="17_camara"]
+[ext_resource type="Script" uid="uid://cmaoevvcsdw4y" path="res://puerta_escena.gd" id="18_puerta"]
+[ext_resource type="Script" uid="uid://chlx4hyqucufu" path="res://llegada.gd" id="19_llegada"]
 
 [sub_resource type="Environment" id="Environment_dpv7s"]
 background_mode = 1
@@ -1594,8 +1594,8 @@ camara = NodePath("../Camara")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
 shape = SubResource("Capsula")
 
-[node name="Modelo" parent="Personaje" unique_id=677901553 instance=ExtResource("7_61dqb")]
-transform = Transform3D(-2.5879235, 0, -0.2502995, 0, 2.5999997, 0, 0.2502995, 0, -2.5879235, 0, 0, 0)
+[node name="Sprite" parent="Personaje" unique_id=1470565326 instance=ExtResource("7_61dqb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.98, 0)
 
 [node name="Dash" type="Node" parent="Personaje" unique_id=1769768472]
 script = ExtResource("9_dash")
@@ -1851,6 +1851,10 @@ script = ExtResource("16_fuera")
 [node name="Forma" type="CollisionShape3D" parent="Escalera/ZonaEscalera" unique_id=440120416]
 shape = SubResource("FormaZonaEscalera")
 
+[node name="DesdeSegundoPiso" type="Marker3D" parent="Escalera" unique_id=1178352060]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7, 3.8, -6.4)
+script = ExtResource("19_llegada")
+
 [node name="Metro" type="Node3D" parent="." unique_id=1426459555 node_paths=PackedStringArray("camara_estacion")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7.7)
 script = ExtResource("15_metro")
@@ -1867,7 +1871,3 @@ shape = SubResource("MuroEnemigosAnden")
 [node name="Escalera" type="CollisionShape3D" parent="MurosEnemigos" unique_id=1497063649]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.7, 1.5, -2.525)
 shape = SubResource("MuroEnemigosEscalera")
-
-[node name="DesdeSegundoPiso" type="Marker3D" parent="Escalera"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7, 3.8, -6.4)
-script = ExtResource("19_llegada")
