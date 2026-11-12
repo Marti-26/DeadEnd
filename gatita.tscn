@@ -59,6 +59,8 @@
 [ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_ojos_2.png" id="57_escojo2"]
 [ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_ojos_3.png" id="58_escojo3"]
 [ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_ojos_4.png" id="59_escojo4"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_salir_escondite_frente_1.png" id="60_salfre1"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_salir_escondite_frente_2.png" id="61_salfre2"]
 
 [sub_resource type="SpriteFrames" id="AnimacionesGatita"]
 animations = [{
@@ -337,6 +339,17 @@ animations = [{
 }],
 "loop": true,
 "name": &"esconderse_ojos",
+"speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("60_salfre1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("61_salfre2")
+}],
+"loop": false,
+"name": &"salir_escondite_frente",
 "speed": 4.0
 }]
 
