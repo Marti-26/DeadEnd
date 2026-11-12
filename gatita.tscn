@@ -48,6 +48,17 @@
 [ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_izquierda_3.png" id="46_dasizq3"]
 [ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_izquierda_4.png" id="47_dasizq4"]
 [ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_izquierda_5.png" id="48_dasizq5"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_espalda_1.png" id="49_escesp1"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_espalda_2.png" id="50_escesp2"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_espalda_3.png" id="51_escesp3"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_derecha_1.png" id="52_escder1"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_derecha_2.png" id="53_escder2"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_izquierda_1.png" id="54_escizq1"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_izquierda_2.png" id="55_escizq2"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_ojos_1.png" id="56_escojo1"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_ojos_2.png" id="57_escojo2"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_ojos_3.png" id="58_escojo3"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_ojos_4.png" id="59_escojo4"]
 
 [sub_resource type="SpriteFrames" id="AnimacionesGatita"]
 animations = [{
@@ -274,6 +285,59 @@ animations = [{
 "loop": false,
 "name": &"dash_izquierda",
 "speed": 6.5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("49_escesp1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("50_escesp2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("51_escesp3")
+}],
+"loop": false,
+"name": &"esconderse_espalda",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("52_escder1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("53_escder2")
+}],
+"loop": false,
+"name": &"esconderse_derecha",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("54_escizq1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("55_escizq2")
+}],
+"loop": false,
+"name": &"esconderse_izquierda",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("56_escojo1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("57_escojo2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("58_escojo3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("59_escojo4")
+}],
+"loop": true,
+"name": &"esconderse_ojos",
+"speed": 4.0
 }]
 
 [node name="Gatita" type="AnimatedSprite3D"]
