@@ -21,10 +21,11 @@ var _sprite_pos: Vector3 = Vector3.ZERO
 var _sprite_escala: Vector3 = Vector3.ONE
 var _sprite_sombreado: bool = true
 var _en_ojos: bool = false
+var _saliendo: bool = false
 
 
 func _physics_process(delta: float) -> void:
-	if Input.is_action_just_pressed(tecla):
+	if Input.is_action_just_pressed(tecla) and not _saliendo:
 		if escondido:
 			salir()
 		else:
@@ -96,17 +97,23 @@ func salir():
 	escondido = false
 	pj.remove_from_group("escondidos")
 	pj.global_position = banca.global_position + Vector3(0, pj.global_position.y - banca.global_position.y, 0.75)
+	print("sale de ", banca.name, " · estrés ", snappedf(Partida.estres, 0.1))
+	banca = null
 	if pj.sprite:
 		_quitar_ojos()
 		pj.direccion = "frente"
+		if pj.sprite.sprite_frames.has_animation("salir_escondite_frente"):
+			_saliendo = true
+			pj.sprite.speed_scale = 1.0
+			pj.sprite.play("salir_escondite_frente")
+			await pj.sprite.animation_finished
+			_saliendo = false
 		pj.reproducir("idle")
 	elif modelo:
 		modelo.position.y = _modelo_y
 	if forma:
 		forma.disabled = false
 	pj.set_physics_process(true)
-	print("sale de ", banca.name, " · estrés ", snappedf(Partida.estres, 0.1))
-	banca = null
 
 
 func mas_cercana():
