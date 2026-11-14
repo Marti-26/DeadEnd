@@ -1,3 +1,4 @@
+class_name Personaje
 extends CharacterBody3D
 
 #Tabla Enum
@@ -77,6 +78,7 @@ var ruido = 0.0
 var tiene_celular: bool = false
 
 func _enter_tree() -> void:
+	add_to_group(Grupos.JUGADOR)
 	if Partida.bateria < 0.0:
 		Partida.bateria = _bateria
 	Partida.estres = clampf(Partida.estres, 0.0, ESTRES_MAX)
@@ -183,7 +185,7 @@ func _actualizar_linterna() -> void:
 
 
 func _asegurar_hud() -> void:
-	if get_tree() == null or get_tree().get_first_node_in_group("hud") != null:
+	if get_tree() == null or get_tree().get_first_node_in_group(Grupos.HUD) != null:
 		return
 	var hud: Node = ESCENA_HUD.instantiate()
 	var destino: Node = get_parent() if get_parent() != null else self
@@ -195,7 +197,7 @@ func sumar_estres(cantidad: float) -> void:
 
 
 func _actualizar_estres(delta: float) -> void:
-	if is_in_group("escondidos"):
+	if is_in_group(Grupos.ESCONDIDOS):
 		if estres < ESTRES_MAX:
 			_jadeo_disparado = false
 		return
@@ -250,7 +252,7 @@ func _obtener_criaturas() -> Array[Node3D]:
 	if arbol == null:
 		return []
 	var resultado: Array[Node3D] = []
-	for grupo: String in ["criaturas", "oyentes", "disparadores"]:
+	for grupo: StringName in [&"criaturas", Grupos.OYENTES, Grupos.DISPARADORES]:
 		for nodo: Node in arbol.get_nodes_in_group(grupo):
 			if not (nodo is Node3D) or nodo == self:
 				continue

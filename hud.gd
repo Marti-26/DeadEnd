@@ -31,8 +31,8 @@ func _process(_delta: float) -> void:
 
 
 func _buscar_referencias() -> void:
-	_nodo_bateria = get_tree().get_first_node_in_group("bateria")
-	_nodo_jugador = get_tree().get_first_node_in_group("jugador")
+	_nodo_jugador = get_tree().get_first_node_in_group(Grupos.JUGADOR)
+	_nodo_bateria = get_tree().get_first_node_in_group(Grupos.BATERIA)
 	if is_instance_valid(_nodo_jugador):
 		_nodo_dash = _nodo_jugador.get_node_or_null("Dash")
 	else:
@@ -45,10 +45,10 @@ func _actualizar_barras() -> void:
 
 
 func _leer_bateria() -> float:
-	if is_instance_valid(_nodo_bateria) and "bateria" in _nodo_bateria:
-		return clampf(float(_nodo_bateria.get("bateria")), 0.0, 100.0)
 	if is_instance_valid(_nodo_jugador) and "bateria" in _nodo_jugador:
 		return clampf(float(_nodo_jugador.get("bateria")), 0.0, 100.0)
+	if is_instance_valid(_nodo_bateria) and "bateria" in _nodo_bateria:
+		return clampf(float(_nodo_bateria.get("bateria")), 0.0, 100.0)
 	return 100.0
 
 
