@@ -5,6 +5,10 @@ signal evento(posicion: Vector3)
 enum Estado { EN_PUESTO, ACERCARSE, AVISO, GOLPE, RECARGA, BUSCAR, VOLVER }
 
 @export var rapidez = 2.0
+@export var rapidez_persecucion = 3.4
+@export var angulo_vision = 60.0
+@export var tiempo_detectar = 2.0
+
 @export var rango_ataque = 1.5
 @export var tiempo_aviso = 0.5
 @export var tiempo_recarga = 1.0
@@ -12,13 +16,14 @@ enum Estado { EN_PUESTO, ACERCARSE, AVISO, GOLPE, RECARGA, BUSCAR, VOLVER }
 @export var radio_perder = 8.0
 @export var tiempo_buscar = 3.0
 
+var tiempo_visto = 0.0
 var estado = Estado.EN_PUESTO
 var reloj = 0.0
 var jugador = null
 var puesto = Vector3.ZERO
 
 @onready var anim = $Modelo/AnimationPlayer
-
+@onready var sonido_criatura: AudioStreamPlayer3D = $Modelo/SonidoCriatura
 
 func _enter_tree():
 	add_to_group("disparadores")
@@ -33,11 +38,14 @@ func _ready():
 func _physics_process(delta):
 	velocity += get_gravity() * delta
 	reloj = maxf(reloj - delta, 0.0)
-
+	if estado in [Estado.EN_PUESTO, Estado.BUSCAR, Estado.VOLVER]:
+		if la_ve(radio_ver):
+			tiempo_visto += delta
+		else:
+			tiempo_visto = 0.0
 	var nuevo = decidir()
 	if nuevo != estado:
 		cambiar_a(nuevo)
-
 	match estado:
 		Estado.EN_PUESTO:
 			frenar("idle")
@@ -54,6 +62,12 @@ func _physics_process(delta):
 			frenar("idle")
 		Estado.VOLVER:
 			ir_a(puesto)
+	if jugador != null:
+		if jugador.audifonos_activos:
+##if jugador.audifonos_activos and distancia_jugador > 3.0: esta para q no lo escuche con los audifonos pero solo despues de tre smetros
+			sonido_criatura.volume_linear = 0.0
+		else:
+			sonido_criatura.volume_linear = 1.0
 
 	move_and_slide()
 
@@ -61,7 +75,7 @@ func _physics_process(delta):
 func decidir():
 	match estado:
 		Estado.EN_PUESTO, Estado.BUSCAR, Estado.VOLVER:
-			if la_ve(radio_ver):
+			if tiempo_visto >= tiempo_detectar:
 				return Estado.ACERCARSE
 			if estado == Estado.BUSCAR and reloj <= 0.001:
 				return Estado.VOLVER
@@ -86,12 +100,16 @@ func decidir():
 func cambiar_a(nuevo):
 	var antes = estado
 	estado = nuevo
+	tiempo_visto = 0.0
+	if estado in [Estado.EN_PUESTO, Estado.BUSCAR, Estado.VOLVER]:
+		sonido_criatura.stop()
 	print(name, " -> ", Estado.keys()[estado], " cuadro ",
 		Engine.get_physics_frames(), " a ",
 		snappedf(distancia(), 0.01), " m")
-
 	if estado == Estado.ACERCARSE and antes in [Estado.EN_PUESTO, Estado.BUSCAR, Estado.VOLVER]:
-		evento.emit(global_position)
+			evento.emit(global_position)
+			sonido_criatura.play()
+			print("SONIDO REPRODUCIÉNDOSE: ", sonido_criatura.playing)
 	elif estado == Estado.AVISO:
 		reloj = tiempo_aviso
 	elif estado == Estado.RECARGA:
@@ -101,10 +119,33 @@ func cambiar_a(nuevo):
 
 
 func la_ve(radio):
-	if jugador == null or jugador.is_in_group("escondidos") \
+	if jugador == null:
+		return false
+
+	if jugador.is_in_group("escondidos") \
 			or jugador.is_in_group("fuera_de_alcance"):
 		return false
-	return distancia() <= radio
+
+	if distancia() > radio:
+		return false
+
+	var hacia_jugador = jugador.global_position - global_position
+	hacia_jugador.y = 0.0
+
+	if hacia_jugador.length_squared() < 0.0001:
+		return true
+
+	hacia_jugador = hacia_jugador.normalized()
+
+	var frente = -global_transform.basis.z
+	frente.y = 0.0
+	frente = frente.normalized()
+
+	var angulo = rad_to_deg(
+		acos(clampf(frente.dot(hacia_jugador), -1.0, 1.0))
+	)
+
+	return angulo <= angulo_vision / 2.0
 
 
 func golpear():
@@ -120,8 +161,11 @@ func ir_a(destino):
 		frenar("idle")
 		return
 	var dir = hacia.normalized()
-	velocity.x = dir.x * rapidez
-	velocity.z = dir.z * rapidez
+	var velocidad_actual = rapidez
+	if estado == Estado.ACERCARSE:
+		velocidad_actual = rapidez_persecucion
+	velocity.x = dir.x * velocidad_actual
+	velocity.z = dir.z * velocidad_actual
 	basis = Basis.looking_at(dir)
 	anim.play("walk")
 
