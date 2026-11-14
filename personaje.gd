@@ -73,13 +73,18 @@ var estres: float = 0.0:
 
 var estado = Estado.QUIETO
 var ruido = 0.0
-
+#variable para el celular
+var tiene_celular: bool = false
 
 func _enter_tree() -> void:
 	if Partida.bateria < 0.0:
 		Partida.bateria = _bateria
 	Partida.estres = clampf(Partida.estres, 0.0, ESTRES_MAX)
 	_estres = Partida.estres
+	
+	#persistencia del celular
+	if Partida != null and "celular_recogido" in Partida:
+		tiene_celular = Partida.celular_recogido
 
 
 func _ready() -> void:
@@ -127,6 +132,10 @@ func alternar_audifonos() -> void:
 		print("Audífonos desactivados")
 
 func alternar_linterna() -> void:
+	# Si NO tiene el celular, cortamos aquí y no hace nada al presionar F
+	if not tiene_celular:
+		return
+	
 	if bateria <= 0.0:
 		linterna_encendida = false
 	else:

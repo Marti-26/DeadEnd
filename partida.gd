@@ -10,6 +10,7 @@ var recuperando = false
 var llegada = ""
 var guardado = {}
 var estacion_usada = false
+var celular_recogido = false
 var encuentros_chico = 0
 var _perdiendo = false
 
@@ -27,6 +28,7 @@ func guardar(punto):
 		"punto": punto,
 		"bateria": bateria,
 		"estres": estres,
+		"celular_recogido": celular_recogido,
 	}
 	print("guardado · batería ", snappedf(bateria, 0.1), " % · estrés ", snappedf(estres, 0.1))
 
@@ -40,10 +42,12 @@ func perder():
 		print("perdió: vuelve al inicio")
 		bateria = -1.0
 		estres = 0.0
+		celular_recogido = false
 		cambiar_escena(ESCENA_INICIO)
 	else:
 		bateria = guardado.bateria
 		estres = guardado.estres
+		celular_recogido = guardado.get("celular_recogido", false)
 		if estres > LIMITE_ESTRES:
 			estres = ESTRES_AL_VOLVER
 		print("perdió: vuelve al último guardado")
