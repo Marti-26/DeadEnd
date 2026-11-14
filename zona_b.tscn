@@ -1617,6 +1617,9 @@ script = ExtResource("12_escon")
 [node name="Salud" type="Node" parent="Personaje" unique_id=1551528763]
 script = ExtResource("11_dnf35")
 
+[node name="EscuchaJugador" type="AudioListener3D" parent="Personaje" unique_id=728419293]
+current = true
+
 [node name="Camara" type="Camera3D" parent="." unique_id=567095934 node_paths=PackedStringArray("objetivo")]
 transform = Transform3D(1, 0, 0, 0, 0.76604444, 0.6427876, 0, -0.6427876, 0.76604444, -5.2, 14.141328, 16.052977)
 projection = 1

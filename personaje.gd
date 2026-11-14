@@ -30,6 +30,9 @@ var avance = Vector3.ZERO
 const ESCENA_HUD: PackedScene = preload("res://hud.tscn")
 const TASA_BATERIA_REPOSO: float = 1.0 / 6.0
 const TASA_BATERIA_LINTERNA: float = 1.0 / 4.0
+const TASA_BATERIA_AUDIFONOS: float = 1.0 / 5.0
+const REDUCCION_ESTRES_AUDIFONOS: float = 10.0
+const RADIO_AUDICION_AUDIFONOS: float = 3.0
 const ESTRES_MAX: float = 100.0
 const TASA_ESTRES_OSCURIDAD: float = 5.0
 const TASA_ESTRES_CRIATURA: float = 3.0
@@ -42,6 +45,7 @@ signal jadeo(posicion: Vector3)
 @export var linterna: Light3D
 
 var linterna_encendida: bool = false
+var audifonos_activos: bool = false
 var _bateria: float = 100.0
 var bateria: float = 100.0:
 	get:
@@ -92,15 +96,34 @@ func _process(delta: float) -> void:
 	_consumir_bateria(delta)
 	_actualizar_linterna()
 	_actualizar_estres(delta)
+	_reducir_estres_audifonos(delta)
 	_actualizar_vibracion_camara()
 
+func _reducir_estres_audifonos(delta: float) -> void:
+	if not audifonos_activos:
+		return
 
+	estres = maxf(0.0, estres - REDUCCION_ESTRES_AUDIFONOS * delta)
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		var tecla: InputEventKey = event as InputEventKey
-		if tecla.pressed and not tecla.echo and tecla.physical_keycode == KEY_F:
-			alternar_linterna()
+		if tecla.pressed and not tecla.echo:
+			if tecla.physical_keycode == KEY_H:
+				alternar_linterna()
+			elif tecla.physical_keycode == KEY_F:
+				alternar_audifonos()
+				
+				
+	if bateria <= 0.0:
+		audifonos_activos = false
+		return
 
+	audifonos_activos = not audifonos_activos
+
+	if audifonos_activos:
+		print("Audífonos activados")
+	else:
+		print("Audífonos desactivados")
 
 func alternar_linterna() -> void:
 	if bateria <= 0.0:
@@ -128,7 +151,12 @@ func _consumir_bateria(delta: float) -> void:
 	if bateria <= 0.0:
 		return
 
-	var tasa: float = TASA_BATERIA_LINTERNA if linterna_encendida else TASA_BATERIA_REPOSO
+	var tasa: float = TASA_BATERIA_REPOSO
+
+	if linterna_encendida:
+		tasa = TASA_BATERIA_LINTERNA
+	elif audifonos_activos:
+		tasa = TASA_BATERIA_AUDIFONOS
 	bateria = maxf(0.0, bateria - tasa * delta)
 
 	if bateria <= 0.0:

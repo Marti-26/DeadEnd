@@ -23,7 +23,7 @@ var jugador = null
 var puesto = Vector3.ZERO
 
 @onready var anim = $Modelo/AnimationPlayer
-
+@onready var sonido_criatura: AudioStreamPlayer3D = $Modelo/SonidoCriatura
 
 func _enter_tree():
 	add_to_group("disparadores")
@@ -66,6 +66,12 @@ func _physics_process(delta):
 		Estado.VOLVER:
 			ir_a(puesto)
 
+	if jugador != null:
+		if jugador.audifonos_activos:
+			sonido_criatura.volume_linear = 0.0
+		else:
+			sonido_criatura.volume_linear = 1.0
+
 	move_and_slide()
 
 
@@ -98,12 +104,15 @@ func cambiar_a(nuevo):
 	var antes = estado
 	estado = nuevo
 	tiempo_visto = 0.0
+	if estado in [Estado.EN_PUESTO, Estado.BUSCAR, Estado.VOLVER]:
+		sonido_criatura.stop()
 	print(name, " -> ", Estado.keys()[estado], " cuadro ",
 		Engine.get_physics_frames(), " a ",
 		snappedf(distancia(), 0.01), " m")
-
 	if estado == Estado.ACERCARSE and antes in [Estado.EN_PUESTO, Estado.BUSCAR, Estado.VOLVER]:
-		evento.emit(global_position)
+			evento.emit(global_position)
+			sonido_criatura.play()
+			print("SONIDO REPRODUCIÉNDOSE: ", sonido_criatura.playing)
 	elif estado == Estado.AVISO:
 		reloj = tiempo_aviso
 	elif estado == Estado.RECARGA:
