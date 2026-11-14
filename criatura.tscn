@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://biu6tppn8ml1q" path="res://personaje/character-male-a.glb" id="2_gqgnk"]
 [ext_resource type="PackedScene" uid="uid://dtcyho4e2mmyw" path="res://personaje/character-female-e.glb" id="3_gqgnk"]
 [ext_resource type="AudioStream" uid="uid://c1mobdmhybuy2" path="res://435150__vykroft__creature-deep-growl.wav" id="4_b6hry"]
+[ext_resource type="FontFile" path="res://assets/font/ShareTechMono-Regular.ttf" id="fuente_neon"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3lpp0"]
 radius = 0.35
@@ -35,5 +36,6 @@ billboard = 1
 no_depth_test = true
 modulate = Color(0.95, 0.05, 0.05, 1)
 text = "!"
+font = ExtResource("fuente_neon")
 font_size = 96
 outline_size = 0

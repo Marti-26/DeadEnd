@@ -15,6 +15,7 @@ enum Estado { QUIETO, ACERCARSE, HABLAR, AVISO, GOLPE, RECARGA, HUIR }
 	"¿También te perdiste? La estación de carga de allá todavía funciona.",
 	"Aquí arriba no entran. Bueno... casi nunca.",
 ]
+@export var nombre_dialogo = "CHICO"
 
 var estado = Estado.QUIETO
 var jugador = null
@@ -25,14 +26,12 @@ var agresivo = false
 var huyendo = false
 
 @onready var anim = $Modelo/AnimationPlayer
-@onready var bocadillo = $Bocadillo
 @onready var salud = $Salud
 
 
 func _ready():
 	jugador = get_tree().get_first_node_in_group("jugador")
 	puesto = global_position
-	bocadillo.visible = false
 	salud.vida_cambiada.connect(_al_cambiar_vida)
 		
 func _physics_process(delta):
@@ -69,8 +68,8 @@ func _physics_process(delta):
 					ir_a(jugador.global_position)
 		Estado.HABLAR:
 			frenar("interact-right" if reloj > 2.5 else "idle")
-			if reloj <= 0.001:
-				bocadillo.visible = false
+			if reloj <= 0.001 or distancia() > radio_notar + 1.0:
+				_dialogo().ocultar()
 				estado = Estado.QUIETO
 		Estado.AVISO:
 			frenar("idle")
@@ -119,14 +118,13 @@ func interactuar():
 	print("encuentro con el Chico: ", n)
 	if n >= 3:
 		Partida.encuentros_chico = 0
-		bocadillo.visible = false
+		_dialogo().ocultar()
 		agresivo = true
 		mirar(jugador.global_position)
 		estado = Estado.AVISO
 		reloj = tiempo_aviso
 		return
-	bocadillo.text = frases[mini(n - 1, frases.size() - 1)]
-	bocadillo.visible = true
+	_dialogo().mostrar(nombre_dialogo, frases[mini(n - 1, frases.size() - 1)], 4.0)
 	estado = Estado.HABLAR
 	reloj = 4.0
 	if n == 1 and senalar:
@@ -176,6 +174,9 @@ func _al_cambiar_vida(actual: float, maxima: float) -> void:
 		huyendo = true
 		agresivo = false
 		estado = Estado.HUIR
-		bocadillo.visible = false
+		_dialogo().ocultar()
 		print("Chico Amable comienza a huir. Vida: ", actual)
-		
+
+
+func _dialogo():
+	return Dialogo.obtener(get_tree())

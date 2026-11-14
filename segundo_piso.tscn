@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" path="res://chico_amable.tscn" id="10_chico"]
 [ext_resource type="Script" uid="uid://chlx4hyqucufu" path="res://llegada.gd" id="11_llegada"]
 [ext_resource type="Script" uid="uid://cmaoevvcsdw4y" path="res://puerta_escena.gd" id="12_puerta"]
+[ext_resource type="FontFile" path="res://assets/font/ShareTechMono-Regular.ttf" id="fuente_neon"]
 
 [sub_resource type="Environment" id="Entorno"]
 background_mode = 1
@@ -217,8 +218,9 @@ surface_material_override/0 = SubResource("MatLuzCasillero")
 [node name="Rotulo" type="Label3D" parent="EstacionCarga" unique_id=129085769]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85, 0.32)
 pixel_size = 0.006
-modulate = Color(0.45, 1, 0.75, 1)
-outline_modulate = Color(0.03, 0.05, 0.06, 1)
+font = ExtResource("fuente_neon")
+modulate = Color(0.6, 1.6, 1.15, 1)
+outline_modulate = Color(0, 0.1, 0.07, 1)
 text = "CARGA"
 font_size = 48
 outline_size = 8
@@ -229,8 +231,9 @@ visible = false
 pixel_size = 0.006
 billboard = 1
 no_depth_test = true
-modulate = Color(1, 0.95, 0.85, 1)
-outline_modulate = Color(0.05, 0.05, 0.1, 1)
+font = ExtResource("fuente_neon")
+modulate = Color(1.5, 1.7, 1.8, 1)
+outline_modulate = Color(0, 0.12, 0.18, 1)
 text = "GUARDADO"
 font_size = 56
 
