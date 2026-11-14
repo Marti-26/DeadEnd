@@ -1,9 +1,11 @@
+class_name Celular
 extends Area3D
 
 var _jugador_cerca: Node = null
 
 
 func _ready() -> void:
+	add_to_group(Grupos.INTERACTIVOS)
 	# Si ya fue recogido en la partida, desaparece inmediatamente
 	if Partida != null and "celular_recogido" in Partida and Partida.celular_recogido:
 		queue_free()
@@ -24,7 +26,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _on_body_entered(cuerpo: Node3D) -> void:
-	if cuerpo.is_in_group("jugador"):
+	if cuerpo.is_in_group(Grupos.JUGADOR):
 		_jugador_cerca = cuerpo
 		print("¡Cerca del celular! Presiona E para recogerlo")
 
@@ -39,8 +41,9 @@ func usar() -> void:
 	if Partida != null:
 		Partida.celular_recogido = true
 
-	var jugador: Node = _jugador_cerca if _jugador_cerca != null else get_tree().get_first_node_in_group("jugador")
+	var jugador: Node = _jugador_cerca if _jugador_cerca != null else get_tree().get_first_node_in_group(Grupos.JUGADOR)
 	if jugador != null:
 		jugador.set("tiene_celular", true)
 
+	remove_from_group(Grupos.INTERACTIVOS)
 	queue_free()

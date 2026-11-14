@@ -1,3 +1,4 @@
+class_name Ruido
 extends Node
 ## Tarea B · Restrepo Sanabria María Camila — el emisor del ruido.
 ## Va como hijo del Personaje (no se toca personaje.gd).
@@ -6,17 +7,17 @@ extends Node
 ##  · En el juego, además, suenan solos: los pasos (radio de la estación), el dash (8 u) y el
 ##    jadeo al llegar a 100 de estrés (10 u). El sigilo no suena: ruido 0.
 
-@export var tecla = "hacer_ruido"
-@export var radio = 6.0
-@export var grupo = "oyentes"
+@export var tecla: String = "hacer_ruido"
+@export var radio: float = 6.0
+@export var grupo: String = Grupos.OYENTES
 
 @export_group("Ruido del juego")
-@export var ruido_del_personaje = true   # pasos y dash según el estado del Personaje
-@export var cada_paso = 0.5              # s entre un ruido de pasos y el siguiente
-@export var radio_pasos = 3.0
-@export var radio_jadeo = 10.0           # u, el jadeo alerta a todo en 10 u
+@export var ruido_del_personaje: bool = true   # pasos y dash según el estado del Personaje
+@export var cada_paso: float = 0.5              # s entre un ruido de pasos y el siguiente
+@export var radio_pasos: float = 3.0
+@export var radio_jadeo: float = 10.0           # u, el jadeo alerta a todo en 10 u
 
-@onready var pj: Node3D = get_parent() as Node3D
+@onready var pj: Personaje = get_parent() as Personaje
 
 var _ruido_antes: float = 0.0
 var _reloj_paso: float = 0.0

@@ -1,3 +1,4 @@
+class_name EstacionCarga
 extends StaticBody3D
 
 const LIMITE_RECARGA: float = 60.0
@@ -11,7 +12,7 @@ var _mat: StandardMaterial3D
 
 
 func _ready() -> void:
-	add_to_group("interactivos")
+	add_to_group(Grupos.INTERACTIVOS)
 	if pantalla != null:
 		_mat = pantalla.get_active_material(0).duplicate() as StandardMaterial3D
 		pantalla.material_override = _mat
@@ -21,9 +22,9 @@ func _ready() -> void:
 
 
 func usar() -> void:
-	var objetivo_bat: Node = get_tree().get_first_node_in_group("bateria")
+	var objetivo_bat: Node = get_tree().get_first_node_in_group(Grupos.JUGADOR)
 	if objetivo_bat == null or not ("bateria" in objetivo_bat):
-		objetivo_bat = get_tree().get_first_node_in_group("jugador")
+		objetivo_bat = get_tree().get_first_node_in_group(Grupos.BATERIA)
 	if not Partida.estacion_usada and objetivo_bat != null and "bateria" in objetivo_bat:
 		var limite: float = minf(carga, LIMITE_RECARGA)
 		var actual: float = float(objetivo_bat.get("bateria"))

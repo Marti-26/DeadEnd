@@ -1,3 +1,4 @@
+class_name Terminal
 extends StaticBody3D
 
 const LIMITE_RECARGA: float = 60.0
@@ -7,9 +8,9 @@ const LIMITE_RECARGA: float = 60.0
 
 
 func usar() -> void:
-	var objetivo_bat: Node = get_tree().get_first_node_in_group("bateria")
+	var objetivo_bat: Node = get_tree().get_first_node_in_group(Grupos.JUGADOR)
 	if objetivo_bat == null or not ("bateria" in objetivo_bat):
-		objetivo_bat = get_tree().get_first_node_in_group("jugador")
+		objetivo_bat = get_tree().get_first_node_in_group(Grupos.BATERIA)
 	if objetivo_bat == null or not ("bateria" in objetivo_bat):
 		return
 	var limite: float = minf(recarga_hasta, LIMITE_RECARGA)
@@ -18,7 +19,7 @@ func usar() -> void:
 		return
 	objetivo_bat.set("bateria", limite)
 	print("batería: ", float(objetivo_bat.get("bateria")), " %")
-	remove_from_group("interactivos")
+	remove_from_group(Grupos.INTERACTIVOS)
 	if pantalla != null:
 		var m: StandardMaterial3D = pantalla.get_active_material(0).duplicate() as StandardMaterial3D
 		if m != null:

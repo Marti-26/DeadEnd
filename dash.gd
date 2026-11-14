@@ -1,3 +1,4 @@
+class_name Dash
 extends Node
 
 enum Estado { LISTA, ACTIVA, RECARGA }
@@ -9,7 +10,7 @@ enum Estado { LISTA, ACTIVA, RECARGA }
 @export var animacion: String = "sprint"
 @export var estres_por_dash: float = 15.0
 
-@onready var pj: CharacterBody3D = get_parent() as CharacterBody3D
+@onready var pj: Personaje = get_parent() as Personaje
 
 var estado: Estado = Estado.LISTA
 var tiempo: float = 0.0
@@ -41,7 +42,7 @@ func _physics_process(delta: float) -> void:
 
 
 func puede() -> bool:
-	return pj != null and pj.is_on_floor() and not pj.is_in_group("escondidos")
+	return pj != null and pj.is_on_floor() and not pj.is_in_group(Grupos.ESCONDIDOS)
 
 
 func empezar() -> void:
