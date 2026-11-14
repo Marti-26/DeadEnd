@@ -59,6 +59,8 @@ class MaterialesMetro:
 @export var x_parada: float = 0.0
 @export var puertas_x: Array[float] = [-7.5, 0.0, 7.5]
 @export var filtro_pantalla: bool = false
+@export var energia_ventanas: float = 2.4
+@export var alcance_ventanas: float = 7.5
 
 const LARGO: float = 24.0
 const ANCHO: float = 3.0
@@ -67,7 +69,7 @@ const ALTO_PUERTA: float = 2.1
 const ANCHO_PUERTA: float = 1.4
 const Z_COMPUERTA: float = -1.85
 
-const ROJO: Color = Color(0.72, 0.09, 0.1)
+const ROJO: Color = Color(0.62, 0.08, 0.1)
 const ROJO_OSCURO: Color = Color(0.45, 0.05, 0.07)
 const PARED_ALTA: Color = Color(0.14, 0.15, 0.26)
 const PARED_BAJA: Color = Color(0.08, 0.085, 0.14)
@@ -105,6 +107,7 @@ var formas_puerta: Array[CollisionShape3D] = []
 var compuertas: Array[PuertaMovil] = []
 var formas_compuerta: Array[CollisionShape3D] = []
 var indicadores: Array[MeshInstance3D] = []
+var luces_ventana: Array[SpotLight3D] = []
 var _m: MaterialesMetro = MaterialesMetro.new()
 var recorrido: float = 0.0
 var movimiento: float = 0.0
@@ -178,6 +181,7 @@ func _physics_process(delta: float) -> void:
 	_m.ventana.set_shader_parameter("recorrido", recorrido)
 	_m.ventana.set_shader_parameter("movimiento", movimiento)
 	_m.ventana.set_shader_parameter("tren_x", tren.global_position.x)
+	_actualizar_luces_ventana()
 	if filtro:
 		var rect: ColorRect = filtro.get_child(0) as ColorRect
 		var mat_filtro: ShaderMaterial = rect.material as ShaderMaterial
@@ -282,6 +286,7 @@ func _construir() -> void:
 	compuertas.clear()
 	formas_compuerta.clear()
 	indicadores.clear()
+	luces_ventana.clear()
 	_materiales()
 
 	tren = _nodo(self, "Tren")
@@ -309,6 +314,8 @@ func _construir() -> void:
 	_bajos(bajo)
 	_carteles(interior)
 	_luces(interior)
+	_luces_ventana(lado_anden, -1)
+	_luces_ventana(lado_camara, 1)
 	_compuertas()
 
 	camara_vagon = Camera3D.new()
@@ -336,9 +343,9 @@ func _construir() -> void:
 
 
 func _materiales() -> void:
-	_m.rojo_ext = _mat(ROJO, Color.BLACK, 0.0, 0.35, 0.4)
-	_m.rojo_oscuro = _mat(ROJO_OSCURO, Color.BLACK, 0.0, 0.3, 0.5)
-	_m.franja = _mat(CREMA, CREMA, 0.4, 0.0, 0.5)
+	_m.rojo_ext = _mat(ROJO, Color(0.5, 0.03, 0.06), 0.06, 0.3, 0.35)
+	_m.rojo_oscuro = _mat(ROJO_OSCURO, Color.BLACK, 0.0, 0.3, 0.45)
+	_m.franja = _mat(CREMA, CREMA, 0.7, 0.0, 0.5)
 	_m.lila = _mat(PARED_ALTA, Color.BLACK, 0.0, 0.2, 0.5)
 	_m.ciruela = _mat(PARED_BAJA, Color.BLACK, 0.0, 0.2, 0.6)
 	_m.cielo = _mat(CIELO, Color.BLACK, 0.0, 0.1, 0.6)
@@ -351,7 +358,10 @@ func _materiales() -> void:
 	_m.gris = _mat(Color(0.22, 0.22, 0.25), Color.BLACK, 0.0, 0.5, 0.6)
 	_m.ventana = _shader("ventana_vagon")
 	_m.vidrio = _m.ventana
-	_m.vidrio_ext = _mat(Color(0.03, 0.035, 0.07), Color(0.12, 0.14, 0.3), 0.35, 0.7, 0.08)
+	_m.vidrio_ext = _vidrio(Color(0.3, 0.36, 0.75, 0.38))
+	_m.vidrio_ext.emission_enabled = true
+	_m.vidrio_ext.emission = Color(0.42, 0.46, 1.0)
+	_m.vidrio_ext.emission_energy_multiplier = 0.9
 	_m.vidrio_anden = _vidrio(Color(0.35, 0.75, 0.7, 0.3))
 	_m.tubos.clear()
 	for i: int in 3:
@@ -675,6 +685,36 @@ func _luces(p: Node3D) -> void:
 	var signos: Array[int] = [-1, 1]
 	for s: int in signos:
 		_caja(p, Vector3(0.03, 0.14, 0.5), Vector3(s * (LARGO / 2.0 - 0.07), 2.35, 0), _m.salida)
+
+
+func _luces_ventana(p: Node3D, s: int) -> void:
+	var colores: Array[Color] = [Color(0.55, 0.6, 1.0), Color(0.62, 0.52, 1.0)]
+	var xs: Array[float] = [-9.0, -3.0, 3.0, 9.0]
+	for i: int in xs.size():
+		var l: SpotLight3D = SpotLight3D.new()
+		l.light_color = colores[i % 2]
+		l.light_energy = energia_ventanas
+		l.set_meta("factor", 1.0 if s < 0 else 0.7)
+		l.light_specular = 0.4
+		l.spot_range = alcance_ventanas
+		l.spot_angle = 55.0
+		l.spot_attenuation = 1.2
+		l.spot_angle_attenuation = 1.6
+		l.shadow_enabled = false
+		l.position = Vector3(xs[i], 1.6, s * (ANCHO / 2.0 + 0.25))
+		l.rotation = Vector3(deg_to_rad(-32.0), PI if s > 0 else 0.0, 0.0)
+		p.add_child(l)
+		luces_ventana.append(l)
+
+
+func _actualizar_luces_ventana() -> void:
+	var lejos: float = absf(tren.position.x - x_parada) - LARGO / 2.0
+	var presencia: float = clampf(1.0 - lejos / 18.0, 0.0, 1.0)
+	presencia = presencia * presencia * (3.0 - 2.0 * presencia)
+	var parpadeo: float = 1.0 - movimiento * 0.25 * (0.5 + 0.5 * sin(reloj * 23.0))
+	for l: SpotLight3D in luces_ventana:
+		l.visible = presencia > 0.01
+		l.light_energy = energia_ventanas * float(l.get_meta("factor", 1.0)) * presencia * parpadeo
 
 
 func _compuertas() -> void:
