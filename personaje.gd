@@ -126,13 +126,15 @@ func _preparar_linterna() -> void:
 
 func _consumir_bateria(delta: float) -> void:
 	if bateria <= 0.0:
-		linterna_encendida = false
 		return
+
 	var tasa: float = TASA_BATERIA_LINTERNA if linterna_encendida else TASA_BATERIA_REPOSO
 	bateria = maxf(0.0, bateria - tasa * delta)
+
 	if bateria <= 0.0:
 		bateria = 0.0
 		linterna_encendida = false
+		Partida.perder()
 
 
 func _actualizar_linterna() -> void:
