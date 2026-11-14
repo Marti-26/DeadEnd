@@ -1,135 +1,69 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://j5agalseuliu"]
 
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_idle_frente_1.png" id="1_idlfre1"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_idle_frente_2.png" id="2_idlfre2"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_idle_espalda_1.png" id="3_idlesp1"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_idle_espalda_2.png" id="4_idlesp2"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_idle_derecha_1.png" id="5_idlder1"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_idle_derecha_2.png" id="6_idlder2"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_idle_izquierda_1.png" id="7_idlizq1"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_idle_izquierda_2.png" id="8_idlizq2"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_caminar_frente_1.png" id="9_camfre1"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_caminar_frente_2.png" id="10_camfre2"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_caminar_espalda_1.png" id="11_camesp1"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_caminar_espalda_2.png" id="12_camesp2"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_caminar_derecha_1.png" id="13_camder1"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_caminar_derecha_2.png" id="14_camder2"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_caminar_derecha_3.png" id="15_camder3"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_caminar_izquierda_1.png" id="16_camizq1"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_caminar_izquierda_2.png" id="17_camizq2"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_caminar_izquierda_3.png" id="18_camizq3"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_sigilo_frente_1.png" id="19_sigfre1"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_sigilo_frente_2.png" id="20_sigfre2"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_sigilo_espalda_1.png" id="21_sigesp1"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_sigilo_espalda_2.png" id="22_sigesp2"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_sigilo_derecha_1.png" id="23_sigder1"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_sigilo_derecha_2.png" id="24_sigder2"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_sigilo_derecha_3.png" id="25_sigder3"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_sigilo_izquierda_1.png" id="26_sigizq1"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_sigilo_izquierda_2.png" id="27_sigizq2"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_sigilo_izquierda_3.png" id="28_sigizq3"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_frente_1.png" id="29_dasfre1"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_frente_2.png" id="30_dasfre2"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_frente_3.png" id="31_dasfre3"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_frente_4.png" id="32_dasfre4"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_frente_5.png" id="33_dasfre5"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_espalda_1.png" id="34_dasesp1"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_espalda_2.png" id="35_dasesp2"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_espalda_3.png" id="36_dasesp3"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_espalda_4.png" id="37_dasesp4"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_espalda_5.png" id="38_dasesp5"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_derecha_1.png" id="39_dasder1"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_derecha_2.png" id="40_dasder2"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_derecha_3.png" id="41_dasder3"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_derecha_4.png" id="42_dasder4"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_derecha_5.png" id="43_dasder5"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_izquierda_1.png" id="44_dasizq1"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_izquierda_2.png" id="45_dasizq2"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_izquierda_3.png" id="46_dasizq3"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_izquierda_4.png" id="47_dasizq4"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_dash_izquierda_5.png" id="48_dasizq5"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_espalda_1.png" id="49_escesp1"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_espalda_2.png" id="50_escesp2"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_espalda_3.png" id="51_escesp3"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_derecha_1.png" id="52_escder1"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_derecha_2.png" id="53_escder2"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_izquierda_1.png" id="54_escizq1"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_izquierda_2.png" id="55_escizq2"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_ojos_1.png" id="56_escojo1"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_ojos_2.png" id="57_escojo2"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_ojos_3.png" id="58_escojo3"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_esconderse_ojos_4.png" id="59_escojo4"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_salir_escondite_frente_1.png" id="60_salfre1"]
-[ext_resource type="Texture2D" path="res://assets/gatita/gatita_salir_escondite_frente_2.png" id="61_salfre2"]
+[ext_resource type="Texture2D" uid="uid://d4mk77ekdfyw6" path="res://assets/gatita/gatita_idle_frente_1.png" id="1_idlfre1"]
+[ext_resource type="Texture2D" uid="uid://17nbtg2y0l0k" path="res://assets/gatita/gatita_idle_frente_2.png" id="2_idlfre2"]
+[ext_resource type="Texture2D" uid="uid://ugnq7vdvnat2" path="res://assets/gatita/gatita_idle_espalda_1.png" id="3_idlesp1"]
+[ext_resource type="Texture2D" uid="uid://dsf6prr31gkx6" path="res://assets/gatita/gatita_idle_espalda_2.png" id="4_idlesp2"]
+[ext_resource type="Texture2D" uid="uid://dm6xns84y74fq" path="res://assets/gatita/gatita_idle_derecha_1.png" id="5_idlder1"]
+[ext_resource type="Texture2D" uid="uid://chhoyb14gw4jt" path="res://assets/gatita/gatita_idle_derecha_2.png" id="6_idlder2"]
+[ext_resource type="Texture2D" uid="uid://cwtfbhl4f02d3" path="res://assets/gatita/gatita_idle_izquierda_1.png" id="7_idlizq1"]
+[ext_resource type="Texture2D" uid="uid://dqspxj0w7iqop" path="res://assets/gatita/gatita_idle_izquierda_2.png" id="8_idlizq2"]
+[ext_resource type="Texture2D" uid="uid://crfbvaoho4x7k" path="res://assets/gatita/gatita_caminar_frente_1.png" id="9_camfre1"]
+[ext_resource type="Texture2D" uid="uid://3ol5fqsox052" path="res://assets/gatita/gatita_caminar_frente_2.png" id="10_camfre2"]
+[ext_resource type="Texture2D" uid="uid://b782sq2xfu57l" path="res://assets/gatita/gatita_caminar_espalda_1.png" id="11_camesp1"]
+[ext_resource type="Texture2D" uid="uid://dj2pxcgaxf0u2" path="res://assets/gatita/gatita_caminar_espalda_2.png" id="12_camesp2"]
+[ext_resource type="Texture2D" uid="uid://d2lu81jl1d0na" path="res://assets/gatita/gatita_caminar_derecha_1.png" id="13_camder1"]
+[ext_resource type="Texture2D" uid="uid://cc4vshdip36d7" path="res://assets/gatita/gatita_caminar_derecha_2.png" id="14_camder2"]
+[ext_resource type="Texture2D" uid="uid://cjom5gtsamd4f" path="res://assets/gatita/gatita_caminar_derecha_3.png" id="15_camder3"]
+[ext_resource type="Texture2D" uid="uid://bmyhturfi6s83" path="res://assets/gatita/gatita_caminar_izquierda_1.png" id="16_camizq1"]
+[ext_resource type="Texture2D" uid="uid://bowj7fmri3ueg" path="res://assets/gatita/gatita_caminar_izquierda_2.png" id="17_camizq2"]
+[ext_resource type="Texture2D" uid="uid://fbx5faarrnaf" path="res://assets/gatita/gatita_caminar_izquierda_3.png" id="18_camizq3"]
+[ext_resource type="Texture2D" uid="uid://dsxtqlr181vyh" path="res://assets/gatita/gatita_sigilo_frente_1.png" id="19_sigfre1"]
+[ext_resource type="Texture2D" uid="uid://cn28ufbhlnekq" path="res://assets/gatita/gatita_sigilo_frente_2.png" id="20_sigfre2"]
+[ext_resource type="Texture2D" uid="uid://vru47duu2c6l" path="res://assets/gatita/gatita_sigilo_espalda_1.png" id="21_sigesp1"]
+[ext_resource type="Texture2D" uid="uid://dobv5k6kvjxbm" path="res://assets/gatita/gatita_sigilo_espalda_2.png" id="22_sigesp2"]
+[ext_resource type="Texture2D" uid="uid://dge21oskcffip" path="res://assets/gatita/gatita_sigilo_derecha_1.png" id="23_sigder1"]
+[ext_resource type="Texture2D" uid="uid://dcykgq8tuyp6v" path="res://assets/gatita/gatita_sigilo_derecha_2.png" id="24_sigder2"]
+[ext_resource type="Texture2D" uid="uid://u7rienap82o0" path="res://assets/gatita/gatita_sigilo_derecha_3.png" id="25_sigder3"]
+[ext_resource type="Texture2D" uid="uid://dxr1alfljtxov" path="res://assets/gatita/gatita_sigilo_izquierda_1.png" id="26_sigizq1"]
+[ext_resource type="Texture2D" uid="uid://bwx76q058476f" path="res://assets/gatita/gatita_sigilo_izquierda_2.png" id="27_sigizq2"]
+[ext_resource type="Texture2D" uid="uid://cbsuc0dl4futt" path="res://assets/gatita/gatita_sigilo_izquierda_3.png" id="28_sigizq3"]
+[ext_resource type="Texture2D" uid="uid://b6vgsbpr7k730" path="res://assets/gatita/gatita_dash_frente_1.png" id="29_dasfre1"]
+[ext_resource type="Texture2D" uid="uid://b43rm32c21iqf" path="res://assets/gatita/gatita_dash_frente_2.png" id="30_dasfre2"]
+[ext_resource type="Texture2D" uid="uid://bfaibc0d38ulx" path="res://assets/gatita/gatita_dash_frente_3.png" id="31_dasfre3"]
+[ext_resource type="Texture2D" uid="uid://dgtg26017npkl" path="res://assets/gatita/gatita_dash_frente_4.png" id="32_dasfre4"]
+[ext_resource type="Texture2D" uid="uid://12p68wn4gxv6" path="res://assets/gatita/gatita_dash_frente_5.png" id="33_dasfre5"]
+[ext_resource type="Texture2D" uid="uid://cn48f8cevqo2c" path="res://assets/gatita/gatita_dash_espalda_1.png" id="34_dasesp1"]
+[ext_resource type="Texture2D" uid="uid://b5o456wp10fht" path="res://assets/gatita/gatita_dash_espalda_2.png" id="35_dasesp2"]
+[ext_resource type="Texture2D" uid="uid://d1vwrb6xkayj3" path="res://assets/gatita/gatita_dash_espalda_3.png" id="36_dasesp3"]
+[ext_resource type="Texture2D" uid="uid://c4ng0l7frruub" path="res://assets/gatita/gatita_dash_espalda_4.png" id="37_dasesp4"]
+[ext_resource type="Texture2D" uid="uid://b0vpy53wqp4jv" path="res://assets/gatita/gatita_dash_espalda_5.png" id="38_dasesp5"]
+[ext_resource type="Texture2D" uid="uid://dq0fqv5kc50l8" path="res://assets/gatita/gatita_dash_derecha_1.png" id="39_dasder1"]
+[ext_resource type="Texture2D" uid="uid://ds8tsjbkqnrbq" path="res://assets/gatita/gatita_dash_derecha_2.png" id="40_dasder2"]
+[ext_resource type="Texture2D" uid="uid://bx8ocwn6ur4mf" path="res://assets/gatita/gatita_dash_derecha_3.png" id="41_dasder3"]
+[ext_resource type="Texture2D" uid="uid://cp73kt00l2jpu" path="res://assets/gatita/gatita_dash_derecha_4.png" id="42_dasder4"]
+[ext_resource type="Texture2D" uid="uid://c388b4rcmufqa" path="res://assets/gatita/gatita_dash_derecha_5.png" id="43_dasder5"]
+[ext_resource type="Texture2D" uid="uid://hs5js6fphlpk" path="res://assets/gatita/gatita_dash_izquierda_1.png" id="44_dasizq1"]
+[ext_resource type="Texture2D" uid="uid://be28a3f5egup8" path="res://assets/gatita/gatita_dash_izquierda_2.png" id="45_dasizq2"]
+[ext_resource type="Texture2D" uid="uid://bd5vx32fpptg6" path="res://assets/gatita/gatita_dash_izquierda_3.png" id="46_dasizq3"]
+[ext_resource type="Texture2D" uid="uid://dswa7vpdvmfnl" path="res://assets/gatita/gatita_dash_izquierda_4.png" id="47_dasizq4"]
+[ext_resource type="Texture2D" uid="uid://dharvu5bufkxx" path="res://assets/gatita/gatita_dash_izquierda_5.png" id="48_dasizq5"]
+[ext_resource type="Texture2D" uid="uid://cc3sl2o8gaesl" path="res://assets/gatita/gatita_esconderse_espalda_1.png" id="49_escesp1"]
+[ext_resource type="Texture2D" uid="uid://da07l1ff4cg0k" path="res://assets/gatita/gatita_esconderse_espalda_2.png" id="50_escesp2"]
+[ext_resource type="Texture2D" uid="uid://vv7lkl8lya87" path="res://assets/gatita/gatita_esconderse_espalda_3.png" id="51_escesp3"]
+[ext_resource type="Texture2D" uid="uid://cef3sm703k2t8" path="res://assets/gatita/gatita_esconderse_derecha_1.png" id="52_escder1"]
+[ext_resource type="Texture2D" uid="uid://bcm0efcuf5se2" path="res://assets/gatita/gatita_esconderse_derecha_2.png" id="53_escder2"]
+[ext_resource type="Texture2D" uid="uid://dx51ru4mesuum" path="res://assets/gatita/gatita_esconderse_izquierda_1.png" id="54_escizq1"]
+[ext_resource type="Texture2D" uid="uid://cyleq2o2w40w3" path="res://assets/gatita/gatita_esconderse_izquierda_2.png" id="55_escizq2"]
+[ext_resource type="Texture2D" uid="uid://c1wplxugthylg" path="res://assets/gatita/gatita_esconderse_ojos_1.png" id="56_escojo1"]
+[ext_resource type="Texture2D" uid="uid://4u4ey65osu16" path="res://assets/gatita/gatita_esconderse_ojos_2.png" id="57_escojo2"]
+[ext_resource type="Texture2D" uid="uid://faiqryjj6ecj" path="res://assets/gatita/gatita_esconderse_ojos_3.png" id="58_escojo3"]
+[ext_resource type="Texture2D" uid="uid://cuyfvurw41t62" path="res://assets/gatita/gatita_esconderse_ojos_4.png" id="59_escojo4"]
+[ext_resource type="Texture2D" uid="uid://ckyq3k7ivafkf" path="res://assets/gatita/gatita_salir_escondite_frente_1.png" id="60_salfre1"]
+[ext_resource type="Texture2D" uid="uid://bq1i500fpw0eg" path="res://assets/gatita/gatita_salir_escondite_frente_2.png" id="61_salfre2"]
 
 [sub_resource type="SpriteFrames" id="AnimacionesGatita"]
 animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("1_idlfre1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("2_idlfre2")
-}],
-"loop": true,
-"name": &"idle_frente",
-"speed": 3.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("3_idlesp1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("4_idlesp2")
-}],
-"loop": true,
-"name": &"idle_espalda",
-"speed": 3.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("5_idlder1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("6_idlder2")
-}],
-"loop": true,
-"name": &"idle_derecha",
-"speed": 3.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("7_idlizq1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("8_idlizq2")
-}],
-"loop": true,
-"name": &"idle_izquierda",
-"speed": 3.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("9_camfre1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("10_camfre2")
-}],
-"loop": true,
-"name": &"caminar_frente",
-"speed": 8.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("11_camesp1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("12_camesp2")
-}],
-"loop": true,
-"name": &"caminar_espalda",
-"speed": 8.0
-}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("13_camder1")
@@ -140,8 +74,30 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("15_camder3")
 }],
-"loop": true,
+"loop": 1,
 "name": &"caminar_derecha",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("11_camesp1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_camesp2")
+}],
+"loop": 1,
+"name": &"caminar_espalda",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_camfre1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_camfre2")
+}],
+"loop": 1,
+"name": &"caminar_frente",
 "speed": 8.0
 }, {
 "frames": [{
@@ -154,78 +110,28 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("18_camizq3")
 }],
-"loop": true,
+"loop": 1,
 "name": &"caminar_izquierda",
 "speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("19_sigfre1")
+"texture": ExtResource("39_dasder1")
 }, {
 "duration": 1.0,
-"texture": ExtResource("20_sigfre2")
+"texture": ExtResource("40_dasder2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("41_dasder3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("42_dasder4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("43_dasder5")
 }],
-"loop": true,
-"name": &"sigilo_frente",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("21_sigesp1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("22_sigesp2")
-}],
-"loop": true,
-"name": &"sigilo_espalda",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("23_sigder1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("24_sigder2")
-}, {
-"duration": 1.0,
-"texture": ExtResource("25_sigder3")
-}],
-"loop": true,
-"name": &"sigilo_derecha",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("26_sigizq1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("27_sigizq2")
-}, {
-"duration": 1.0,
-"texture": ExtResource("28_sigizq3")
-}],
-"loop": true,
-"name": &"sigilo_izquierda",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("29_dasfre1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("30_dasfre2")
-}, {
-"duration": 1.0,
-"texture": ExtResource("31_dasfre3")
-}, {
-"duration": 1.0,
-"texture": ExtResource("32_dasfre4")
-}, {
-"duration": 1.0,
-"texture": ExtResource("33_dasfre5")
-}],
-"loop": false,
-"name": &"dash_frente",
+"loop": 0,
+"name": &"dash_derecha",
 "speed": 6.5
 }, {
 "frames": [{
@@ -244,28 +150,28 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("38_dasesp5")
 }],
-"loop": false,
+"loop": 0,
 "name": &"dash_espalda",
 "speed": 6.5
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("39_dasder1")
+"texture": ExtResource("29_dasfre1")
 }, {
 "duration": 1.0,
-"texture": ExtResource("40_dasder2")
+"texture": ExtResource("30_dasfre2")
 }, {
 "duration": 1.0,
-"texture": ExtResource("41_dasder3")
+"texture": ExtResource("31_dasfre3")
 }, {
 "duration": 1.0,
-"texture": ExtResource("42_dasder4")
+"texture": ExtResource("32_dasfre4")
 }, {
 "duration": 1.0,
-"texture": ExtResource("43_dasder5")
+"texture": ExtResource("33_dasfre5")
 }],
-"loop": false,
-"name": &"dash_derecha",
+"loop": 0,
+"name": &"dash_frente",
 "speed": 6.5
 }, {
 "frames": [{
@@ -284,9 +190,20 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("48_dasizq5")
 }],
-"loop": false,
+"loop": 0,
 "name": &"dash_izquierda",
 "speed": 6.5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("52_escder1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("53_escder2")
+}],
+"loop": 0,
+"name": &"esconderse_derecha",
+"speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -298,20 +215,9 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("51_escesp3")
 }],
-"loop": false,
+"loop": 0,
 "name": &"esconderse_espalda",
 "speed": 6.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("52_escder1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("53_escder2")
-}],
-"loop": false,
-"name": &"esconderse_derecha",
-"speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -320,7 +226,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("55_escizq2")
 }],
-"loop": false,
+"loop": 0,
 "name": &"esconderse_izquierda",
 "speed": 5.0
 }, {
@@ -337,9 +243,53 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("59_escojo4")
 }],
-"loop": true,
+"loop": 1,
 "name": &"esconderse_ojos",
 "speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_idlder1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_idlder2")
+}],
+"loop": 1,
+"name": &"idle_derecha",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_idlesp1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_idlesp2")
+}],
+"loop": 1,
+"name": &"idle_espalda",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_idlfre1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_idlfre2")
+}],
+"loop": 1,
+"name": &"idle_frente",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_idlizq1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_idlizq2")
+}],
+"loop": 1,
+"name": &"idle_izquierda",
+"speed": 3.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -348,16 +298,66 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("61_salfre2")
 }],
-"loop": false,
+"loop": 0,
 "name": &"salir_escondite_frente",
 "speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("23_sigder1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_sigder2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_sigder3")
+}],
+"loop": 1,
+"name": &"sigilo_derecha",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("21_sigesp1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_sigesp2")
+}],
+"loop": 1,
+"name": &"sigilo_espalda",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("19_sigfre1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_sigfre2")
+}],
+"loop": 1,
+"name": &"sigilo_frente",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("26_sigizq1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_sigizq2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_sigizq3")
+}],
+"loop": 1,
+"name": &"sigilo_izquierda",
+"speed": 5.0
 }]
 
-[node name="Gatita" type="AnimatedSprite3D"]
+[node name="Gatita" type="AnimatedSprite3D" unique_id=489570899]
 cast_shadow = 0
-shaded = true
 pixel_size = 0.0083
 billboard = 2
+shaded = true
 alpha_cut = 1
 sprite_frames = SubResource("AnimacionesGatita")
 animation = &"idle_frente"

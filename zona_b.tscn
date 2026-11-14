@@ -5,10 +5,11 @@
 [ext_resource type="Script" uid="uid://djty86m4dgy4m" path="res://luz_parpadeante.gd" id="3_r8jko"]
 [ext_resource type="Script" uid="uid://cut6u3dpgatay" path="res://sistema_eventos.gd" id="5_eyatn"]
 [ext_resource type="Script" uid="uid://bj0372xnq02wk" path="res://personaje.gd" id="6_r0ps7"]
-[ext_resource type="PackedScene" path="res://gatita.tscn" id="7_61dqb"]
+[ext_resource type="PackedScene" uid="uid://j5agalseuliu" path="res://gatita.tscn" id="7_61dqb"]
 [ext_resource type="PackedScene" uid="uid://twjt23gel8cv" path="res://criatura.tscn" id="8_n70iv"]
 [ext_resource type="Script" uid="uid://bh2bylh8kjoo8" path="res://dash.gd" id="9_dash"]
 [ext_resource type="Script" uid="uid://cqv5bh23wl3n3" path="res://interactuar.gd" id="10_inter"]
+[ext_resource type="Script" uid="uid://cjb6fbriprfvw" path="res://salud.gd" id="11_dnf35"]
 [ext_resource type="Script" uid="uid://bh3ei7hjfvyk5" path="res://ruido.gd" id="11_ruido"]
 [ext_resource type="Script" uid="uid://6l6v2g14wi" path="res://esconderse.gd" id="12_escon"]
 [ext_resource type="Script" uid="uid://bjwxkaxpj8ksj" path="res://terminal.gd" id="13_term"]
@@ -1612,6 +1613,9 @@ radio = 4.0
 
 [node name="Esconderse" type="Node" parent="Personaje" unique_id=1816471655]
 script = ExtResource("12_escon")
+
+[node name="Salud" type="Node" parent="Personaje" unique_id=1551528763]
+script = ExtResource("11_dnf35")
 
 [node name="Camara" type="Camera3D" parent="." unique_id=567095934 node_paths=PackedStringArray("objetivo")]
 transform = Transform3D(1, 0, 0, 0, 0.76604444, 0.6427876, 0, -0.6427876, 0.76604444, -5.2, 14.141328, 16.052977)

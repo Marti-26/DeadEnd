@@ -80,6 +80,16 @@ func _physics_process(delta):
 		Estado.GOLPE:
 			frenar("attack-melee-right")
 			if reloj <= 0.001:
+				if distancia() <= rango_ataque:
+					print("Jugador detectado: ", jugador.get_path())
+					var salud = jugador.get_node_or_null("Salud")
+					if salud == null:
+						print("ERROR: No se encontró el nodo Salud en Gatita")
+					else:
+						salud.recibir_dano(20.0)
+						print("Golpe acertado. Vida restante: ", salud.vida_actual)
+				else:
+					print("Golpe fallido: jugador fuera del alcance")
 				estado = Estado.RECARGA
 				reloj = tiempo_recarga
 		Estado.RECARGA:
