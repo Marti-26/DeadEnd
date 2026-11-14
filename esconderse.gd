@@ -10,6 +10,8 @@ extends Node
 @export var altura_ojos: float = 0.22
 @export var adelanto_ojos: float = 0.1
 @export var escala_ojos: float = 0.8
+@export var entrada_frente: float = 0.45
+@export var tiempo_acercarse: float = 0.15
 
 @onready var pj: Personaje = get_parent() as Personaje
 @onready var modelo: Node3D = (pj.get_node_or_null("Sprite") if pj.has_node("Sprite") else pj.get_node_or_null("Modelo")) as Node3D
@@ -23,33 +25,37 @@ var _sprite_escala: Vector3 = Vector3.ONE
 var _sprite_sombreado: bool = true
 var _en_ojos: bool = false
 var _saliendo: bool = false
-var _enfriamiento_reentrada: float = 0.0
+var _entrando: bool = false
+var _esperando_soltar: bool = false
+var _debe_alejarse: bool = false
 
 
 func _physics_process(delta: float) -> void:
-	if _enfriamiento_reentrada > 0.0:
-		_enfriamiento_reentrada = maxf(0.0, _enfriamiento_reentrada - delta)
-
 	if escondido:
-		# Si intenta moverse con WASD o presiona una tecla de salida, sale automáticamente
 		var input_mov: Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down")
-		if (input_mov.length() > 0.1 or Input.is_action_just_pressed(tecla)) and not _saliendo:
+		if input_mov.length() <= 0.1:
+			_esperando_soltar = false
+		var quiere_salir: bool = Input.is_action_just_pressed(tecla) or (input_mov.length() > 0.1 and not _esperando_soltar)
+		if quiere_salir and not _entrando and not _saliendo:
 			salir()
 		elif pj != null and pj.has_method("sumar_estres"):
 			pj.call("sumar_estres", -baja_estres * delta)
 		else:
 			Partida.estres = maxf(0.0, Partida.estres - baja_estres * delta)
-	else:
-		# Automático por proximidad: al caminar directo al hueco de la banca, entra solo
-		if _enfriamiento_reentrada <= 0.0 and not _saliendo:
-			var b: Node3D = mas_cercana() as Node3D
-			if b != null:
-				entrar(b)
+	elif not _saliendo:
+		var b: Node3D = mas_cercana() as Node3D
+		if _debe_alejarse:
+			if b == null:
+				_debe_alejarse = false
+		elif b != null:
+			entrar(b)
 
 
 func entrar(b):
 	escondido = true
 	banca = b
+	_entrando = true
+	_esperando_soltar = Input.get_vector("move_left", "move_right", "move_up", "move_down").length() > 0.1
 	pj.add_to_group(Grupos.ESCONDIDOS)
 	pj.set_physics_process(false)
 	pj.velocity = Vector3.ZERO
@@ -65,11 +71,30 @@ func entrar(b):
 			_modelo_y = modelo.position.y
 			modelo.position.y = _modelo_y - hundir_modelo
 		pj.anim.play(animacion)
+		_entrando = false
 		return
-	if pj.direccion == "frente":
-		pj.direccion = "espalda"
-	pj.reproducir("esconderse")
-	await pj.sprite.animation_finished
+
+	var sprite: AnimatedSprite3D = pj.sprite
+	var local: Vector3 = b.to_local(pj.global_position)
+	var dir: String = "espalda"
+	if absf(local.x) > 0.9 or local.z < 0.0:
+		dir = "izquierda" if local.x > 0.0 else "derecha"
+	var nombre: String = "esconderse_" + dir
+	if not sprite.sprite_frames.has_animation(nombre):
+		dir = "espalda"
+		nombre = "esconderse_espalda"
+	pj.direccion = dir
+
+	var destino: Vector3 = b.to_global(Vector3(clampf(local.x, -0.6, 0.6), 0.0, entrada_frente))
+	destino.y = pj.global_position.y
+	var t: Tween = create_tween()
+	t.tween_property(pj, "global_position", destino, tiempo_acercarse)
+
+	sprite.stop()
+	sprite.speed_scale = 1.0
+	sprite.play(nombre)
+	await sprite.animation_finished
+	_entrando = false
 	if not escondido or banca != b:
 		return
 	_mostrar_ojos(b)
@@ -103,7 +128,7 @@ func _quitar_ojos():
 
 func salir():
 	escondido = false
-	_enfriamiento_reentrada = 1.2
+	_debe_alejarse = true
 	pj.remove_from_group(Grupos.ESCONDIDOS)
 	pj.global_position = banca.global_position + Vector3(0, pj.global_position.y - banca.global_position.y, 0.75)
 	print("sale de ", banca.name, " · estrés ", snappedf(Partida.estres, 0.1))
@@ -113,6 +138,7 @@ func salir():
 		pj.direccion = "frente"
 		if pj.sprite.sprite_frames.has_animation("salir_escondite_frente"):
 			_saliendo = true
+			pj.sprite.stop()
 			pj.sprite.speed_scale = 1.0
 			pj.sprite.play("salir_escondite_frente")
 			await pj.sprite.animation_finished
