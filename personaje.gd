@@ -114,6 +114,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				alternar_audifonos()
 				
 				
+func alternar_audifonos() -> void:
 	if bateria <= 0.0:
 		audifonos_activos = false
 		return
