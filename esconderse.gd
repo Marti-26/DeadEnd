@@ -1,7 +1,8 @@
+class_name Esconderse
 extends Node
 
 @export var tecla: String = "esconderse"
-@export var grupo: String = "escondites"
+@export var grupo: String = Grupos.ESCONDITES
 @export var alcance: float = 1.35
 @export var baja_estres: float = 1.0
 @export var hundir_modelo: float = 0.45
@@ -12,7 +13,7 @@ extends Node
 @export var entrada_frente: float = 0.45
 @export var tiempo_acercarse: float = 0.15
 
-@onready var pj: CharacterBody3D = get_parent() as CharacterBody3D
+@onready var pj: Personaje = get_parent() as Personaje
 @onready var modelo: Node3D = (pj.get_node_or_null("Sprite") if pj.has_node("Sprite") else pj.get_node_or_null("Modelo")) as Node3D
 @onready var forma: CollisionShape3D = pj.get_node_or_null("CollisionShape3D") as CollisionShape3D
 
@@ -55,7 +56,7 @@ func entrar(b):
 	banca = b
 	_entrando = true
 	_esperando_soltar = Input.get_vector("move_left", "move_right", "move_up", "move_down").length() > 0.1
-	pj.add_to_group("escondidos")
+	pj.add_to_group(Grupos.ESCONDIDOS)
 	pj.set_physics_process(false)
 	pj.velocity = Vector3.ZERO
 	pj.avance = Vector3.ZERO
@@ -128,7 +129,7 @@ func _quitar_ojos():
 func salir():
 	escondido = false
 	_debe_alejarse = true
-	pj.remove_from_group("escondidos")
+	pj.remove_from_group(Grupos.ESCONDIDOS)
 	pj.global_position = banca.global_position + Vector3(0, pj.global_position.y - banca.global_position.y, 0.75)
 	print("sale de ", banca.name, " · estrés ", snappedf(Partida.estres, 0.1))
 	banca = null

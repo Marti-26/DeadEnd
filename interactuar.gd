@@ -1,31 +1,32 @@
+class_name Interactuar
 extends Node
 
-@export var tecla = "usar"
-@export var alcance = 1.8
-@export var tiempo_necesario = 3.0
-@export var bateria_inicial = 25.0
+@export var tecla: String = "usar"
+@export var alcance: float = 1.8
+@export var tiempo_necesario: float = 3.0
+@export var bateria_inicial: float = 25.0
 
-var bateria:
+var bateria: float:
 	get:
 		return Partida.bateria
 	set(valor):
 		Partida.bateria = valor
 
-@onready var pj = get_parent()
+@onready var pj: Personaje = get_parent() as Personaje
 
-var progreso = 0.0
-var actual = null
+var progreso: float = 0.0
+var actual: Node = null
 
 
-func _ready():
-	add_to_group("bateria")
+func _ready() -> void:
+	add_to_group(Grupos.BATERIA)
 	if Partida.bateria < 0.0:
 		Partida.bateria = bateria_inicial
 	print("batería al cargar la escena: ", snappedf(bateria, 0.1), " %")
 
 
-func _physics_process(delta):
-	var obj = mas_cercano()
+func _physics_process(delta: float) -> void:
+	var obj: Node = mas_cercano()
 	if not Input.is_action_pressed(tecla) or obj == null:
 		progreso = 0.0
 		actual = null
@@ -44,9 +45,9 @@ func _physics_process(delta):
 		progreso = 0.0
 
 
-func mas_cercano():
-	var mejor = null
-	for obj in get_tree().get_nodes_in_group("interactivos"):
+func mas_cercano() -> Node:
+	var mejor: Node = null
+	for obj in get_tree().get_nodes_in_group(Grupos.INTERACTIVOS):
 		var d = distancia_a(obj)
 		if d <= alcance and (mejor == null or d < distancia_a(mejor)):
 			mejor = obj

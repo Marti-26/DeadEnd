@@ -1,46 +1,38 @@
-extends CharacterBody3D
+class_name CriaturaOido
+extends CriaturaBase
 ## Tarea B · Restrepo Sanabria María Camila — Oido, la criatura que oye.
 ## Receta C. No mira al jugador cada cuadro: espera en su puesto hasta que
 ## alguien la llama con oir(punto). Entonces va a donde sonó, mira 5 s
 ## (la alerta del documento) y vuelve. Si estaba tranquila, avisa a las
 ## criaturas que tenga a menos de radio_aviso (alerta en cadena).
 
-signal evento(posicion: Vector3)
-
 enum Estado { EN_PUESTO, INVESTIGAR, MIRAR, VOLVER }
 
-@export var rapidez = 1.2          # u/s, patrulla de la Estación 2 (Taller 4)
-@export var tiempo_mirar = 5.0     # s, los 5 s de alerta del documento
+@export var tiempo_mirar: float = 5.0     # s, los 5 s de alerta del documento
 # Se detiene antes del punto: ahí puede estar el jugador, y chocarían.
-@export var llega_a = 1.0          # u
-@export var radio_aviso = 5.0      # u, hasta dónde avisa a otras criaturas
-@export var radio_audicion = 8.0   # u, lo máximo que oye: llega al dash en todas las estaciones
-@export var tiempo_max_investigar = 8.0
+@export var llega_a: float = 1.0          # u
+@export var radio_aviso: float = 5.0      # u, hasta dónde avisa a otras criaturas
+@export var radio_audicion: float = 8.0   # u, lo máximo que oye: llega al dash en todas las estaciones
+@export var tiempo_max_investigar: float = 8.0
 
-var estado = Estado.EN_PUESTO
-var puesto = Vector3.ZERO
-var ruido_en = Vector3.ZERO
-var reloj = 0.0
+var estado: Estado = Estado.EN_PUESTO
+var ruido_en: Vector3 = Vector3.ZERO
 # Sprites: idle y alerta van 1 2 3 2 en bucle (1 2 3 2 1 2 3...), sin saltos.
 # Caminar tiene dos lados; el eje X del mundo es izquierda/derecha en pantalla.
 @onready var sprite: AnimatedSprite3D = $Sprite
-var lado = "derecha"
-@onready var exclamacion = get_node_or_null("Exclamacion")
+var lado: String = "derecha"
+@onready var exclamacion: Node = get_node_or_null("Exclamacion")
 
 
-func _enter_tree():
-	add_to_group("disparadores")
-
-
-func _ready():
-	add_to_group("oyentes")
-	puesto = global_position
-	collision_mask |= 4
+func _ready() -> void:
+	rapidez = 1.2
+	super._ready()
+	add_to_group(Grupos.OYENTES)
 	mostrar_alerta()
 
 
-func _physics_process(delta):
-	velocity += get_gravity() * delta
+func _physics_process(delta: float) -> void:
+	aplicar_gravedad(delta)
 	reloj = maxf(reloj - delta, 0.0)
 	var nuevo = decidir()
 	if nuevo != estado:
@@ -101,8 +93,8 @@ func oir(punto):
 		avisar_a_vecinos(punto)
 
 
-func avisar_a_vecinos(punto):
-	for n in get_tree().get_nodes_in_group("oyentes"):
+func avisar_a_vecinos(punto: Vector3) -> void:
+	for n in get_tree().get_nodes_in_group(Grupos.OYENTES):
 		if n == self:
 			continue
 		if global_position.distance_to(n.global_position) <= radio_aviso:
@@ -138,9 +130,3 @@ func animar(nombre):
 		nombre = "idle"
 	if sprite.animation != nombre or not sprite.is_playing():
 		sprite.play(nombre)
-
-
-# Distancia en el suelo: si el otro salta, no "se aleja".
-func distancia_a(p):
-	var o = global_position
-	return Vector2(p.x - o.x, p.z - o.z).length()
