@@ -1,28 +1,49 @@
 extends Node
 
-const ESCENA_INICIO = "res://zona_b.tscn"
-const LIMITE_ESTRES = 70.0
-const ESTRES_AL_VOLVER = 50.0
+const ESCENA_INICIO: String = "res://zona_b.tscn"
+const LIMITE_ESTRES: float = 70.0
+const ESTRES_AL_VOLVER: float = 50.0
 
-var bateria = -1.0
-var estres = 0.0
-var recuperando = false
-var llegada = ""
-var guardado = {}
-var estacion_usada = false
-var celular_recogido = false
-var encuentros_chico = 0
-var _perdiendo = false
+var bateria: float = -1.0
+var estres: float = 0.0
+var recuperando: bool = false
+var llegada: String = ""
+var guardado: Dictionary = {}
+var estacion_usada: bool = false
+var celular_recogido: bool = false
+var encuentros_chico: int = 0
+var _perdiendo: bool = false
 
 
-func cambiar_escena(ruta, punto = ""):
+func guardar_estado_personaje(p: Personaje) -> void:
+	if p == null:
+		return
+	bateria = p.bateria
+	estres = p.estres
+	celular_recogido = p.tiene_celular
+	print("Partida: estado de personaje guardado · batería ", snappedf(bateria, 0.1), " % · estrés ", snappedf(estres, 0.1), " · celular: ", celular_recogido)
+
+
+func cargar_estado_personaje(p: Personaje) -> void:
+	if p == null:
+		return
+	if bateria >= 0.0:
+		p.bateria = bateria
+	else:
+		bateria = p.bateria
+	p.estres = estres
+	p.tiene_celular = celular_recogido
+	print("Partida: estado de personaje cargado · batería ", snappedf(p.bateria, 0.1), " % · estrés ", snappedf(p.estres, 0.1), " · celular: ", p.tiene_celular)
+
+
+func cambiar_escena(ruta: String, punto: String = "") -> void:
 	llegada = punto
 	print("cambio de escena -> ", ruta, " · batería ", snappedf(bateria, 0.1),
 		" % · estrés ", snappedf(estres, 0.1))
 	get_tree().change_scene_to_file.call_deferred(ruta)
 
 
-func guardar(punto):
+func guardar(punto: String) -> void:
 	guardado = {
 		"escena": get_tree().current_scene.scene_file_path,
 		"punto": punto,
@@ -33,7 +54,7 @@ func guardar(punto):
 	print("guardado · batería ", snappedf(bateria, 0.1), " % · estrés ", snappedf(estres, 0.1))
 
 
-func perder():
+func perder() -> void:
 	if _perdiendo:
 		return
 	_perdiendo = true
@@ -45,20 +66,23 @@ func perder():
 		celular_recogido = false
 		cambiar_escena(ESCENA_INICIO)
 	else:
-		bateria = guardado.bateria
-		estres = guardado.estres
-		celular_recogido = guardado.get("celular_recogido", false)
+		bateria = float(guardado.get("bateria", -1.0))
+		estres = float(guardado.get("estres", 0.0))
+		celular_recogido = bool(guardado.get("celular_recogido", false))
 		if estres > LIMITE_ESTRES:
 			estres = ESTRES_AL_VOLVER
 		print("perdió: vuelve al último guardado")
-		cambiar_escena(guardado.escena, guardado.punto)
+		var escena_guardada: String = str(guardado.get("escena", ESCENA_INICIO))
+		var punto_guardado: String = str(guardado.get("punto", ""))
+		cambiar_escena(escena_guardada, punto_guardado)
 	await get_tree().create_timer(0.5).timeout
 	_perdiendo = false
 
 
-func _unhandled_input(event):
+func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
-		if event.physical_keycode == KEY_F9:
+		var key_event: InputEventKey = event as InputEventKey
+		if key_event.physical_keycode == KEY_F9:
 			cambiar_escena(get_tree().current_scene.scene_file_path)
-		elif event.physical_keycode == KEY_F10:
+		elif key_event.physical_keycode == KEY_F10:
 			perder()

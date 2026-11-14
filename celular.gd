@@ -7,7 +7,7 @@ var _jugador_cerca: Node = null
 func _ready() -> void:
 	add_to_group(Grupos.INTERACTIVOS)
 	# Si ya fue recogido en la partida, desaparece inmediatamente
-	if Partida != null and "celular_recogido" in Partida and Partida.celular_recogido:
+	if Partida != null and Partida.celular_recogido:
 		queue_free()
 		return
 	body_entered.connect(_on_body_entered)
@@ -41,9 +41,11 @@ func usar() -> void:
 	if Partida != null:
 		Partida.celular_recogido = true
 
-	var jugador: Node = _jugador_cerca if _jugador_cerca != null else get_tree().get_first_node_in_group(Grupos.JUGADOR)
+	var jugador: Personaje = (_jugador_cerca if _jugador_cerca != null else get_tree().get_first_node_in_group(Grupos.JUGADOR)) as Personaje
 	if jugador != null:
-		jugador.set("tiene_celular", true)
+		jugador.tiene_celular = true
+		if Partida != null:
+			Partida.guardar_estado_personaje(jugador)
 
 	remove_from_group(Grupos.INTERACTIVOS)
 	queue_free()

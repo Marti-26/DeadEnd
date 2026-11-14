@@ -4,7 +4,7 @@ extends Node3D
 signal jugador_entro(cuerpo: Node3D)
 signal jugador_salio(cuerpo: Node3D)
 
-@export var grupo: String = "fuera_de_alcance"
+@export var grupo: String = Grupos.FUERA_DE_ALCANCE
 @export var bloquear_frente_hueco: bool = true
 
 const ANCHO: float = 30.0
@@ -409,14 +409,14 @@ func _vidrio(color: Color) -> StandardMaterial3D:
 
 
 func _on_area_zona_segura_body_entered(cuerpo: Node3D) -> void:
-	if cuerpo.is_in_group("jugador"):
+	if cuerpo.is_in_group(Grupos.JUGADOR):
 		if grupo != "":
 			cuerpo.add_to_group(grupo)
 		jugador_entro.emit(cuerpo)
 
 
 func _on_area_zona_segura_body_exited(cuerpo: Node3D) -> void:
-	if cuerpo.is_in_group("jugador"):
+	if cuerpo.is_in_group(Grupos.JUGADOR):
 		if grupo != "" and not _sigue_en_otra_zona(cuerpo):
 			cuerpo.remove_from_group(grupo)
 		jugador_salio.emit(cuerpo)

@@ -79,14 +79,8 @@ var tiene_celular: bool = false
 
 func _enter_tree() -> void:
 	add_to_group(Grupos.JUGADOR)
-	if Partida.bateria < 0.0:
-		Partida.bateria = _bateria
-	Partida.estres = clampf(Partida.estres, 0.0, ESTRES_MAX)
-	_estres = Partida.estres
-	
-	#persistencia del celular
-	if Partida != null and "celular_recogido" in Partida:
-		tiene_celular = Partida.celular_recogido
+	if Partida != null:
+		Partida.cargar_estado_personaje(self)
 
 
 func _ready() -> void:
@@ -97,6 +91,8 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	_detener_vibracion_camara()
+	if Partida != null:
+		Partida.guardar_estado_personaje(self)
 
 
 func _process(delta: float) -> void:

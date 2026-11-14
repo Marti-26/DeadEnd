@@ -1,9 +1,7 @@
 class_name EstacionCarga
 extends StaticBody3D
 
-const LIMITE_RECARGA: float = 60.0
-
-@export var carga: float = 60.0
+@export var carga: float = 100.0
 @export var punto_guardado: String = "PuntoGuardado"
 @export var pantalla: MeshInstance3D
 @export var aviso: Label3D
@@ -22,16 +20,15 @@ func _ready() -> void:
 
 
 func usar() -> void:
-	var objetivo_bat: Node = get_tree().get_first_node_in_group(Grupos.JUGADOR)
-	if objetivo_bat == null or not ("bateria" in objetivo_bat):
-		objetivo_bat = get_tree().get_first_node_in_group(Grupos.BATERIA)
-	if not Partida.estacion_usada and objetivo_bat != null and "bateria" in objetivo_bat:
-		var limite: float = minf(carga, LIMITE_RECARGA)
-		var actual: float = float(objetivo_bat.get("bateria"))
-		if actual < limite:
-			objetivo_bat.set("bateria", limite)
+	var pj: Personaje = get_tree().get_first_node_in_group(Grupos.JUGADOR) as Personaje
+	if pj != null:
+		if pj.bateria < carga:
+			pj.bateria = carga
+			Partida.bateria = carga
 			Partida.estacion_usada = true
-			print("estación de carga: batería al ", limite, " %")
+			print("estación de carga: batería al ", carga, " %")
+		if Partida != null:
+			Partida.guardar_estado_personaje(pj)
 	Partida.guardar(punto_guardado)
 	_pintar()
 	_mostrar("GUARDADO")

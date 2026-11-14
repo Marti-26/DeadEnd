@@ -10,7 +10,7 @@ var _nodo_dash: Node = null
 
 
 func _enter_tree() -> void:
-	add_to_group("hud")
+	add_to_group(Grupos.HUD)
 
 
 func _ready() -> void:
@@ -25,7 +25,7 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	if not is_instance_valid(_nodo_bateria) and not is_instance_valid(_nodo_jugador):
+	if not is_instance_valid(_nodo_bateria) or not is_instance_valid(_nodo_jugador):
 		_buscar_referencias()
 	_actualizar_barras()
 
@@ -45,6 +45,8 @@ func _actualizar_barras() -> void:
 
 
 func _leer_bateria() -> float:
+	if Partida != null and Partida.bateria >= 0.0:
+		return clampf(Partida.bateria, 0.0, 100.0)
 	if is_instance_valid(_nodo_jugador) and "bateria" in _nodo_jugador:
 		return clampf(float(_nodo_jugador.get("bateria")), 0.0, 100.0)
 	if is_instance_valid(_nodo_bateria) and "bateria" in _nodo_bateria:
@@ -53,6 +55,8 @@ func _leer_bateria() -> float:
 
 
 func _leer_estres() -> float:
+	if Partida != null:
+		return clampf(Partida.estres, 0.0, 100.0)
 	if is_instance_valid(_nodo_jugador) and "estres" in _nodo_jugador:
 		return clampf(float(_nodo_jugador.get("estres")), 0.0, 100.0)
 	if is_instance_valid(_nodo_bateria) and "estres" in _nodo_bateria:
