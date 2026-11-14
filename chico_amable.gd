@@ -1,6 +1,6 @@
 extends CharacterBody3D
 
-enum Estado { QUIETO, ACERCARSE, HABLAR, AVISO, GOLPE, RECARGA }
+enum Estado { QUIETO, ACERCARSE, HABLAR, AVISO, GOLPE, RECARGA, HUIR }
 
 @export var tecla = "hablar"
 @export var radio_notar = 4.5
@@ -22,18 +22,19 @@ var puesto = Vector3.ZERO
 var reloj = 0.0
 var _ya_se_acerco = false
 var agresivo = false
+var huyendo = false
 
 @onready var anim = $Modelo/AnimationPlayer
 @onready var bocadillo = $Bocadillo
+@onready var salud = $Salud
 
 
 func _ready():
 	jugador = get_tree().get_first_node_in_group("jugador")
 	puesto = global_position
 	bocadillo.visible = false
-
-
-
+	salud.vida_cambiada.connect(_al_cambiar_vida)
+		
 func _physics_process(delta):
 	velocity += get_gravity() * delta
 	reloj = maxf(reloj - delta, 0.0)
@@ -96,6 +97,16 @@ func _physics_process(delta):
 			frenar("idle")
 			if reloj <= 0.001:
 				estado = Estado.ACERCARSE
+		Estado.HUIR:
+			if jugador != null:
+				var direccion_huida = global_position - jugador.global_position
+				direccion_huida.y = 0.0
+				if direccion_huida.length() > 0.05:
+					ir_a(global_position + direccion_huida.normalized() * 3.0)
+				else:
+					frenar("idle")
+			else:
+				frenar("idle")
 	if Input.is_action_just_pressed(tecla) and not agresivo and distancia() <= alcance_hablar:
 		interactuar()
 	move_and_slide()
@@ -159,3 +170,12 @@ func distancia():
 func distancia_a(p):
 	var o = global_position
 	return Vector2(p.x - o.x, p.z - o.z).length()
+	
+func _al_cambiar_vida(actual: float, maxima: float) -> void:
+	if actual <= maxima * 0.30 and not huyendo:
+		huyendo = true
+		agresivo = false
+		estado = Estado.HUIR
+		bocadillo.visible = false
+		print("Chico Amable comienza a huir. Vida: ", actual)
+		
