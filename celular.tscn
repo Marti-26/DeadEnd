@@ -34,7 +34,7 @@ mesh = SubResource("BoxMesh_3lpp0")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="MeshInstance3D" unique_id=260484486]
 light_color = Color(7.02709e-06, 0.74142313, 0.7423472, 1)
-light_energy = 0.8
+light_energy = 0.86
 omni_range = 1.5
 
 [node name="Pantalla" type="MeshInstance3D" parent="." unique_id=1199716108]
