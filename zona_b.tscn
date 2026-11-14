@@ -30,7 +30,7 @@ background_mode = 1
 background_color = Color(0.008, 0.02, 0.022, 1)
 ambient_light_source = 2
 ambient_light_color = Color(0.035, 0.07, 0.08, 1)
-ambient_light_energy = 1.1
+ambient_light_energy = 0.45
 tonemap_mode = 2
 glow_enabled = true
 glow_levels/2 = 1.0
@@ -59,7 +59,7 @@ shader_parameter/desfase = 0.0
 shader_parameter/junta = 0.035
 shader_parameter/variacion = 0.06
 shader_parameter/pixel = 0.05
-shader_parameter/rugosidad = 0.3
+shader_parameter/rugosidad = 0.85
 shader_parameter/en_piso = true
 shader_parameter/manchas = 0.12
 
@@ -736,7 +736,7 @@ environment = SubResource("Environment_dpv7s")
 [node name="LuzLuna" type="DirectionalLight3D" parent="." unique_id=1005726734]
 transform = Transform3D(0.906308, -0.346189, 0.242404, 0, 0.573576, 0.819152, -0.422618, -0.742404, 0.519837, 0, 8, 0)
 light_color = Color(0.6, 0.82, 0.84, 1)
-light_energy = 0.55
+light_energy = 0.25
 shadow_enabled = true
 
 [node name="Estacion" type="Node3D" parent="." unique_id=1373757006]
@@ -1409,11 +1409,12 @@ mesh = SubResource("CylinderMesh_4hwbu")
 [node name="Luz" type="OmniLight3D" parent="Tubos/TuboEstable1" unique_id=2147093714 node_paths=PackedStringArray("tubo", "cono")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, -2.9)
 light_color = Color(0.56078434, 0.8509804, 0.6901961, 1)
-light_energy = 5.0
-omni_range = 7.5
+light_energy = 1.5
+light_specular = 0.0
+omni_range = 5.0
 omni_attenuation = 2.0
 script = ExtResource("3_r8jko")
-energia_base = 5.0
+energia_base = 1.5
 amplitud = 0.08
 velocidad = 1.5
 semilla = 3
@@ -1444,11 +1445,12 @@ mesh = SubResource("CylinderMesh_d2qcw")
 [node name="Luz" type="OmniLight3D" parent="Tubos/TuboEstable2" unique_id=1475829777 node_paths=PackedStringArray("tubo", "cono")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, -2.9)
 light_color = Color(0.56078434, 0.8509804, 0.6901961, 1)
-light_energy = 5.0
-omni_range = 7.5
+light_energy = 1.5
+light_specular = 0.0
+omni_range = 5.0
 omni_attenuation = 2.0
 script = ExtResource("3_r8jko")
-energia_base = 5.0
+energia_base = 1.5
 amplitud = 0.12
 velocidad = 2.0
 semilla = 5
@@ -1479,11 +1481,13 @@ mesh = SubResource("CylinderMesh_nmmvb")
 [node name="Luz" type="OmniLight3D" parent="Tubos/TuboQueFalla" unique_id=1383712557 node_paths=PackedStringArray("tubo", "cono")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, -2.9)
 light_color = Color(0.56078434, 0.8509804, 0.6901961, 1)
-light_energy = 6.0
+light_energy = 1.8
+light_specular = 0.0
 shadow_enabled = true
-omni_range = 7.5
+omni_range = 5.0
 omni_attenuation = 2.0
 script = ExtResource("3_r8jko")
+energia_base = 1.8
 tubo = NodePath("../Tubo")
 cono = NodePath("../Cono")
 
@@ -1526,11 +1530,12 @@ mesh = SubResource("CylinderMesh_4hwbu")
 [node name="Luz" type="OmniLight3D" parent="Tubos/TuboEstable3" unique_id=565271899 node_paths=PackedStringArray("tubo", "cono")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, -2.9)
 light_color = Color(0.56078434, 0.8509804, 0.6901961, 1)
-light_energy = 5.0
-omni_range = 7.5
+light_energy = 1.5
+light_specular = 0.0
+omni_range = 5.0
 omni_attenuation = 2.0
 script = ExtResource("3_r8jko")
-energia_base = 5.0
+energia_base = 1.5
 amplitud = 0.08
 velocidad = 1.5
 semilla = 3
@@ -1561,11 +1566,12 @@ mesh = SubResource("CylinderMesh_4hwbu")
 [node name="Luz" type="OmniLight3D" parent="Tubos/TuboEstable4" unique_id=1605955704 node_paths=PackedStringArray("tubo", "cono")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, -2.9)
 light_color = Color(0.56078434, 0.8509804, 0.6901961, 1)
-light_energy = 5.0
-omni_range = 7.5
+light_energy = 1.5
+light_specular = 0.0
+omni_range = 5.0
 omni_attenuation = 2.0
 script = ExtResource("3_r8jko")
-energia_base = 5.0
+energia_base = 1.5
 amplitud = 0.08
 velocidad = 1.5
 semilla = 3
@@ -1664,7 +1670,8 @@ mesh = SubResource("BoxLampara")
 [node name="LuzSodioIzq" type="OmniLight3D" parent="AcentosCalidos" unique_id=1840256681]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.5, 2.8, -3)
 light_color = Color(1, 0.76, 0.52, 1)
-light_energy = 2.4
+light_energy = 1.0
+light_specular = 0.0
 omni_attenuation = 1.6
 
 [node name="PilotoBarrera0" type="MeshInstance3D" parent="AcentosCalidos" unique_id=643357421]

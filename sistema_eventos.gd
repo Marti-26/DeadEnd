@@ -9,6 +9,7 @@ extends Node
 @export var color_bajo := Color(0.36, 0.62, 0.72)
 @export var color_alto := Color(0.784, 0.243, 0.243)
 @export var k_variable := 4.0
+@export var energia_minima := 1.0
 
 var variable := 0.0
 
@@ -28,7 +29,7 @@ func _process(delta: float) -> void:
 			variable = maxf(0.0, variable - delta * 0.5)
 		variable = clampf(variable, 0.0, 1.0)
 		luz_variable.light_color = color_bajo.lerp(color_alto, variable)
-		var deseada := 1.0 + 3.0 * variable
+		var deseada := energia_minima + 3.0 * variable
 		luz_variable.light_energy = decaer(luz_variable.light_energy, deseada, k_variable, delta)
 
 
