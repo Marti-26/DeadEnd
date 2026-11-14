@@ -23,6 +23,7 @@
 [ext_resource type="PackedScene" path="res://hud.tscn" id="21_hud"]
 [ext_resource type="PackedScene" uid="uid://dk2w3at8nv2xx" path="res://celular.tscn" id="21_s3cy1"]
 [ext_resource type="PackedScene" uid="uid://df2osby5n6wnv" path="res://salida.tscn" id="23_jc8c0"]
+[ext_resource type="PackedScene" uid="uid://dhfme1yx68me0" path="res://cartel_controles.tscn" id="24_mikmk"]
 
 [sub_resource type="Environment" id="Environment_dpv7s"]
 background_mode = 1
@@ -1892,3 +1893,6 @@ bloquear_frente_hueco = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8816857, 0.059074253, 2.049488)
 
 [node name="Salida" parent="." unique_id=1248284208 instance=ExtResource("23_jc8c0")]
+
+[node name="CartelControles" parent="." unique_id=778062498 instance=ExtResource("24_mikmk")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -6.1826963, 2.1095808, -3.4051104)
