@@ -1,30 +1,122 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://criatura_oido.gd" id="1_oido"]
-[ext_resource type="PackedScene" uid="uid://52giffn4ww16" path="res://personaje/character-male-d.glb" id="2_modelo"]
+[ext_resource type="Texture2D" uid="uid://ob03cg1mua2r" path="res://assets/Criatura_que_escucha/criatura_escucha_idle_frente_1.png" id="2_idle_1"]
+[ext_resource type="Texture2D" uid="uid://ptvgerffy74l" path="res://assets/Criatura_que_escucha/criatura_escucha_idle_frente_2.png" id="3_idle_2"]
+[ext_resource type="Texture2D" uid="uid://o2o5fdkxloee" path="res://assets/Criatura_que_escucha/criatura_escucha_idle_frente_3.png" id="4_idle_3"]
+[ext_resource type="Texture2D" uid="uid://bnrwmvakx4q43" path="res://assets/Criatura_que_escucha/criatura_escucha_alerta_frente_1.png" id="5_alerta_1"]
+[ext_resource type="Texture2D" uid="uid://6vqyxdld3u5o" path="res://assets/Criatura_que_escucha/criatura_escucha_alerta_frente_2.png" id="6_alerta_2"]
+[ext_resource type="Texture2D" uid="uid://cfv7tjl7irq0g" path="res://assets/Criatura_que_escucha/criatura_escucha_alerta_frente_3.png" id="7_alerta_3"]
+[ext_resource type="Texture2D" uid="uid://b8vu2dtcindd5" path="res://assets/Criatura_que_escucha/criatura_escucha_caminar_derecha_1.png" id="8_cam_derecha_1"]
+[ext_resource type="Texture2D" uid="uid://bs2i5ecw8mdu7" path="res://assets/Criatura_que_escucha/criatura_escucha_caminar_derecha_2.png" id="9_cam_derecha_2"]
+[ext_resource type="Texture2D" uid="uid://vkwdfoo2nq0w" path="res://assets/Criatura_que_escucha/criatura_escucha_caminar_izquierda_1.png" id="10_cam_izquierda_1"]
+[ext_resource type="Texture2D" uid="uid://fjxr2xpomunb" path="res://assets/Criatura_que_escucha/criatura_escucha_caminar_izquierda_2.png" id="11_cam_izquierda_2"]
+[ext_resource type="Texture2D" uid="uid://bpxrq2dumy54x" path="res://assets/Criatura_que_escucha/criatura_escucha_caminar_derecha_3.png" id="12_cam_derecha_3"]
+[ext_resource type="Texture2D" uid="uid://d1f557wptmtyt" path="res://assets/Criatura_que_escucha/criatura_escucha_caminar_izquierda_3.png" id="13_cam_izquierda_3"]
+[ext_resource type="Texture2D" uid="uid://c68jdddb3r4su" path="res://assets/Criatura_que_escucha/criatura_escucha_caminar_derecha_4.png" id="14_cam_derecha_4"]
+[ext_resource type="Texture2D" uid="uid://bcgut2vs6ji46" path="res://assets/Criatura_que_escucha/criatura_escucha_caminar_izquierda_4.png" id="15_cam_izquierda_4"]
 
 [sub_resource type="CapsuleShape3D" id="CapsulaOido"]
 radius = 0.35
-height = 1.75
+height = 5.0
+
+[sub_resource type="SpriteFrames" id="AnimacionesOido"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_idle_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_idle_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_idle_3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_idle_2")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_alerta_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_alerta_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_alerta_3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_alerta_2")
+}],
+"loop": true,
+"name": &"alerta",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_cam_derecha_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_cam_derecha_4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_cam_derecha_3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_cam_derecha_2")
+}],
+"loop": true,
+"name": &"caminar_derecha",
+"speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("11_cam_izquierda_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_cam_izquierda_4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_cam_izquierda_3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_cam_izquierda_1")
+}],
+"loop": true,
+"name": &"caminar_izquierda",
+"speed": 4.0
+}]
 
 [node name="Oido" type="CharacterBody3D"]
 script = ExtResource("1_oido")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
 shape = SubResource("CapsulaOido")
 
-[node name="Modelo" parent="." instance=ExtResource("2_modelo")]
-transform = Transform3D(-2.6, 0, 0, 0, 2.6, 0, 0, 0, -2.6, 0, 0, 0)
+[node name="Sprite" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.705, 0)
+cast_shadow = 0
+shaded = true
+pixel_size = 0.0069
+billboard = 2
+alpha_cut = 1
+texture_filter = 1
+sprite_frames = SubResource("AnimacionesOido")
+animation = &"idle"
+autoplay = "idle"
 
 [node name="Exclamacion" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.4, 0)
 visible = false
 pixel_size = 0.01
 billboard = 1
 no_depth_test = true
-modulate = Color(0.62, 0.64, 0.66, 1)
-outline_modulate = Color(0.05, 0.05, 0.06, 1)
+modulate = Color(0.85, 0.05, 0.05, 1)
 text = "!"
 font_size = 96
-outline_size = 16
+outline_size = 0

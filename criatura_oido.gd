@@ -21,7 +21,10 @@ var estado = Estado.EN_PUESTO
 var puesto = Vector3.ZERO
 var ruido_en = Vector3.ZERO
 var reloj = 0.0
-@onready var anim = $Modelo/AnimationPlayer
+# Sprites: idle y alerta van 1 2 3 2 en bucle (1 2 3 2 1 2 3...), sin saltos.
+# Caminar tiene dos lados; el eje X del mundo es izquierda/derecha en pantalla.
+@onready var sprite: AnimatedSprite3D = $Sprite
+var lado = "derecha"
 @onready var exclamacion = get_node_or_null("Exclamacion")
 
 
@@ -116,14 +119,25 @@ func ir_a(destino):
 	var dir = hacia.normalized()
 	velocity.x = dir.x * rapidez
 	velocity.z = dir.z * rapidez
-	basis = Basis.looking_at(dir)
-	anim.play("walk")
+	# Si va casi recto hacia arriba/abajo, conserva el último lado.
+	if absf(dir.x) > 0.05:
+		lado = "izquierda" if dir.x < 0.0 else "derecha"
+	animar("caminar_" + lado)
 
 
 func frenar():
 	velocity.x = 0.0
 	velocity.z = 0.0
-	anim.play("idle")
+	# Quieta buscando al jugador -> alerta; en su puesto -> idle.
+	animar("alerta" if estado == Estado.MIRAR else "idle")
+
+
+# Usa la animación pedida si existe; si no, se queda en idle.
+func animar(nombre):
+	if not sprite.sprite_frames.has_animation(nombre):
+		nombre = "idle"
+	if sprite.animation != nombre or not sprite.is_playing():
+		sprite.play(nombre)
 
 
 # Distancia en el suelo: si el otro salta, no "se aleja".
