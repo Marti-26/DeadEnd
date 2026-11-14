@@ -13,7 +13,7 @@
 [ext_resource type="Script" uid="uid://bh3ei7hjfvyk5" path="res://ruido.gd" id="11_ruido"]
 [ext_resource type="Script" uid="uid://6l6v2g14wi" path="res://esconderse.gd" id="12_escon"]
 [ext_resource type="PackedScene" path="res://criatura_oido.tscn" id="14_oido"]
-[ext_resource type="PackedScene" path="res://metro.tscn" id="15_metro"]
+[ext_resource type="PackedScene" uid="uid://nhfwj0jc7mm4" path="res://metro.tscn" id="15_metro"]
 [ext_resource type="Script" uid="uid://fqgq0ua6b3dp" path="res://zona_fuera_alcance.gd" id="16_fuera"]
 [ext_resource type="Script" uid="uid://bvblnav03id4i" path="res://camara_fija.gd" id="17_camara"]
 [ext_resource type="Script" uid="uid://cmaoevvcsdw4y" path="res://puerta_escena.gd" id="18_puerta"]
@@ -1215,7 +1215,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 [node name="Forma" type="CollisionShape3D" parent="Estacion/Expendedora2/Choque" unique_id=1033039359]
 shape = SubResource("BoxShape3D_j1cnc")
 
-[node name="Luz" type="OmniLight3D" parent="Estacion/Expendedora2"]
+[node name="Luz" type="OmniLight3D" parent="Estacion/Expendedora2" unique_id=1705627625]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0.9)
 light_color = Color(1, 0.8, 0.6, 1)
 light_energy = 1.8
@@ -1377,7 +1377,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, -2.9)
 light_color = Color(0.56078434, 0.8509804, 0.6901961, 1)
 light_energy = 1.5
 light_specular = 0.0
-omni_range = 5.0
 omni_attenuation = 2.0
 script = ExtResource("3_r8jko")
 energia_base = 1.5
@@ -1413,7 +1412,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, -2.9)
 light_color = Color(0.56078434, 0.8509804, 0.6901961, 1)
 light_energy = 1.5
 light_specular = 0.0
-omni_range = 5.0
 omni_attenuation = 2.0
 script = ExtResource("3_r8jko")
 energia_base = 1.5
@@ -1450,7 +1448,6 @@ light_color = Color(0.56078434, 0.8509804, 0.6901961, 1)
 light_energy = 1.8
 light_specular = 0.0
 shadow_enabled = true
-omni_range = 5.0
 omni_attenuation = 2.0
 script = ExtResource("3_r8jko")
 energia_base = 1.8
@@ -1498,7 +1495,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, -2.9)
 light_color = Color(0.56078434, 0.8509804, 0.6901961, 1)
 light_energy = 1.5
 light_specular = 0.0
-omni_range = 5.0
 omni_attenuation = 2.0
 script = ExtResource("3_r8jko")
 energia_base = 1.5
@@ -1534,7 +1530,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, -2.9)
 light_color = Color(0.56078434, 0.8509804, 0.6901961, 1)
 light_energy = 1.5
 light_specular = 0.0
-omni_range = 5.0
 omni_attenuation = 2.0
 script = ExtResource("3_r8jko")
 energia_base = 1.5
@@ -1553,8 +1548,8 @@ omni_attenuation = 2.0
 
 [node name="LuzEstres" type="OmniLight3D" parent="." unique_id=502242771]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 1)
-light_energy = 0.2
 light_color = Color(0.36, 0.62, 0.72, 1)
+light_energy = 0.2
 light_specular = 0.2
 omni_range = 16.0
 omni_attenuation = 1.6
@@ -1569,6 +1564,8 @@ energia_minima = 0.2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.05, 0.8)
 script = ExtResource("6_r0ps7")
 camara = NodePath("../Camara")
+energia_aura = 1.2
+color_aura = Color(0.98856527, 0.9808132, 0.9822039, 1)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Personaje" unique_id=1801526638]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
@@ -1621,7 +1618,6 @@ mesh = SubResource("BoxLampara")
 [node name="LuzSodioIzq" type="OmniLight3D" parent="AcentosCalidos" unique_id=1840256681]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.5, 2.8, -3)
 light_color = Color(1, 0.76, 0.52, 1)
-light_energy = 1.0
 light_specular = 0.0
 omni_attenuation = 1.6
 

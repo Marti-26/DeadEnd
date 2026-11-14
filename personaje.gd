@@ -45,6 +45,13 @@ signal jadeo(posicion: Vector3)
 
 @export var linterna: Light3D
 
+@export_group("Aura Visual Personaje")
+@export var activar_aura: bool = true
+@export var energia_aura: float = 1.4
+@export var color_aura: Color = Color(1.0, 0.95, 0.88)
+
+var _contenedor_aura: Node3D = null
+
 var linterna_encendida: bool = false
 var audifonos_activos: bool = false
 var _bateria: float = 100.0
@@ -86,6 +93,7 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	_rng_vibracion.randomize()
 	_preparar_linterna()
+	_preparar_aura()
 	_asegurar_hud.call_deferred()
 
 
@@ -101,6 +109,7 @@ func _process(delta: float) -> void:
 	_actualizar_estres(delta)
 	_reducir_estres_audifonos(delta)
 	_actualizar_vibracion_camara()
+	_actualizar_aura()
 
 func _reducir_estres_audifonos(delta: float) -> void:
 	if not audifonos_activos:
@@ -155,6 +164,61 @@ func _preparar_linterna() -> void:
 		add_child(foco)
 		linterna = foco
 	_actualizar_linterna()
+
+
+func _preparar_aura() -> void:
+	if not activar_aura:
+		return
+	# Asignar Capa 2 al sprite de la gata para que reciba la luz del aura exclusiva
+	var sp: VisualInstance3D = get_node_or_null("Sprite") as VisualInstance3D
+	if sp != null:
+		sp.layers = sp.layers | 2
+		for hijo in sp.get_children():
+			if hijo is VisualInstance3D:
+				(hijo as VisualInstance3D).layers = (hijo as VisualInstance3D).layers | 2
+
+	# Contenedor top_level independiente de la rotación del cuerpo para que NUNCA gire a los lados
+	if _contenedor_aura == null:
+		_contenedor_aura = get_node_or_null("LuzAuraContenedor") as Node3D
+	if _contenedor_aura == null:
+		_contenedor_aura = Node3D.new()
+		_contenedor_aura.name = "LuzAuraContenedor"
+		_contenedor_aura.top_level = true
+		add_child(_contenedor_aura)
+	else:
+		_contenedor_aura.top_level = true
+
+	# Limpiar luces previas para recrear con cobertura limpia
+	for h in _contenedor_aura.get_children():
+		h.queue_free()
+
+	# Cobertura en cruz siempre alineada con la pantalla (frente, espalda y laterales suaves)
+	var posiciones_luz: Array[Vector3] = [
+		Vector3(0.0, 1.25, 0.45),   # Frontal hacia la cámara (baña cara y ojos directamente)
+		Vector3(0.0, 1.25, -0.45),  # Trasera (baña nuca y mochila)
+		Vector3(-0.35, 1.25, 0.15), # Lateral izquierda
+		Vector3(0.35, 1.25, 0.15)   # Lateral derecha
+	]
+
+	for i in posiciones_luz.size():
+		var luz: OmniLight3D = OmniLight3D.new()
+		luz.name = "LuzAura_%d" % i
+		luz.position = posiciones_luz[i]
+		luz.omni_range = 2.4
+		luz.omni_attenuation = 1.0
+		luz.light_energy = energia_aura if i < 2 else energia_aura * 0.8
+		luz.light_color = color_aura
+		luz.light_cull_mask = 2 # Exclusivo para Capa 2 (solo la gata)
+		luz.shadow_enabled = false
+		_contenedor_aura.add_child(luz)
+
+	_actualizar_aura()
+
+
+func _actualizar_aura() -> void:
+	if _contenedor_aura != null and is_instance_valid(_contenedor_aura):
+		_contenedor_aura.global_position = global_position
+		_contenedor_aura.global_rotation = Vector3.ZERO
 
 
 func _consumir_bateria(delta: float) -> void:
@@ -223,7 +287,7 @@ func _esta_en_oscuridad_absoluta() -> bool:
 
 func _hay_luz_local_iluminando(nodo: Node, punto: Vector3) -> bool:
 	if nodo is Light3D and not (nodo is DirectionalLight3D):
-		if nodo != linterna and nodo.name != "LuzEstres" and nodo.name != "LuzEvento":
+		if nodo != linterna and nodo.name != "LuzEstres" and nodo.name != "LuzEvento" and not nodo.name.begins_with("LuzAura"):
 			var luz: Light3D = nodo as Light3D
 			if luz.is_visible_in_tree() and luz.light_energy > 0.05:
 				if luz is OmniLight3D:
