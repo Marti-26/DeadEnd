@@ -50,7 +50,21 @@ class MaterialesMetro:
 	var amarillo_piso: StandardMaterial3D
 
 
+@export_group("Camaras y Perspectiva")
+@export var camara_vagon: Camera3D
 @export var camara_estacion: Camera3D
+@export var ocultar_techo: bool = true
+@export var ocultar_pared_frontal: bool = true
+@export var suavizado_camara: float = 5.0
+
+@export_group("Iluminacion Vagon")
+@export var color_luz_vagon: Color = Color(0.92, 0.94, 1.0)
+@export var energia_luz_vagon: float = 1.8
+@export var iluminar_solo_puertas: bool = false
+@export var conos_luz_vagon: bool = false
+@export var luces_manuales: Node3D
+
+@export_group("Movimiento y Tiempos")
 @export var tiempo_fuera: float = 20.0
 @export var primera_llegada: float = 8.0
 @export var tiempo_detenido: float = 20.0
@@ -99,7 +113,6 @@ var _capas_plataforma: int = 0
 
 var tren: Node3D
 var cuerpo: AnimatableBody3D
-var camara_vagon: Camera3D
 var lado_camara: Node3D
 var techo: Node3D
 var hojas: Array[PuertaMovil] = []
@@ -115,9 +128,17 @@ var _x_antes: float = 0.0
 var filtro: CanvasLayer
 var marcador: Node3D
 var _mat_marcador: StandardMaterial3D
+var _offset_camara: Vector3 = Vector3(0.0, 2.4, 4.8)
+var _cam_x_actual: float = 0.0
 
 
 func _ready() -> void:
+	if camara_vagon == null:
+		camara_vagon = get_node_or_null("Camera3D") as Camera3D
+	if camara_vagon != null:
+		_offset_camara = camara_vagon.position
+		_cam_x_actual = camara_vagon.position.x
+
 	_construir()
 	if Engine.is_editor_hint():
 		return
@@ -188,11 +209,12 @@ func _physics_process(delta: float) -> void:
 		mat_filtro.set_shader_parameter("movimiento", movimiento)
 
 	_actualizar_marcador()
-	if dentro and jugador:
+	if dentro and jugador and camara_vagon:
 		var l: Vector3 = tren.to_local(jugador.global_position)
 		var mitad: float = LARGO / 2.0 - 3.3
 		var meta: float = clampf(l.x, -mitad, mitad)
-		camara_vagon.position.x = lerpf(camara_vagon.position.x, meta, 1.0 - exp(-5.0 * delta))
+		_cam_x_actual = lerpf(_cam_x_actual, meta, 1.0 - exp(-suavizado_camara * delta))
+		camara_vagon.global_position = tren.to_global(Vector3(_cam_x_actual, _offset_camara.y, _offset_camara.z))
 
 
 func _cambiar(nuevo: Estado) -> void:
@@ -240,21 +262,36 @@ func _al_salir(cuerpo_sale: Node3D) -> void:
 		jugador.remove_from_group("fuera_de_alcance")
 		if camara_estacion:
 			camara_estacion.make_current()
+			if "camara" in jugador:
+				jugador.camara = camara_estacion
 		_actualizar_vista()
 
 
 func _entrar_vista() -> void:
 	dentro = true
 	jugador.add_to_group("fuera_de_alcance")
-	var l: Vector3 = tren.to_local(jugador.global_position)
-	camara_vagon.position.x = clampf(l.x, -LARGO / 2.0 + 3.3, LARGO / 2.0 - 3.3)
-	camara_vagon.make_current()
+	if camara_vagon:
+		var l: Vector3 = tren.to_local(jugador.global_position)
+		var mitad: float = LARGO / 2.0 - 3.3
+		_cam_x_actual = clampf(l.x, -mitad, mitad)
+		camara_vagon.global_position = tren.to_global(Vector3(_cam_x_actual, _offset_camara.y, _offset_camara.z))
+		camara_vagon.make_current()
+		if "camara" in jugador:
+			jugador.camara = camara_vagon
 	_actualizar_vista()
 
 
 func _actualizar_vista() -> void:
-	lado_camara.visible = not dentro
-	techo.visible = true
+	if Engine.is_editor_hint():
+		if lado_camara:
+			lado_camara.visible = not ocultar_pared_frontal
+		if techo:
+			techo.visible = not ocultar_techo
+		return
+	if lado_camara:
+		lado_camara.visible = not dentro if ocultar_pared_frontal else true
+	if techo:
+		techo.visible = not dentro if ocultar_techo else true
 	if filtro:
 		filtro.visible = dentro
 
@@ -318,13 +355,17 @@ func _construir() -> void:
 	_luces_ventana(lado_camara, 1)
 	_compuertas()
 
-	camara_vagon = Camera3D.new()
-	camara_vagon.name = "CamaraVagon"
-	camara_vagon.projection = Camera3D.PROJECTION_ORTHOGONAL
-	camara_vagon.size = 3.6
-	camara_vagon.far = 40.0
-	camara_vagon.position = Vector3(0, 1.35, 7.0)
-	tren.add_child(camara_vagon)
+	# Se usa el nodo Camera3D asignado en el Inspector o de la escena
+	if camara_vagon == null:
+		camara_vagon = get_node_or_null("Camera3D") as Camera3D
+	if camara_vagon == null:
+		camara_vagon = Camera3D.new()
+		camara_vagon.name = "Camera3D"
+		camara_vagon.projection = Camera3D.PROJECTION_ORTHOGONAL
+		camara_vagon.size = 8.5
+		camara_vagon.far = 40.0
+		camara_vagon.position = Vector3(0, 2.4, 4.8)
+		add_child(camara_vagon)
 
 	var zona: Area3D = Area3D.new()
 	zona.name = "ZonaInterior"
@@ -651,31 +692,54 @@ func _carteles(p: Node3D) -> void:
 
 
 func _luces(p: Node3D) -> void:
-	var colores: Array[Color] = [Color(0.35, 0.4, 1.0), Color(0.5, 0.42, 1.0)]
-	var i: int = 0
-	var x: float = -LARGO / 2.0 + 2.0
-	while x < LARGO / 2.0:
-		var l: OmniLight3D = OmniLight3D.new()
-		l.light_color = colores[i % 2]
-		l.light_energy = 1.6
-		l.omni_range = 4.5
-		l.omni_attenuation = 1.3
-		l.position = Vector3(x, 2.25, 0)
-		p.add_child(l)
-		var cono: MeshInstance3D = MeshInstance3D.new()
-		var cm: CylinderMesh = CylinderMesh.new()
-		cm.top_radius = 0.25
-		cm.bottom_radius = 0.95
-		cm.height = 2.4
-		cm.cap_top = false
-		cm.cap_bottom = false
-		cono.mesh = cm
-		cono.material_override = _m.cono
-		cono.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		cono.position = Vector3(x, 1.25, -0.8 if i % 2 == 0 else 0.8)
-		p.add_child(cono)
-		x += 4.0
-		i += 1
+	# Si el desarrollador colocó luces manuales en el editor de Godot, las usa
+	var nodo_luces: Node3D = luces_manuales if luces_manuales != null else get_node_or_null("Luces") as Node3D
+	if nodo_luces != null and nodo_luces.get_child_count() > 0:
+		for hijo in nodo_luces.get_children():
+			if hijo is Light3D:
+				var copia: Light3D = hijo.duplicate() as Light3D
+				p.add_child(copia)
+		return
+
+	# Si no hay luces manuales, generar luces según configuración
+	if iluminar_solo_puertas:
+		# Iluminar principalmente las zonas de las puertas, dejando tramos oscuros para exploración con linterna
+		for px: float in puertas_x:
+			var l: OmniLight3D = OmniLight3D.new()
+			l.light_color = color_luz_vagon
+			l.light_energy = energia_luz_vagon
+			l.omni_range = 4.2
+			l.omni_attenuation = 1.2
+			l.position = Vector3(px, 2.25, 0)
+			p.add_child(l)
+	else:
+		# Distribución uniforme a lo largo del vagón
+		var i: int = 0
+		var x: float = -LARGO / 2.0 + 2.0
+		while x < LARGO / 2.0:
+			var l: OmniLight3D = OmniLight3D.new()
+			l.light_color = color_luz_vagon
+			l.light_energy = energia_luz_vagon
+			l.omni_range = 5.0
+			l.omni_attenuation = 1.0
+			l.position = Vector3(x, 2.25, 0)
+			p.add_child(l)
+			if conos_luz_vagon:
+				var cono: MeshInstance3D = MeshInstance3D.new()
+				var cm: CylinderMesh = CylinderMesh.new()
+				cm.top_radius = 0.25
+				cm.bottom_radius = 0.95
+				cm.height = 2.4
+				cm.cap_top = false
+				cm.cap_bottom = false
+				cono.mesh = cm
+				cono.material_override = _m.cono
+				cono.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+				cono.position = Vector3(x, 1.25, -0.8 if i % 2 == 0 else 0.8)
+				p.add_child(cono)
+			x += 4.0
+			i += 1
+
 	var calida: OmniLight3D = OmniLight3D.new()
 	calida.light_color = NARANJA
 	calida.light_energy = 0.9
