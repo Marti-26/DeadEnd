@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://df2osby5n6wnv"]
+
+[ext_resource type="Script" uid="uid://b56ntbuf7spsx" path="res://salida.gd" id="1_0xb47"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0xb47"]
+size = Vector3(1.5, 2, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jc8c0"]
+albedo_color = Color(0.54901963, 0.59607846, 0.6392157, 1)
+metallic = 0.85
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_50jv7"]
+size = Vector3(0.35, 1, 1.2)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_1vivr"]
+top_radius = 0.035
+bottom_radius = 0.035
+height = 0.8
+
+[node name="Salida" type="Area3D" unique_id=1248284208]
+script = ExtResource("1_0xb47")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1020779605]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("BoxShape3D_0xb47")
+
+[node name="Base" type="MeshInstance3D" parent="." unique_id=1910039821]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+material_override = SubResource("StandardMaterial3D_jc8c0")
+mesh = SubResource("BoxMesh_50jv7")
+
+[node name="EjeTorniquete" type="Node3D" parent="." unique_id=1075920091]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.85, 0)
+
+[node name="Brazo1" type="MeshInstance3D" parent="EjeTorniquete" unique_id=946375062]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0.3, 0, 0)
+mesh = SubResource("CylinderMesh_1vivr")
+
+[node name="Brazo2" type="MeshInstance3D" parent="EjeTorniquete" unique_id=1485183246]
+transform = Transform3D(0.6007807, -0.79637665, 0.06961768, 0.69175994, 0.56154805, 0.4540179, -0.4006629, -0.2246065, 0.8882685, 0.2, -0.3, 0.236)
+mesh = SubResource("CylinderMesh_1vivr")
+
+[node name="Brazo3" type="MeshInstance3D" parent="EjeTorniquete" unique_id=2018902001]
+transform = Transform3D(0.12554833, 0.5585735, -0.81989807, 0.72172934, -0.6184614, -0.31082433, -0.68069375, -0.5527212, -0.48078588, 0.1, -0.3, -0.3)
+mesh = SubResource("CylinderMesh_1vivr")

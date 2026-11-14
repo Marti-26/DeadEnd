@@ -1,24 +1,24 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://b5vw0pbkdjanw"]
 
 [ext_resource type="Script" uid="uid://bj0372xnq02wk" path="res://personaje.gd" id="1_pj"]
-[ext_resource type="PackedScene" path="res://gatita.tscn" id="2_modelo"]
+[ext_resource type="PackedScene" uid="uid://j5agalseuliu" path="res://gatita.tscn" id="2_modelo"]
 [ext_resource type="Script" uid="uid://bh2bylh8kjoo8" path="res://dash.gd" id="3_dash"]
 [ext_resource type="Script" uid="uid://cqv5bh23wl3n3" path="res://interactuar.gd" id="4_inter"]
 [ext_resource type="Script" uid="uid://bh3ei7hjfvyk5" path="res://ruido.gd" id="5_ruido"]
 [ext_resource type="Script" uid="uid://6l6v2g14wi" path="res://esconderse.gd" id="6_escon"]
-[ext_resource type="Script" path="res://camara_fija.gd" id="7_camara"]
-[ext_resource type="Script" path="res://zona_segura.gd" id="8_sala"]
-[ext_resource type="Script" path="res://estacion_carga.gd" id="9_carga"]
+[ext_resource type="Script" uid="uid://bvblnav03id4i" path="res://camara_fija.gd" id="7_camara"]
+[ext_resource type="Script" uid="uid://cjb6fbriprfvw" path="res://salud.gd" id="8_2x1d7"]
+[ext_resource type="Script" uid="uid://cxjnco3eeyjf7" path="res://zona_segura.gd" id="8_sala"]
+[ext_resource type="Script" uid="uid://b2ef24cd2g4vs" path="res://estacion_carga.gd" id="9_carga"]
 [ext_resource type="PackedScene" path="res://chico_amable.tscn" id="10_chico"]
-[ext_resource type="Script" path="res://llegada.gd" id="11_llegada"]
-[ext_resource type="Script" path="res://puerta_escena.gd" id="12_puerta"]
+[ext_resource type="Script" uid="uid://chlx4hyqucufu" path="res://llegada.gd" id="11_llegada"]
+[ext_resource type="Script" uid="uid://cmaoevvcsdw4y" path="res://puerta_escena.gd" id="12_puerta"]
 
 [sub_resource type="Environment" id="Entorno"]
 background_mode = 1
 background_color = Color(0.05, 0.03, 0.07, 1)
 ambient_light_source = 2
 ambient_light_color = Color(0.24, 0.15, 0.24, 1)
-ambient_light_energy = 1.0
 tonemap_mode = 2
 glow_enabled = true
 glow_levels/2 = 1.0
@@ -53,7 +53,7 @@ roughness = 0.4
 size = Vector3(1.4, 1.7, 0.6)
 
 [sub_resource type="BoxMesh" id="PantallaCarga"]
-size = Vector3(1.0, 0.35, 0.03)
+size = Vector3(1, 0.35, 0.03)
 
 [sub_resource type="StandardMaterial3D" id="MatPantallaCarga"]
 albedo_color = Color(0.05, 0.08, 0.08, 1)
@@ -81,46 +81,49 @@ emission_energy_multiplier = 3.0
 [sub_resource type="BoxShape3D" id="FormaBajada"]
 size = Vector3(2.9, 2, 2.6)
 
-[node name="SegundoPiso" type="Node3D"]
+[node name="SegundoPiso" type="Node3D" unique_id=352055503]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=441203886]
 environment = SubResource("Entorno")
 
-[node name="LuzLuna" type="DirectionalLight3D" parent="."]
+[node name="LuzLuna" type="DirectionalLight3D" parent="." unique_id=1176702490]
 transform = Transform3D(0.906308, -0.346189, 0.242404, 0, 0.573576, 0.819152, -0.422618, -0.742404, 0.519837, 0, 8, 0)
 light_color = Color(0.88, 0.72, 0.88, 1)
 light_energy = 0.45
 shadow_enabled = true
 
-[node name="Decorado" type="Node3D" parent="."]
+[node name="Decorado" type="Node3D" parent="." unique_id=1241099992]
 script = ExtResource("8_sala")
 
-[node name="Personaje" type="CharacterBody3D" parent="." node_paths=PackedStringArray("camara") groups=["jugador"]]
+[node name="Personaje" type="CharacterBody3D" parent="." unique_id=1065140557 node_paths=PackedStringArray("camara") groups=["jugador"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.05, 0.6)
 script = ExtResource("1_pj")
 camara = NodePath("../Camara")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Personaje"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Personaje" unique_id=930905360]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
 shape = SubResource("Capsula")
 
-[node name="Sprite" parent="Personaje" instance=ExtResource("2_modelo")]
+[node name="Sprite" parent="Personaje" unique_id=1513931002 instance=ExtResource("2_modelo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.98, 0)
 
-[node name="Dash" type="Node" parent="Personaje"]
+[node name="Dash" type="Node" parent="Personaje" unique_id=484960637]
 script = ExtResource("3_dash")
 
-[node name="Interactuar" type="Node" parent="Personaje"]
+[node name="Interactuar" type="Node" parent="Personaje" unique_id=1711827190]
 script = ExtResource("4_inter")
 
-[node name="Ruido" type="Node" parent="Personaje"]
+[node name="Ruido" type="Node" parent="Personaje" unique_id=1154326684]
 script = ExtResource("5_ruido")
 radio = 4.0
 
-[node name="Esconderse" type="Node" parent="Personaje"]
+[node name="Esconderse" type="Node" parent="Personaje" unique_id=2068702515]
 script = ExtResource("6_escon")
 
-[node name="Camara" type="Camera3D" parent="." node_paths=PackedStringArray("objetivo")]
+[node name="Salud" type="Node" parent="Personaje" unique_id=102925287]
+script = ExtResource("8_2x1d7")
+
+[node name="Camara" type="Camera3D" parent="." unique_id=767412451 node_paths=PackedStringArray("objetivo")]
 transform = Transform3D(1, 0, 0, 0, 0.76604444, 0.6427876, 0, -0.6427876, 0.76604444, -5.2, 14.141328, 16.052977)
 projection = 1
 current = true
@@ -130,87 +133,87 @@ objetivo = NodePath("../Personaje")
 limite_x = 5.2
 limite_z = Vector2(-1.2, 2.5)
 
-[node name="EstacionCarga" type="StaticBody3D" parent="." node_paths=PackedStringArray("pantalla", "aviso")]
+[node name="EstacionCarga" type="StaticBody3D" parent="." unique_id=943757498 node_paths=PackedStringArray("pantalla", "aviso")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0, -3.6)
 script = ExtResource("9_carga")
 pantalla = NodePath("Pantalla")
 aviso = NodePath("Aviso")
 
-[node name="Cuerpo" type="MeshInstance3D" parent="EstacionCarga"]
+[node name="Cuerpo" type="MeshInstance3D" parent="EstacionCarga" unique_id=725457720]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
 mesh = SubResource("CuerpoCarga")
 surface_material_override/0 = SubResource("MatCuerpoCarga")
 
-[node name="Forma" type="CollisionShape3D" parent="EstacionCarga"]
+[node name="Forma" type="CollisionShape3D" parent="EstacionCarga" unique_id=1315208227]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
 shape = SubResource("FormaCarga")
 
-[node name="Pantalla" type="MeshInstance3D" parent="EstacionCarga"]
+[node name="Pantalla" type="MeshInstance3D" parent="EstacionCarga" unique_id=1945826755]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0.31)
 mesh = SubResource("PantallaCarga")
 surface_material_override/0 = SubResource("MatPantallaCarga")
 
-[node name="Casillero0" type="MeshInstance3D" parent="EstacionCarga"]
+[node name="Casillero0" type="MeshInstance3D" parent="EstacionCarga" unique_id=1234799120]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.42, 0.45, 0.31)
 mesh = SubResource("Casillero")
 surface_material_override/0 = SubResource("MatCasillero")
 
-[node name="Piloto0" type="MeshInstance3D" parent="EstacionCarga"]
+[node name="Piloto0" type="MeshInstance3D" parent="EstacionCarga" unique_id=1043541719]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.29, 0.53, 0.33)
 mesh = SubResource("LuzCasillero")
 surface_material_override/0 = SubResource("MatLuzCasillero")
 
-[node name="Casillero1" type="MeshInstance3D" parent="EstacionCarga"]
+[node name="Casillero1" type="MeshInstance3D" parent="EstacionCarga" unique_id=1689389066]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0.31)
 mesh = SubResource("Casillero")
 surface_material_override/0 = SubResource("MatCasillero")
 
-[node name="Piloto1" type="MeshInstance3D" parent="EstacionCarga"]
+[node name="Piloto1" type="MeshInstance3D" parent="EstacionCarga" unique_id=363471977]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.13, 0.53, 0.33)
 mesh = SubResource("LuzCasillero")
 surface_material_override/0 = SubResource("MatLuzCasillero")
 
-[node name="Casillero2" type="MeshInstance3D" parent="EstacionCarga"]
+[node name="Casillero2" type="MeshInstance3D" parent="EstacionCarga" unique_id=1736708829]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.42, 0.45, 0.31)
 mesh = SubResource("Casillero")
 surface_material_override/0 = SubResource("MatCasillero")
 
-[node name="Piloto2" type="MeshInstance3D" parent="EstacionCarga"]
+[node name="Piloto2" type="MeshInstance3D" parent="EstacionCarga" unique_id=981781912]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55, 0.53, 0.33)
 mesh = SubResource("LuzCasillero")
 surface_material_override/0 = SubResource("MatLuzCasillero")
 
-[node name="Casillero3" type="MeshInstance3D" parent="EstacionCarga"]
+[node name="Casillero3" type="MeshInstance3D" parent="EstacionCarga" unique_id=1980679383]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.42, 0.79, 0.31)
 mesh = SubResource("Casillero")
 surface_material_override/0 = SubResource("MatCasillero")
 
-[node name="Piloto3" type="MeshInstance3D" parent="EstacionCarga"]
+[node name="Piloto3" type="MeshInstance3D" parent="EstacionCarga" unique_id=1103022457]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.29, 0.87, 0.33)
 mesh = SubResource("LuzCasillero")
 surface_material_override/0 = SubResource("MatLuzCasillero")
 
-[node name="Casillero4" type="MeshInstance3D" parent="EstacionCarga"]
+[node name="Casillero4" type="MeshInstance3D" parent="EstacionCarga" unique_id=1029721087]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.79, 0.31)
 mesh = SubResource("Casillero")
 surface_material_override/0 = SubResource("MatCasillero")
 
-[node name="Piloto4" type="MeshInstance3D" parent="EstacionCarga"]
+[node name="Piloto4" type="MeshInstance3D" parent="EstacionCarga" unique_id=2101719176]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.13, 0.87, 0.33)
 mesh = SubResource("LuzCasillero")
 surface_material_override/0 = SubResource("MatLuzCasillero")
 
-[node name="Casillero5" type="MeshInstance3D" parent="EstacionCarga"]
+[node name="Casillero5" type="MeshInstance3D" parent="EstacionCarga" unique_id=632701529]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.42, 0.79, 0.31)
 mesh = SubResource("Casillero")
 surface_material_override/0 = SubResource("MatCasillero")
 
-[node name="Piloto5" type="MeshInstance3D" parent="EstacionCarga"]
+[node name="Piloto5" type="MeshInstance3D" parent="EstacionCarga" unique_id=1671938626]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55, 0.87, 0.33)
 mesh = SubResource("LuzCasillero")
 surface_material_override/0 = SubResource("MatLuzCasillero")
 
-[node name="Rotulo" type="Label3D" parent="EstacionCarga"]
+[node name="Rotulo" type="Label3D" parent="EstacionCarga" unique_id=129085769]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85, 0.32)
 pixel_size = 0.006
 modulate = Color(0.45, 1, 0.75, 1)
@@ -219,7 +222,7 @@ text = "CARGA"
 font_size = 48
 outline_size = 8
 
-[node name="Aviso" type="Label3D" parent="EstacionCarga"]
+[node name="Aviso" type="Label3D" parent="EstacionCarga" unique_id=1737835963]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0.6)
 visible = false
 pixel_size = 0.006
@@ -229,32 +232,31 @@ modulate = Color(1, 0.95, 0.85, 1)
 outline_modulate = Color(0.05, 0.05, 0.1, 1)
 text = "GUARDADO"
 font_size = 56
-outline_size = 12
 
-[node name="Luz" type="OmniLight3D" parent="EstacionCarga"]
+[node name="Luz" type="OmniLight3D" parent="EstacionCarga" unique_id=728851988]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0.8)
 light_color = Color(0.45, 1, 0.75, 1)
 light_energy = 1.2
 omni_range = 3.0
 
-[node name="PuntoGuardado" type="Marker3D" parent="."]
+[node name="PuntoGuardado" type="Marker3D" parent="." unique_id=290221043]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0.1, -2.4)
 script = ExtResource("11_llegada")
 
-[node name="DesdeEstacion" type="Marker3D" parent="."]
+[node name="DesdeEstacion" type="Marker3D" parent="." unique_id=667132082]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.1, 0.6)
 script = ExtResource("11_llegada")
 
-[node name="Bajada" type="Area3D" parent="."]
+[node name="Bajada" type="Area3D" parent="." unique_id=472942472]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -0.5, 3.3)
 collision_layer = 0
 script = ExtResource("12_puerta")
 destino = "res://zona_b.tscn"
 llegada = "DesdeSegundoPiso"
 
-[node name="Forma" type="CollisionShape3D" parent="Bajada"]
+[node name="Forma" type="CollisionShape3D" parent="Bajada" unique_id=1238600523]
 shape = SubResource("FormaBajada")
 
-[node name="ChicoAmable" parent="." node_paths=PackedStringArray("senalar") instance=ExtResource("10_chico")]
+[node name="ChicoAmable" parent="." unique_id=2109638705 node_paths=PackedStringArray("senalar") instance=ExtResource("10_chico")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0.8)
 senalar = NodePath("../EstacionCarga")

@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://diqaqnykw61iw" path="res://criatura.gd" id="1_e43qq"]
 [ext_resource type="PackedScene" uid="uid://biu6tppn8ml1q" path="res://personaje/character-male-a.glb" id="2_gqgnk"]
 [ext_resource type="PackedScene" uid="uid://dtcyho4e2mmyw" path="res://personaje/character-female-e.glb" id="3_gqgnk"]
+[ext_resource type="AudioStream" uid="uid://c1mobdmhybuy2" path="res://435150__vykroft__creature-deep-growl.wav" id="4_b6hry"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3lpp0"]
 radius = 0.35
@@ -19,3 +20,9 @@ shape = SubResource("CapsuleShape3D_3lpp0")
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
 
 [node name="character-female-e2" parent="Modelo" unique_id=1261822380 instance=ExtResource("3_gqgnk")]
+
+[node name="SonidoCriatura" type="AudioStreamPlayer3D" parent="Modelo" unique_id=1892846411]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 0, 0)
+stream = ExtResource("4_b6hry")
+volume_db = 10.0
+max_distance = 15.0
