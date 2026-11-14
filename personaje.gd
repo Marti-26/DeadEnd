@@ -113,9 +113,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		var tecla: InputEventKey = event as InputEventKey
 		if tecla.pressed and not tecla.echo:
-			if tecla.physical_keycode == KEY_H:
+			if tecla.physical_keycode == KEY_F:
 				alternar_linterna()
-			elif tecla.physical_keycode == KEY_F:
+			elif tecla.physical_keycode == KEY_Q:
 				alternar_audifonos()
 				
 				
@@ -150,8 +150,10 @@ func _preparar_linterna() -> void:
 		var foco: SpotLight3D = SpotLight3D.new()
 		foco.name = "Linterna"
 		foco.position = Vector3(0.0, 1.1, -0.2)
-		foco.spot_range = 8.0
-		foco.light_energy = 2.5
+		foco.rotation_degrees.x = -15.0
+		foco.spot_range = 9.0
+		foco.spot_angle = 45.0
+		foco.light_energy = 3.5
 		add_child(foco)
 		linterna = foco
 	_actualizar_linterna()

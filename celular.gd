@@ -18,15 +18,15 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		var tecla_event: InputEventKey = event as InputEventKey
 		if tecla_event.pressed and not tecla_event.echo:
-			# Tecla R física o acción "hablar" mapeada a R en el proyecto
-			if tecla_event.physical_keycode == KEY_R or event.is_action_pressed("hablar"):
+			# Tecla E física o acción interactuar ("usar" / "esconderse")
+			if tecla_event.physical_keycode == KEY_E or event.is_action_pressed("usar") or event.is_action_pressed("esconderse"):
 				usar()
 
 
 func _on_body_entered(cuerpo: Node3D) -> void:
 	if cuerpo.is_in_group("jugador"):
 		_jugador_cerca = cuerpo
-		print("¡Cerca del celular! Presiona R para recogerlo")
+		print("¡Cerca del celular! Presiona E para recogerlo")
 
 
 func _on_body_exited(cuerpo: Node3D) -> void:

@@ -2,7 +2,7 @@ extends Node
 
 @export var tecla: String = "esconderse"
 @export var grupo: String = "escondites"
-@export var alcance: float = 1.5
+@export var alcance: float = 1.35
 @export var baja_estres: float = 1.0
 @export var hundir_modelo: float = 0.45
 @export var animacion: String = "crouch"
@@ -22,21 +22,28 @@ var _sprite_escala: Vector3 = Vector3.ONE
 var _sprite_sombreado: bool = true
 var _en_ojos: bool = false
 var _saliendo: bool = false
+var _enfriamiento_reentrada: float = 0.0
 
 
 func _physics_process(delta: float) -> void:
-	if Input.is_action_just_pressed(tecla) and not _saliendo:
-		if escondido:
-			salir()
-		else:
-			var b: Node3D = mas_cercana() as Node3D
-			if b != null:
-				entrar(b)
+	if _enfriamiento_reentrada > 0.0:
+		_enfriamiento_reentrada = maxf(0.0, _enfriamiento_reentrada - delta)
+
 	if escondido:
-		if pj != null and pj.has_method("sumar_estres"):
+		# Si intenta moverse con WASD o presiona una tecla de salida, sale automáticamente
+		var input_mov: Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+		if (input_mov.length() > 0.1 or Input.is_action_just_pressed(tecla)) and not _saliendo:
+			salir()
+		elif pj != null and pj.has_method("sumar_estres"):
 			pj.call("sumar_estres", -baja_estres * delta)
 		else:
 			Partida.estres = maxf(0.0, Partida.estres - baja_estres * delta)
+	else:
+		# Automático por proximidad: al caminar directo al hueco de la banca, entra solo
+		if _enfriamiento_reentrada <= 0.0 and not _saliendo:
+			var b: Node3D = mas_cercana() as Node3D
+			if b != null:
+				entrar(b)
 
 
 func entrar(b):
@@ -95,6 +102,7 @@ func _quitar_ojos():
 
 func salir():
 	escondido = false
+	_enfriamiento_reentrada = 1.2
 	pj.remove_from_group("escondidos")
 	pj.global_position = banca.global_position + Vector3(0, pj.global_position.y - banca.global_position.y, 0.75)
 	print("sale de ", banca.name, " · estrés ", snappedf(Partida.estres, 0.1))
