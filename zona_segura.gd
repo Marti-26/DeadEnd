@@ -20,6 +20,7 @@ const AMARILLO: Color = Color(1.0, 0.84, 0.5)
 const CREMA: Color = Color(0.97, 0.93, 0.92)
 const NOCHE: Color = Color(0.09, 0.06, 0.12)
 const LADRILLO: Shader = preload("res://zona_b/ladrillo.gdshader")
+const FUENTE: FontFile = preload("res://assets/font/ShareTechMono-Regular.ttf")
 const CONO_LUZ: Shader = preload("res://zona_b/cono_luz.gdshader")
 const PISO_AZUL: Color = Color(0.22, 0.25, 0.36)
 const PISO_JUNTA: Color = Color(0.06, 0.07, 0.12)
@@ -128,9 +129,10 @@ func _bajada(p: Node3D) -> void:
 	letrero.text = "ANDÉN"
 	letrero.font_size = 64
 	letrero.pixel_size = 0.006
-	letrero.modulate = CREMA
+	letrero.font = FUENTE
+	letrero.modulate = Color(1.2, 1.8, 2.0)
 	letrero.outline_size = 10
-	letrero.outline_modulate = NOCHE
+	letrero.outline_modulate = Color(0.0, 0.12, 0.18)
 	letrero.position = Vector3(cx, 2.4, HUECO_Z.x - 0.1)
 	p.add_child(letrero)
 	var postes_x: Array[float] = [HUECO_X.x, HUECO_X.y]

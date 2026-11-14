@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://dhfme1yx68me0"]
 
+[ext_resource type="FontFile" path="res://assets/font/ShareTechMono-Regular.ttf" id="fuente_neon"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k403e"]
 albedo_color = Color(0.08235294, 0.105882354, 0.14117648, 1)
 metallic = 0.2
@@ -14,6 +16,9 @@ transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
 [node name="Label3D" type="Label3D" parent="." unique_id=1834987544]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0.02)
 pixel_size = 0.0025
+font = ExtResource("fuente_neon")
+modulate = Color(1.2, 1.8, 2, 1)
+outline_modulate = Color(0, 0.12, 0.18, 1)
 text = "DEAD END
 CONTROLES
 

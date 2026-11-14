@@ -15,6 +15,7 @@
 [ext_resource type="Texture2D" uid="uid://d1f557wptmtyt" path="res://assets/Criatura_que_escucha/criatura_escucha_caminar_izquierda_3.png" id="13_cam_izquierda_3"]
 [ext_resource type="Texture2D" uid="uid://c68jdddb3r4su" path="res://assets/Criatura_que_escucha/criatura_escucha_caminar_derecha_4.png" id="14_cam_derecha_4"]
 [ext_resource type="Texture2D" uid="uid://bcgut2vs6ji46" path="res://assets/Criatura_que_escucha/criatura_escucha_caminar_izquierda_4.png" id="15_cam_izquierda_4"]
+[ext_resource type="FontFile" path="res://assets/font/ShareTechMono-Regular.ttf" id="fuente_neon"]
 
 [sub_resource type="CapsuleShape3D" id="CapsulaOido"]
 radius = 0.35
@@ -118,5 +119,6 @@ billboard = 1
 no_depth_test = true
 modulate = Color(0.85, 0.05, 0.05, 1)
 text = "!"
+font = ExtResource("fuente_neon")
 font_size = 96
 outline_size = 0

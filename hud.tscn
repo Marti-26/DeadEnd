@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://hud.gd" id="1_hud"]
+[ext_resource type="Theme" path="res://tema.tres" id="2_tema"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFondo"]
 bg_color = Color(0.08, 0.1, 0.12, 0.8)
@@ -31,11 +32,12 @@ offset_left = 20.0
 offset_top = 20.0
 offset_right = 260.0
 offset_bottom = 128.0
+theme = ExtResource("2_tema")
 theme_override_constants/separation = 6
 
 [node name="EtiquetaBateria" type="Label" parent="Contenedor"]
 layout_mode = 2
-text = "Batería"
+text = "BATERÍA"
 
 [node name="BarraBateria" type="ProgressBar" parent="Contenedor"]
 custom_minimum_size = Vector2(240, 22)
@@ -46,7 +48,7 @@ value = 100.0
 
 [node name="EtiquetaEstres" type="Label" parent="Contenedor"]
 layout_mode = 2
-text = "Estrés"
+text = "ESTRÉS"
 
 [node name="BarraEstres" type="ProgressBar" parent="Contenedor"]
 custom_minimum_size = Vector2(240, 22)
