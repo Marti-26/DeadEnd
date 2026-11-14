@@ -22,6 +22,7 @@
 [ext_resource type="PackedScene" path="res://zona_segura.tscn" id="20_zona_segura"]
 [ext_resource type="PackedScene" path="res://hud.tscn" id="21_hud"]
 [ext_resource type="PackedScene" uid="uid://dk2w3at8nv2xx" path="res://celular.tscn" id="21_s3cy1"]
+[ext_resource type="PackedScene" uid="uid://df2osby5n6wnv" path="res://salida.tscn" id="23_jc8c0"]
 
 [sub_resource type="Environment" id="Environment_dpv7s"]
 background_mode = 1
@@ -1889,3 +1890,5 @@ bloquear_frente_hueco = false
 
 [node name="Celular" parent="." unique_id=1572017040 instance=ExtResource("21_s3cy1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8816857, 0.059074253, 2.049488)
+
+[node name="Salida" parent="." unique_id=1248284208 instance=ExtResource("23_jc8c0")]

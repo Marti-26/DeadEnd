@@ -38,17 +38,14 @@ func _ready():
 func _physics_process(delta):
 	velocity += get_gravity() * delta
 	reloj = maxf(reloj - delta, 0.0)
-
 	if estado in [Estado.EN_PUESTO, Estado.BUSCAR, Estado.VOLVER]:
 		if la_ve(radio_ver):
 			tiempo_visto += delta
 		else:
 			tiempo_visto = 0.0
-
 	var nuevo = decidir()
 	if nuevo != estado:
 		cambiar_a(nuevo)
-
 	match estado:
 		Estado.EN_PUESTO:
 			frenar("idle")
@@ -65,9 +62,9 @@ func _physics_process(delta):
 			frenar("idle")
 		Estado.VOLVER:
 			ir_a(puesto)
-
 	if jugador != null:
 		if jugador.audifonos_activos:
+##if jugador.audifonos_activos and distancia_jugador > 3.0: esta para q no lo escuche con los audifonos pero solo despues de tre smetros
 			sonido_criatura.volume_linear = 0.0
 		else:
 			sonido_criatura.volume_linear = 1.0
