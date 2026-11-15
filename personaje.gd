@@ -45,6 +45,16 @@ signal jadeo(posicion: Vector3)
 
 @export var linterna: Light3D
 
+@export_group("Bombillo")
+@export var activar_bombillo: bool = true
+@export var energia_bombillo: float = 1.2
+@export var color_bombillo: Color = Color(1.0, 0.72, 0.4)
+@export var alcance_bombillo: float = 3.2
+@export var separacion_bombillo: Vector3 = Vector3(0.55, 1.9, 0.2)
+
+var _bombillo: Node3D = null
+var _luz_bombillo: OmniLight3D = null
+
 var linterna_encendida: bool = false
 var audifonos_activos: bool = false
 var _bateria: float = 100.0
@@ -86,6 +96,7 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	_rng_vibracion.randomize()
 	_preparar_linterna()
+	_preparar_bombillo()
 	_asegurar_hud.call_deferred()
 
 
@@ -101,6 +112,7 @@ func _process(delta: float) -> void:
 	_actualizar_estres(delta)
 	_reducir_estres_audifonos(delta)
 	_actualizar_vibracion_camara()
+	_actualizar_bombillo()
 
 func _reducir_estres_audifonos(delta: float) -> void:
 	if not audifonos_activos:
@@ -155,6 +167,35 @@ func _preparar_linterna() -> void:
 		add_child(foco)
 		linterna = foco
 	_actualizar_linterna()
+
+
+func _preparar_bombillo() -> void:
+	if not activar_bombillo:
+		return
+	var previo: Node = get_node_or_null("Bombillo")
+	if previo != null:
+		previo.free()
+	_bombillo = Node3D.new()
+	_bombillo.name = "Bombillo"
+	_bombillo.top_level = true
+	add_child(_bombillo)
+	_luz_bombillo = OmniLight3D.new()
+	_luz_bombillo.name = "LuzAura_Bombillo"
+	_luz_bombillo.light_color = color_bombillo
+	_luz_bombillo.light_energy = energia_bombillo
+	_luz_bombillo.light_specular = 0.2
+	_luz_bombillo.omni_range = alcance_bombillo
+	_luz_bombillo.omni_attenuation = 1.5
+	_luz_bombillo.shadow_enabled = false
+	_bombillo.add_child(_luz_bombillo)
+	_actualizar_bombillo()
+
+
+func _actualizar_bombillo() -> void:
+	if _bombillo == null or not is_instance_valid(_bombillo):
+		return
+	_bombillo.global_position = global_position + separacion_bombillo
+	_bombillo.visible = not is_in_group(Grupos.ESCONDIDOS)
 
 
 func _consumir_bateria(delta: float) -> void:
@@ -223,7 +264,7 @@ func _esta_en_oscuridad_absoluta() -> bool:
 
 func _hay_luz_local_iluminando(nodo: Node, punto: Vector3) -> bool:
 	if nodo is Light3D and not (nodo is DirectionalLight3D):
-		if nodo != linterna and nodo.name != "LuzEstres" and nodo.name != "LuzEvento":
+		if nodo != linterna and nodo.name != "LuzEstres" and nodo.name != "LuzEvento" and not nodo.name.begins_with("LuzAura"):
 			var luz: Light3D = nodo as Light3D
 			if luz.is_visible_in_tree() and luz.light_energy > 0.05:
 				if luz is OmniLight3D:

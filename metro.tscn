@@ -1,6 +1,17 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://nhfwj0jc7mm4"]
 
 [ext_resource type="Script" uid="uid://c6bfglccmjtlq" path="res://metro.gd" id="1_metro"]
 
-[node name="Metro" type="Node3D"]
+[node name="Metro" type="Node3D" unique_id=1603987902 node_paths=PackedStringArray("camara_vagon", "luces_manuales")]
 script = ExtResource("1_metro")
+camara_vagon = NodePath("Camera3D")
+luces_manuales = NodePath("Luces")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1732018434]
+transform = Transform3D(1, 0, 0, 0, 0.9396926, 0.3420201, 0, -0.3420201, 0.9396926, 0, 2.4, 4.8)
+projection = 1
+size = 8.5
+near = 0.05
+far = 40.0
+
+[node name="Luces" type="Node3D" parent="." unique_id=1849201942]
