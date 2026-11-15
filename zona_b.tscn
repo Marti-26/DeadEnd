@@ -1564,8 +1564,6 @@ energia_minima = 0.2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.05, 0.8)
 script = ExtResource("6_r0ps7")
 camara = NodePath("../Camara")
-energia_aura = 1.2
-color_aura = Color(0.98856527, 0.9808132, 0.9822039, 1)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Personaje" unique_id=1801526638]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)

@@ -45,12 +45,15 @@ signal jadeo(posicion: Vector3)
 
 @export var linterna: Light3D
 
-@export_group("Aura Visual Personaje")
-@export var activar_aura: bool = true
-@export var energia_aura: float = 1.4
-@export var color_aura: Color = Color(1.0, 0.95, 0.88)
+@export_group("Bombillo")
+@export var activar_bombillo: bool = true
+@export var energia_bombillo: float = 1.2
+@export var color_bombillo: Color = Color(1.0, 0.72, 0.4)
+@export var alcance_bombillo: float = 3.2
+@export var separacion_bombillo: Vector3 = Vector3(0.55, 1.9, 0.2)
 
-var _contenedor_aura: Node3D = null
+var _bombillo: Node3D = null
+var _luz_bombillo: OmniLight3D = null
 
 var linterna_encendida: bool = false
 var audifonos_activos: bool = false
@@ -93,7 +96,7 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	_rng_vibracion.randomize()
 	_preparar_linterna()
-	_preparar_aura()
+	_preparar_bombillo()
 	_asegurar_hud.call_deferred()
 
 
@@ -109,7 +112,7 @@ func _process(delta: float) -> void:
 	_actualizar_estres(delta)
 	_reducir_estres_audifonos(delta)
 	_actualizar_vibracion_camara()
-	_actualizar_aura()
+	_actualizar_bombillo()
 
 func _reducir_estres_audifonos(delta: float) -> void:
 	if not audifonos_activos:
@@ -166,59 +169,33 @@ func _preparar_linterna() -> void:
 	_actualizar_linterna()
 
 
-func _preparar_aura() -> void:
-	if not activar_aura:
+func _preparar_bombillo() -> void:
+	if not activar_bombillo:
 		return
-	# Asignar Capa 2 al sprite de la gata para que reciba la luz del aura exclusiva
-	var sp: VisualInstance3D = get_node_or_null("Sprite") as VisualInstance3D
-	if sp != null:
-		sp.layers = sp.layers | 2
-		for hijo in sp.get_children():
-			if hijo is VisualInstance3D:
-				(hijo as VisualInstance3D).layers = (hijo as VisualInstance3D).layers | 2
-
-	# Contenedor top_level independiente de la rotación del cuerpo para que NUNCA gire a los lados
-	if _contenedor_aura == null:
-		_contenedor_aura = get_node_or_null("LuzAuraContenedor") as Node3D
-	if _contenedor_aura == null:
-		_contenedor_aura = Node3D.new()
-		_contenedor_aura.name = "LuzAuraContenedor"
-		_contenedor_aura.top_level = true
-		add_child(_contenedor_aura)
-	else:
-		_contenedor_aura.top_level = true
-
-	# Limpiar luces previas para recrear con cobertura limpia
-	for h in _contenedor_aura.get_children():
-		h.queue_free()
-
-	# Cobertura en cruz siempre alineada con la pantalla (frente, espalda y laterales suaves)
-	var posiciones_luz: Array[Vector3] = [
-		Vector3(0.0, 1.25, 0.45),   # Frontal hacia la cámara (baña cara y ojos directamente)
-		Vector3(0.0, 1.25, -0.45),  # Trasera (baña nuca y mochila)
-		Vector3(-0.35, 1.25, 0.15), # Lateral izquierda
-		Vector3(0.35, 1.25, 0.15)   # Lateral derecha
-	]
-
-	for i in posiciones_luz.size():
-		var luz: OmniLight3D = OmniLight3D.new()
-		luz.name = "LuzAura_%d" % i
-		luz.position = posiciones_luz[i]
-		luz.omni_range = 2.4
-		luz.omni_attenuation = 1.0
-		luz.light_energy = energia_aura if i < 2 else energia_aura * 0.8
-		luz.light_color = color_aura
-		luz.light_cull_mask = 2 # Exclusivo para Capa 2 (solo la gata)
-		luz.shadow_enabled = false
-		_contenedor_aura.add_child(luz)
-
-	_actualizar_aura()
+	var previo: Node = get_node_or_null("Bombillo")
+	if previo != null:
+		previo.free()
+	_bombillo = Node3D.new()
+	_bombillo.name = "Bombillo"
+	_bombillo.top_level = true
+	add_child(_bombillo)
+	_luz_bombillo = OmniLight3D.new()
+	_luz_bombillo.name = "LuzAura_Bombillo"
+	_luz_bombillo.light_color = color_bombillo
+	_luz_bombillo.light_energy = energia_bombillo
+	_luz_bombillo.light_specular = 0.2
+	_luz_bombillo.omni_range = alcance_bombillo
+	_luz_bombillo.omni_attenuation = 1.5
+	_luz_bombillo.shadow_enabled = false
+	_bombillo.add_child(_luz_bombillo)
+	_actualizar_bombillo()
 
 
-func _actualizar_aura() -> void:
-	if _contenedor_aura != null and is_instance_valid(_contenedor_aura):
-		_contenedor_aura.global_position = global_position
-		_contenedor_aura.global_rotation = Vector3.ZERO
+func _actualizar_bombillo() -> void:
+	if _bombillo == null or not is_instance_valid(_bombillo):
+		return
+	_bombillo.global_position = global_position + separacion_bombillo
+	_bombillo.visible = not is_in_group(Grupos.ESCONDIDOS)
 
 
 func _consumir_bateria(delta: float) -> void:

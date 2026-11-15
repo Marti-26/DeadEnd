@@ -58,10 +58,10 @@ class MaterialesMetro:
 @export var suavizado_camara: float = 5.0
 
 @export_group("Iluminacion Vagon")
-@export var color_luz_vagon: Color = Color(0.92, 0.94, 1.0)
-@export var energia_luz_vagon: float = 1.8
+@export var colores_luz_vagon: Array[Color] = [Color(0.35, 0.4, 1.0), Color(0.5, 0.42, 1.0)]
+@export var energia_luz_vagon: float = 1.6
 @export var iluminar_solo_puertas: bool = false
-@export var conos_luz_vagon: bool = false
+@export var conos_luz_vagon: bool = true
 @export var luces_manuales: Node3D
 
 @export_group("Movimiento y Tiempos")
@@ -83,8 +83,8 @@ const ALTO_PUERTA: float = 2.1
 const ANCHO_PUERTA: float = 1.4
 const Z_COMPUERTA: float = -1.85
 
-const ROJO: Color = Color(0.62, 0.08, 0.1)
-const ROJO_OSCURO: Color = Color(0.45, 0.05, 0.07)
+const ROJO: Color = Color(0.4, 0.06, 0.08)
+const ROJO_OSCURO: Color = Color(0.28, 0.04, 0.06)
 const PARED_ALTA: Color = Color(0.14, 0.15, 0.26)
 const PARED_BAJA: Color = Color(0.08, 0.085, 0.14)
 const CIELO: Color = Color(0.11, 0.115, 0.21)
@@ -355,7 +355,6 @@ func _construir() -> void:
 	_luces_ventana(lado_camara, 1)
 	_compuertas()
 
-	# Se usa el nodo Camera3D asignado en el Inspector o de la escena
 	if camara_vagon == null:
 		camara_vagon = get_node_or_null("Camera3D") as Camera3D
 	if camara_vagon == null:
@@ -384,7 +383,7 @@ func _construir() -> void:
 
 
 func _materiales() -> void:
-	_m.rojo_ext = _mat(ROJO, Color(0.5, 0.03, 0.06), 0.06, 0.3, 0.35)
+	_m.rojo_ext = _mat(ROJO, Color.BLACK, 0.0, 0.35, 0.45)
 	_m.rojo_oscuro = _mat(ROJO_OSCURO, Color.BLACK, 0.0, 0.3, 0.45)
 	_m.franja = _mat(CREMA, CREMA, 0.7, 0.0, 0.5)
 	_m.lila = _mat(PARED_ALTA, Color.BLACK, 0.0, 0.2, 0.5)
@@ -692,54 +691,43 @@ func _carteles(p: Node3D) -> void:
 
 
 func _luces(p: Node3D) -> void:
-	# Si el desarrollador colocó luces manuales en el editor de Godot, las usa
 	var nodo_luces: Node3D = luces_manuales if luces_manuales != null else get_node_or_null("Luces") as Node3D
 	if nodo_luces != null and nodo_luces.get_child_count() > 0:
-		for hijo in nodo_luces.get_children():
+		for hijo: Node in nodo_luces.get_children():
 			if hijo is Light3D:
-				var copia: Light3D = hijo.duplicate() as Light3D
-				p.add_child(copia)
+				p.add_child((hijo as Light3D).duplicate() as Light3D)
 		return
-
-	# Si no hay luces manuales, generar luces según configuración
+	var colores: Array[Color] = colores_luz_vagon if not colores_luz_vagon.is_empty() else [Color(0.35, 0.4, 1.0)]
+	var posiciones: Array[float] = []
 	if iluminar_solo_puertas:
-		# Iluminar principalmente las zonas de las puertas, dejando tramos oscuros para exploración con linterna
-		for px: float in puertas_x:
-			var l: OmniLight3D = OmniLight3D.new()
-			l.light_color = color_luz_vagon
-			l.light_energy = energia_luz_vagon
-			l.omni_range = 4.2
-			l.omni_attenuation = 1.2
-			l.position = Vector3(px, 2.25, 0)
-			p.add_child(l)
+		posiciones = puertas_x.duplicate()
 	else:
-		# Distribución uniforme a lo largo del vagón
-		var i: int = 0
 		var x: float = -LARGO / 2.0 + 2.0
 		while x < LARGO / 2.0:
-			var l: OmniLight3D = OmniLight3D.new()
-			l.light_color = color_luz_vagon
-			l.light_energy = energia_luz_vagon
-			l.omni_range = 5.0
-			l.omni_attenuation = 1.0
-			l.position = Vector3(x, 2.25, 0)
-			p.add_child(l)
-			if conos_luz_vagon:
-				var cono: MeshInstance3D = MeshInstance3D.new()
-				var cm: CylinderMesh = CylinderMesh.new()
-				cm.top_radius = 0.25
-				cm.bottom_radius = 0.95
-				cm.height = 2.4
-				cm.cap_top = false
-				cm.cap_bottom = false
-				cono.mesh = cm
-				cono.material_override = _m.cono
-				cono.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-				cono.position = Vector3(x, 1.25, -0.8 if i % 2 == 0 else 0.8)
-				p.add_child(cono)
+			posiciones.append(x)
 			x += 4.0
-			i += 1
-
+	for i: int in posiciones.size():
+		var px: float = posiciones[i]
+		var l: OmniLight3D = OmniLight3D.new()
+		l.light_color = colores[i % colores.size()]
+		l.light_energy = energia_luz_vagon
+		l.omni_range = 4.5
+		l.omni_attenuation = 1.3
+		l.position = Vector3(px, 2.25, 0)
+		p.add_child(l)
+		if conos_luz_vagon:
+			var cono: MeshInstance3D = MeshInstance3D.new()
+			var cm: CylinderMesh = CylinderMesh.new()
+			cm.top_radius = 0.25
+			cm.bottom_radius = 0.95
+			cm.height = 2.4
+			cm.cap_top = false
+			cm.cap_bottom = false
+			cono.mesh = cm
+			cono.material_override = _m.cono
+			cono.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			cono.position = Vector3(px, 1.25, -0.8 if i % 2 == 0 else 0.8)
+			p.add_child(cono)
 	var calida: OmniLight3D = OmniLight3D.new()
 	calida.light_color = NARANJA
 	calida.light_energy = 0.9
