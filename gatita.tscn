@@ -61,6 +61,30 @@
 [ext_resource type="Texture2D" uid="uid://cuyfvurw41t62" path="res://assets/gatita/gatita_esconderse_ojos_4.png" id="59_escojo4"]
 [ext_resource type="Texture2D" uid="uid://ckyq3k7ivafkf" path="res://assets/gatita/gatita_salir_escondite_frente_1.png" id="60_salfre1"]
 [ext_resource type="Texture2D" uid="uid://bq1i500fpw0eg" path="res://assets/gatita/gatita_salir_escondite_frente_2.png" id="61_salfre2"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_frente_1.png" id="aud_frente_1"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_frente_2.png" id="aud_frente_2"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_frente_3.png" id="aud_frente_3"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_frente_4.png" id="aud_frente_4"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_frente_5.png" id="aud_frente_5"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_frente_6.png" id="aud_frente_6"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_espalda_1.png" id="aud_espalda_1"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_espalda_2.png" id="aud_espalda_2"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_espalda_3.png" id="aud_espalda_3"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_espalda_4.png" id="aud_espalda_4"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_espalda_5.png" id="aud_espalda_5"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_espalda_6.png" id="aud_espalda_6"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_derecha_1.png" id="aud_derecha_1"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_derecha_2.png" id="aud_derecha_2"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_derecha_3.png" id="aud_derecha_3"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_derecha_4.png" id="aud_derecha_4"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_derecha_5.png" id="aud_derecha_5"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_derecha_6.png" id="aud_derecha_6"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_izquierda_1.png" id="aud_izquierda_1"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_izquierda_2.png" id="aud_izquierda_2"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_izquierda_3.png" id="aud_izquierda_3"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_izquierda_4.png" id="aud_izquierda_4"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_izquierda_5.png" id="aud_izquierda_5"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_izquierda_6.png" id="aud_izquierda_6"]
 
 [sub_resource type="SpriteFrames" id="AnimacionesGatita"]
 animations = [{
@@ -351,6 +375,162 @@ animations = [{
 "loop": 1,
 "name": &"sigilo_izquierda",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("aud_frente_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_frente_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_frente_3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_frente_4")
+}],
+"loop": false,
+"name": &"audifonos_poner_frente",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("aud_frente_4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_frente_5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_frente_6")
+}],
+"loop": true,
+"name": &"audifonos_caminar_frente",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("aud_frente_4")
+}],
+"loop": true,
+"name": &"audifonos_idle_frente",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("aud_espalda_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_espalda_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_espalda_3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_espalda_4")
+}],
+"loop": false,
+"name": &"audifonos_poner_espalda",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("aud_espalda_4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_espalda_5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_espalda_6")
+}],
+"loop": true,
+"name": &"audifonos_caminar_espalda",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("aud_espalda_4")
+}],
+"loop": true,
+"name": &"audifonos_idle_espalda",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("aud_derecha_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_derecha_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_derecha_3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_derecha_4")
+}],
+"loop": false,
+"name": &"audifonos_poner_derecha",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("aud_derecha_4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_derecha_5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_derecha_6")
+}],
+"loop": true,
+"name": &"audifonos_caminar_derecha",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("aud_derecha_4")
+}],
+"loop": true,
+"name": &"audifonos_idle_derecha",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("aud_izquierda_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_izquierda_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_izquierda_3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_izquierda_4")
+}],
+"loop": false,
+"name": &"audifonos_poner_izquierda",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("aud_izquierda_4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_izquierda_5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_izquierda_6")
+}],
+"loop": true,
+"name": &"audifonos_caminar_izquierda",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("aud_izquierda_4")
+}],
+"loop": true,
+"name": &"audifonos_idle_izquierda",
+"speed": 1.0
 }]
 
 [node name="Gatita" type="AnimatedSprite3D" unique_id=489570899]

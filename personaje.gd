@@ -57,6 +57,7 @@ var _luz_bombillo: OmniLight3D = null
 
 var linterna_encendida: bool = false
 var audifonos_activos: bool = false
+var _transicion_audifonos: String = ""
 var _bateria: float = 100.0
 var bateria: float = 100.0:
 	get:
@@ -135,11 +136,26 @@ func alternar_audifonos() -> void:
 		return
 
 	audifonos_activos = not audifonos_activos
+	_animar_audifonos(audifonos_activos)
 
 	if audifonos_activos:
 		print("Audífonos activados")
 	else:
 		print("Audífonos desactivados")
+
+func _animar_audifonos(poner: bool) -> void:
+	if sprite == null or is_in_group(Grupos.ESCONDIDOS):
+		return
+	var nombre: String = "audifonos_poner_" + direccion
+	if not sprite.sprite_frames.has_animation(nombre):
+		return
+	_transicion_audifonos = nombre
+	sprite.speed_scale = 1.0
+	if poner:
+		sprite.play(nombre)
+	else:
+		sprite.play_backwards(nombre)
+
 
 func alternar_linterna() -> void:
 	# Si NO tiene el celular, cortamos aquí y no hace nada al presionar F
@@ -461,9 +477,13 @@ func animar_2d():
 			direccion = "derecha" if v.x > 0.0 else "izquierda"
 		else:
 			direccion = "frente" if v.y > 0.0 else "espalda"
+	if _transicion_audifonos != "":
+		if sprite.animation == _transicion_audifonos and sprite.is_playing() and estado != Estado.DASH:
+			return
+		_transicion_audifonos = ""
 	match estado:
 		Estado.CAMINAR:
-			reproducir("caminar")
+			reproducir("audifonos_caminar" if audifonos_activos else "caminar")
 		Estado.DASH:
 			reproducir("dash")
 		Estado.SIGILO:
@@ -471,7 +491,7 @@ func animar_2d():
 		Estado.AIRE:
 			reproducir("caminar", 0.0)
 		_:
-			reproducir("idle")
+			reproducir("audifonos_idle" if audifonos_activos else "idle")
 
 
 func reproducir(accion_2d, velocidad = 1.0):
