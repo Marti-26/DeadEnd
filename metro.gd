@@ -697,7 +697,9 @@ func _luces(p: Node3D) -> void:
 			if hijo is Light3D:
 				p.add_child((hijo as Light3D).duplicate() as Light3D)
 		return
-	var colores: Array[Color] = colores_luz_vagon if not colores_luz_vagon.is_empty() else [Color(0.35, 0.4, 1.0)]
+	var colores: Array[Color] = colores_luz_vagon.duplicate()
+	if colores.is_empty():
+		colores.append(Color(0.35, 0.4, 1.0))
 	var posiciones: Array[float] = []
 	if iluminar_solo_puertas:
 		posiciones = puertas_x.duplicate()

@@ -14,6 +14,7 @@
 [ext_resource type="Script" uid="uid://chlx4hyqucufu" path="res://llegada.gd" id="11_llegada"]
 [ext_resource type="Script" uid="uid://cmaoevvcsdw4y" path="res://puerta_escena.gd" id="12_puerta"]
 [ext_resource type="FontFile" path="res://assets/font/ShareTechMono-Regular.ttf" id="fuente_neon"]
+[ext_resource type="Script" path="res://bombillo.gd" id="bombillo_luz"]
 
 [sub_resource type="Environment" id="Entorno"]
 background_mode = 1
@@ -264,3 +265,8 @@ shape = SubResource("FormaBajada")
 [node name="ChicoAmable" parent="." unique_id=2109638705 node_paths=PackedStringArray("senalar") instance=ExtResource("10_chico")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0.8)
 senalar = NodePath("../EstacionCarga")
+
+[node name="Bombillo" type="Node3D" parent="ChicoAmable"]
+script = ExtResource("bombillo_luz")
+color = Color(0.4, 0.6, 1, 1)
+
