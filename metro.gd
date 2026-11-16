@@ -76,6 +76,11 @@ class MaterialesMetro:
 @export var energia_ventanas: float = 2.4
 @export var alcance_ventanas: float = 7.5
 
+@export_group("Pasajeros")
+@export var mostrar_ardilla: bool = true
+@export var asiento_ardilla_x: float = -3.71
+@export var alto_ardilla: float = 1.6
+
 const LARGO: float = 24.0
 const ANCHO: float = 3.0
 const ALTO: float = 2.7
@@ -388,6 +393,7 @@ func _construir() -> void:
 	_lado(lado_camara, 1, false)
 	_asientos(interior, -1)
 	_asientos(lado_camara, 1)
+	_pasajeros(interior)
 	_barras_y_agarraderas(interior)
 	_techo(techo)
 	_frentes(frentes)
@@ -573,6 +579,33 @@ func _asientos(p: Node3D, s: int) -> void:
 			_caja(p, Vector3(0.03, 0.75, 0.5), Vector3(ex, 0.75, z), _m.vidrio)
 			_cilindro(p, 0.025, ALTO, Vector3(ex, ALTO / 2.0, s * 0.9), _m.laton)
 		_forma(Vector3(lx, 0.5, 0.5), Vector3(cx, 0.25, z))
+
+
+func _pasajeros(p: Node3D) -> void:
+	if not mostrar_ardilla:
+		return
+	var marcos: SpriteFrames = SpriteFrames.new()
+	marcos.set_animation_speed("default", 1.6)
+	marcos.set_animation_loop("default", true)
+	var alto_imagen: float = 0.0
+	for i: int in [1, 2]:
+		var textura: Texture2D = load("res://assets/npcs y posters/ardilla_idle_frente_%d.png" % i) as Texture2D
+		if textura == null:
+			return
+		alto_imagen = float(textura.get_height())
+		marcos.add_frame("default", textura)
+	var tamano_pixel: float = alto_ardilla / (alto_imagen * 0.94)
+	var ardilla: AnimatedSprite3D = AnimatedSprite3D.new()
+	ardilla.name = "Ardilla"
+	ardilla.sprite_frames = marcos
+	ardilla.pixel_size = tamano_pixel
+	ardilla.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+	ardilla.shaded = true
+	ardilla.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
+	ardilla.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	ardilla.position = Vector3(asiento_ardilla_x, 0.45 + (alto_imagen * 0.5 - 12.0) * tamano_pixel, -1.12)
+	p.add_child(ardilla)
+	ardilla.play("default")
 
 
 func _barras_y_agarraderas(p: Node3D) -> void:
