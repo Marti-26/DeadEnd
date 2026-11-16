@@ -15,7 +15,6 @@ const RUIDO = [0.0, 3.0, 0.0, 0.0, 8.0]
 var dash_tiempo = 0.0 
 
 @export var gravedad = 9.8
-@export var fuerza_salto = 6.0
 @onready var anim = get_node_or_null("Modelo/AnimationPlayer")
 @onready var sprite = get_node_or_null("Sprite")
 var direccion = "frente"
