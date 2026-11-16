@@ -42,10 +42,18 @@ func usar() -> void:
 		Partida.celular_recogido = true
 
 	var jugador: Personaje = (_jugador_cerca if _jugador_cerca != null else get_tree().get_first_node_in_group(Grupos.JUGADOR)) as Personaje
+	
 	if jugador != null:
 		jugador.tiene_celular = true
-		if Partida != null:
-			Partida.guardar_estado_personaje(jugador)
+
+	# Reproducir el sonido al recoger el celular
+	var sonido = jugador.get_node_or_null("RecogerCelular") as AudioStreamPlayer
+	if sonido != null:
+		sonido.play()
+
+	if Partida != null:
+		Partida.guardar_estado_personaje(jugador)
+
 
 	remove_from_group(Grupos.INTERACTIVOS)
 	queue_free()
