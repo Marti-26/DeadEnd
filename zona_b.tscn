@@ -13,6 +13,8 @@
 [ext_resource type="Script" uid="uid://bh3ei7hjfvyk5" path="res://ruido.gd" id="11_ruido"]
 [ext_resource type="AudioStream" uid="uid://dko1vuws25jap" path="res://Sonidos/Jugador/pasos.wav" id="12_ajsmc"]
 [ext_resource type="Script" uid="uid://6l6v2g14wi" path="res://esconderse.gd" id="12_escon"]
+[ext_resource type="AudioStream" uid="uid://butc8q385uggq" path="res://Sonidos/Jugador/latidos.wav" id="13_ig1hw"]
+[ext_resource type="AudioStream" uid="uid://c51ft5btj10h4" path="res://Sonidos/Jugador/respircion.wav" id="14_np7jt"]
 [ext_resource type="PackedScene" path="res://criatura_oido.tscn" id="14_oido"]
 [ext_resource type="PackedScene" uid="uid://nhfwj0jc7mm4" path="res://metro.tscn" id="15_metro"]
 [ext_resource type="Script" uid="uid://fqgq0ua6b3dp" path="res://zona_fuera_alcance.gd" id="16_fuera"]
@@ -1595,6 +1597,14 @@ current = true
 
 [node name="Pasos" type="AudioStreamPlayer3D" parent="Personaje" unique_id=1229568540]
 stream = ExtResource("12_ajsmc")
+
+[node name="Latidos" type="AudioStreamPlayer" parent="Personaje" unique_id=1594835931]
+stream = ExtResource("13_ig1hw")
+volume_db = -15.0
+
+[node name="Respiracion" type="AudioStreamPlayer" parent="Personaje" unique_id=515183154]
+stream = ExtResource("14_np7jt")
+volume_db = -15.0
 
 [node name="Camara" type="Camera3D" parent="." unique_id=567095934 node_paths=PackedStringArray("objetivo")]
 transform = Transform3D(1, 0, 0, 0, 0.76604444, 0.6427876, 0, -0.6427876, 0.76604444, -5.2, 14.141328, 16.052977)

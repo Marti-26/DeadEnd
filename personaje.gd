@@ -18,6 +18,8 @@ var dash_tiempo = 0.0
 @onready var anim = get_node_or_null("Modelo/AnimationPlayer")
 @onready var sprite = get_node_or_null("Sprite")
 @onready var sonido_pasos: AudioStreamPlayer3D = $Pasos
+@onready var sonido_latidos: AudioStreamPlayer = $Latidos
+@onready var sonido_respiracion: AudioStreamPlayer = $Respiracion
 var direccion = "frente"
 
 
@@ -121,6 +123,61 @@ func _process(delta: float) -> void:
 	_reducir_estres_audifonos(delta)
 	_actualizar_vibracion_camara()
 	_actualizar_bombillo()
+	_actualizar_sonidos_estres(delta)
+	
+
+
+func _actualizar_sonidos_estres(delta: float) -> void:
+	var nivel = clampf(estres, 0.0, 100.0)
+
+	# LATIDOS: empiezan al 65 % y aumentan progresivamente.
+	if nivel >= 40.0:
+		var intensidad = (nivel - 40.0) / 60.0
+		var volumen = lerpf(-10.0, 0.0, intensidad)
+		var velocidad = lerpf(0.85, 1.4, intensidad)
+
+		if not sonido_latidos.playing:
+			sonido_latidos.volume_db = -10.0
+			sonido_latidos.play()
+
+		sonido_latidos.volume_db = move_toward(
+			sonido_latidos.volume_db, volumen, delta * 20.0
+		)
+		sonido_latidos.pitch_scale = move_toward(
+			sonido_latidos.pitch_scale, velocidad, delta * 0.5
+		)
+	else:
+		sonido_latidos.volume_db = move_toward(
+			sonido_latidos.volume_db, -45.0, delta * 25.0
+		)
+		if sonido_latidos.volume_db <= -44.9:
+			sonido_latidos.stop()
+
+	# RESPIRACION: empieza al 70 %, lenta y audible.
+	if nivel >= 70.0:
+		var intensidad = (nivel - 70.0) / 30.0
+		var volumen = lerpf(-10.0, -2.0, intensidad)
+		var velocidad = lerpf(0.7, 1.05, intensidad)
+
+		if not sonido_respiracion.playing:
+			sonido_respiracion.volume_db = -10.0
+			sonido_respiracion.pitch_scale = 0.7
+			sonido_respiracion.play()
+
+		sonido_respiracion.volume_db = move_toward(
+			sonido_respiracion.volume_db, volumen, delta * 15.0
+		)
+		sonido_respiracion.pitch_scale = move_toward(
+			sonido_respiracion.pitch_scale, velocidad, delta * 0.3
+		)
+	else:
+		sonido_respiracion.volume_db = move_toward(
+			sonido_respiracion.volume_db, -45.0, delta * 25.0
+		)
+		if sonido_respiracion.volume_db <= -44.9:
+			sonido_respiracion.stop()
+
+
 
 func _reducir_estres_audifonos(delta: float) -> void:
 	if not audifonos_activos:
