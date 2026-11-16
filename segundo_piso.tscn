@@ -20,6 +20,8 @@
 [ext_resource type="Script" uid="uid://cmaoevvcsdw4y" path="res://puerta_escena.gd" id="12_puerta"]
 [ext_resource type="AudioStream" uid="uid://bkiffdughthbl" path="res://Sonidos/Efectos/linterna.wav" id="13_5do8x"]
 [ext_resource type="AudioStream" uid="uid://xesjpdslfwad" path="res://Sonidos/Efectos/Celular.mp3" id="14_v7ay8"]
+[ext_resource type="AudioStream" uid="uid://c6xn87qsspf2s" path="res://Sonidos/Jugador/meow2.mp3" id="15_qes7y"]
+[ext_resource type="AudioStream" uid="uid://b24hk0wedmjao" path="res://Sonidos/Jugador/meow.wav" id="16_bjt1x"]
 [ext_resource type="AudioStream" uid="uid://dw6nrxsaxx3ph" path="res://Sonidos/Ambiente/Ventilador.wav" id="21_nkq4h"]
 [ext_resource type="AudioStream" uid="uid://c666lg5t6mmsq" path="res://Sonidos/Ambiente/Luces.wav" id="22_5do8x"]
 [ext_resource type="Script" uid="uid://4mdf5onjb7ag" path="res://bombillo.gd" id="bombillo_luz"]
@@ -163,6 +165,16 @@ stream = ExtResource("13_5do8x")
 
 [node name="Celular" type="AudioStreamPlayer" parent="Personaje" unique_id=1249809312]
 stream = ExtResource("14_v7ay8")
+bus = &"Juego"
+
+[node name="MeowEsconderse" type="AudioStreamPlayer" parent="Personaje" unique_id=379417719]
+stream = ExtResource("15_qes7y")
+volume_db = -8.0
+bus = &"Juego"
+
+[node name="MeowDash" type="AudioStreamPlayer" parent="Personaje" unique_id=607751577]
+stream = ExtResource("16_bjt1x")
+volume_db = -3.0
 bus = &"Juego"
 
 [node name="Camara" type="Camera3D" parent="." unique_id=767412451 node_paths=PackedStringArray("objetivo")]

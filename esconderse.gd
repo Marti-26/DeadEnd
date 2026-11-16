@@ -51,10 +51,18 @@ func _physics_process(delta: float) -> void:
 			entrar(b)
 
 
+
 func entrar(b):
 	escondido = true
 	banca = b
 	_entrando = true
+
+	# Reproducir maullido al entrar a la silla
+	if pj.maullido_esconder != null:
+		if pj.maullido_esconder.stream != null:
+			pj.maullido_esconder.play()
+			print("Gatita maulló al esconderse")
+
 	_esperando_soltar = Input.get_vector("move_left", "move_right", "move_up", "move_down").length() > 0.1
 	pj.add_to_group(Grupos.ESCONDIDOS)
 	pj.set_physics_process(false)
@@ -62,9 +70,12 @@ func entrar(b):
 	pj.avance = Vector3.ZERO
 	pj.estado = pj.Estado.ESCONDERSE
 	pj.ruido = 0.0
+
 	if forma:
 		forma.disabled = true
+
 	print("escondida bajo ", b.name, " · estrés ", snappedf(Partida.estres, 0.1))
+
 	if pj.sprite == null:
 		pj.global_position = Vector3(b.global_position.x, pj.global_position.y, b.global_position.z)
 		if modelo:
@@ -77,27 +88,36 @@ func entrar(b):
 	var sprite: AnimatedSprite3D = pj.sprite
 	var local: Vector3 = b.to_local(pj.global_position)
 	var dir: String = "espalda"
+
 	if absf(local.x) > 0.9 or local.z < 0.0:
 		dir = "izquierda" if local.x > 0.0 else "derecha"
+
 	var nombre: String = "esconderse_" + dir
+
 	if not sprite.sprite_frames.has_animation(nombre):
 		dir = "espalda"
 		nombre = "esconderse_espalda"
+
 	pj.direccion = dir
 
 	var destino: Vector3 = b.to_global(Vector3(clampf(local.x, -0.6, 0.6), 0.0, entrada_frente))
 	destino.y = pj.global_position.y
+
 	var t: Tween = create_tween()
 	t.tween_property(pj, "global_position", destino, tiempo_acercarse)
 
 	sprite.stop()
 	sprite.speed_scale = 1.0
 	sprite.play(nombre)
+
 	await sprite.animation_finished
 	_entrando = false
+
 	if not escondido or banca != b:
 		return
+
 	_mostrar_ojos(b)
+
 
 
 func _mostrar_ojos(b):

@@ -23,6 +23,8 @@ var dash_tiempo = 0.0
 @onready var musica_audifonos: AudioStreamPlayer = $MusicaAudifonos
 @onready var sonido_linterna: AudioStreamPlayer = $Linterna
 @onready var sonido_abrir_mapa: AudioStreamPlayer = $Celular
+@onready var maullido_dash: AudioStreamPlayer = $MeowDash
+@onready var maullido_esconder: AudioStreamPlayer = $MeowEsconderse
 
 var fragmentos_snowfall: Array[AudioStream] = [
 	preload("res://Sonidos/Efectos/audio1.wav"),
@@ -549,28 +551,29 @@ func _actualizar_sonido_pasos() -> void:
 			if sonido_pasos.playing:
 				sonido_pasos.stop()
 
+
 func elegir_estado():
-	#Si esta activo el dash por el tiempo mantenerlo
+	# Si el dash está activo, mantener el estado
 	if dash_tiempo > 0.0:
 		return Estado.DASH
-		
-	# 1. Dash con la barra espaciadora 
-	if Input.is_action_just_pressed("dash"): 
-		dash_tiempo = 0.8 #Duracion en segundos del dash
+	# Dash con la barra espaciadora
+	if Input.is_action_just_pressed("dash"):
+		dash_tiempo = 0.8
+		# Reproducir maullido una sola vez
+		if maullido_dash != null and maullido_dash.stream != null:
+			maullido_dash.play()
 		return Estado.DASH
-		
-		
-	# 3. Sigilo con la tecla Shift
+	# Sigilo con Shift
 	if Input.is_action_pressed("sigilo"):
 		return Estado.SIGILO
-		
-	# 4. Rapidez normal o quieto
+	# Movimiento normal o quieto
 	var rapidez = Vector2(velocity.x, velocity.z).length()
 	if rapidez < 0.1:
 		return Estado.QUIETO
 	if rapidez > speed_caminar + 0.1:
 		return Estado.CAMINAR
 	return Estado.CAMINAR
+
 	
 func animar():
 	if sprite:
