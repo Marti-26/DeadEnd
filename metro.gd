@@ -100,6 +100,7 @@ const COLOR_MARCADOR: Color = Color(0.6, 0.9, 1.0)
 const COLOR_ENTRAR: Color = Color(1.0, 0.78, 0.35)
 const ALTO_MARCADOR: float = 3.3
 
+@onready var sonido_llegada: AudioStreamPlayer3D = $Llegada
 var estado: Estado = Estado.FUERA
 var reloj: float = 0.0
 var inicio: float = 0.0
@@ -181,7 +182,9 @@ func _physics_process(delta: float) -> void:
 				_x_antes += salto
 				if viajando and jugador:
 					jugador.global_position.x += salto
-
+					
+					
+	sonido_llegada.global_position = tren.global_position + Vector3(0, 1, 0)
 	t = reloj - inicio
 	var abrir: bool = estado == Estado.DETENIDO and t > 0.6 and t < tiempo_detenido - 1.6
 	if _abiertas and not abrir:
@@ -217,10 +220,22 @@ func _physics_process(delta: float) -> void:
 		camara_vagon.global_position = tren.to_global(Vector3(_cam_x_actual, _offset_camara.y, _offset_camara.z))
 
 
+
 func _cambiar(nuevo: Estado) -> void:
 	estado = nuevo
 	inicio = reloj
 	print("metro -> ", Estado.keys()[estado], " a los ", snappedf(reloj, 0.1), " s")
+
+	if estado == Estado.LLEGANDO:
+		sonido_llegada.play(0.0)
+
+	elif estado == Estado.SALIENDO:
+		sonido_llegada.stop()
+		sonido_llegada.play(0.0)
+
+	elif estado == Estado.FUERA:
+		sonido_llegada.stop()
+
 	if estado == Estado.DETENIDO:
 		if viajando:
 			viajando = false
@@ -229,7 +244,9 @@ func _cambiar(nuevo: Estado) -> void:
 		llego.emit()
 	elif estado == Estado.FUERA:
 		se_fue.emit()
+
 	_actualizar_vista()
+
 
 
 func _al_cerrar() -> void:
