@@ -1,3 +1,4 @@
+
 class_name Criatura
 extends CriaturaBase
 
@@ -27,12 +28,14 @@ func _ready() -> void:
 	super._ready()
 	orientacion_inicial = basis
 	mostrar_alerta(false)
+	print("CRIATURA.GD ACTIVO: ", name)
 
 
 func _physics_process(delta: float) -> void:
 	aplicar_gravedad(delta)
 	reloj = maxf(reloj - delta, 0.0)
 
+	# Detectar al jugador mientras está en estados de búsqueda.
 	if estado in [Estado.EN_PUESTO, Estado.BUSCAR, Estado.VOLVER]:
 		if la_ve(radio_ver, true):
 			tiempo_visto += delta
@@ -43,26 +46,34 @@ func _physics_process(delta: float) -> void:
 	if nuevo != estado:
 		cambiar_a(nuevo)
 
+	# Ejecutar el comportamiento correspondiente al estado.
 	match estado:
 		Estado.EN_PUESTO:
 			frenar("idle")
+
 		Estado.ACERCARSE:
 			if jugador != null:
 				ir_a(jugador.global_position)
+
 		Estado.AVISO:
 			frenar("interact-right")
+
 		Estado.GOLPE:
 			frenar("attack-melee-right")
 			golpear()
+
 		Estado.RECARGA:
 			frenar("idle")
+
 		Estado.BUSCAR:
 			frenar("idle")
+
 		Estado.VOLVER:
 			ir_a(puesto)
 
-	if jugador != null:
-		if jugador.get("audifonos_activos") == true:
+	# Silenciar el sonido de la criatura con audífonos.
+	if sonido_criatura != null:
+		if jugador != null and jugador.get("audifonos_activos") == true:
 			sonido_criatura.volume_linear = 0.0
 		else:
 			sonido_criatura.volume_linear = 1.0
@@ -75,23 +86,31 @@ func decidir() -> Estado:
 		Estado.EN_PUESTO, Estado.BUSCAR, Estado.VOLVER:
 			if tiempo_visto >= tiempo_detectar:
 				return Estado.ACERCARSE
+
 			if estado == Estado.BUSCAR and reloj <= 0.001:
 				return Estado.VOLVER
+
 			if estado == Estado.VOLVER and distancia_a(puesto) < 0.15:
 				return Estado.EN_PUESTO
+
 		Estado.ACERCARSE:
 			if not la_ve(radio_perder, false):
 				return Estado.BUSCAR
+
 			if distancia() <= rango_ataque:
 				return Estado.AVISO
+
 		Estado.AVISO:
 			if reloj <= 0.001:
 				return Estado.GOLPE
+
 		Estado.GOLPE:
 			return Estado.RECARGA
+
 		Estado.RECARGA:
 			if reloj <= 0.001:
 				return Estado.ACERCARSE
+
 	return estado
 
 
@@ -100,27 +119,49 @@ func cambiar_a(nuevo: Estado) -> void:
 	estado = nuevo
 	tiempo_visto = 0.0
 
+	# Detener el sonido cuando deja de perseguir.
 	if estado in [Estado.EN_PUESTO, Estado.BUSCAR, Estado.VOLVER]:
-		sonido_criatura.stop()
+		if sonido_criatura != null:
+			sonido_criatura.stop()
 
-	print(name, " -> ", Estado.keys()[estado], " cuadro ",
-		Engine.get_physics_frames(), " a ",
-		snappedf(distancia(), 0.01), " m")
+	print(
+		name,
+		" -> ",
+		Estado.keys()[estado],
+		" cuadro ",
+		Engine.get_physics_frames(),
+		" a ",
+		snappedf(distancia(), 0.01),
+		" m"
+	)
 
-	if estado == Estado.ACERCARSE and antes in [Estado.EN_PUESTO, Estado.BUSCAR, Estado.VOLVER]:
+	# Reproducir el sonido cuando detecta al jugador.
+	if estado == Estado.ACERCARSE and antes in [
+		Estado.EN_PUESTO,
+		Estado.BUSCAR,
+		Estado.VOLVER
+	]:
 		evento.emit(global_position)
-		sonido_criatura.play()
-		print("SONIDO REPRODUCIÉNDOSE: ", sonido_criatura.playing)
+
+		if sonido_criatura != null:
+			sonido_criatura.play()
+			print("SONIDO REPRODUCIÉNDOSE: ", sonido_criatura.playing)
+
 	elif estado == Estado.AVISO:
 		reloj = tiempo_aviso
+
 	elif estado == Estado.RECARGA:
 		reloj = tiempo_recarga
+
 	elif estado == Estado.BUSCAR:
 		reloj = tiempo_buscar
+
 	elif estado == Estado.EN_PUESTO:
 		basis = orientacion_inicial
 
-	mostrar_alerta(estado in [Estado.ACERCARSE, Estado.AVISO, Estado.GOLPE])
+	mostrar_alerta(
+		estado in [Estado.ACERCARSE, Estado.AVISO, Estado.GOLPE]
+	)
 
 
 func mostrar_alerta(activa: bool) -> void:
@@ -162,7 +203,8 @@ func la_ve(radio: float, usar_angulo: bool = true) -> bool:
 
 
 func golpear() -> void:
-	print(name, " golpea")
+	print(name, " GOLPEA EN EL CUADRO: ", Engine.get_physics_frames())
+
 	if distancia() <= rango_ataque + 0.3:
 		Partida.perder()
 
@@ -170,13 +212,22 @@ func golpear() -> void:
 func ir_a(destino: Vector3) -> void:
 	var hacia: Vector3 = destino - global_position
 	hacia.y = 0.0
+
 	if hacia.length() < 0.05:
 		frenar("idle")
 		return
+
 	var dir: Vector3 = hacia.normalized()
-	var velocidad_actual: float = rapidez_persecucion if estado == Estado.ACERCARSE else rapidez
+
+	var velocidad_actual: float = (
+		rapidez_persecucion
+		if estado == Estado.ACERCARSE
+		else rapidez
+	)
+
 	velocity.x = dir.x * velocidad_actual
 	velocity.z = dir.z * velocidad_actual
+
 	basis = Basis.looking_at(dir)
 	anim.play("walk")
 
