@@ -6,9 +6,10 @@ signal jugador_salio(cuerpo: Node3D)
 
 @export var grupo: String = Grupos.FUERA_DE_ALCANCE
 @export var bloquear_frente_hueco: bool = true
-@export var poster_x: float = -6.0
+@export var poster_x: float = -8.15
+@export var poster2_x: float = 3.97
 @export var poster_alto: float = 1.85
-@export var poster_centro_y: float = 1.9
+@export var poster_centro_y: float = 1.55
 @export var poster_brillo: float = 0.18
 @export var poster_luz: float = 0.9
 
@@ -41,8 +42,6 @@ const ASIENTO: Color = Color(0.22, 0.26, 0.42)
 
 var choques: StaticBody3D
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
-var _textura_poster: Texture2D = null
-var _borde_poster: Node3D = null
 var _capa_poster: CanvasLayer = null
 
 
@@ -72,7 +71,8 @@ func _ready() -> void:
 	_pilar(sala, Vector3(9.0, 0, -1.6), CIAN)
 	_viga_luz(sala)
 	_detalles(sala)
-	_poster(sala)
+	_poster(sala, "res://assets/npcs y posters/RATINI1.jpg.jpeg", poster_x, "Poster")
+	_poster(sala, "res://assets/npcs y posters/felidae1.png", poster2_x, "Poster2")
 	if not Engine.is_editor_hint():
 		var area: Area3D = get_node_or_null("AreaZonaSegura") as Area3D
 		if area != null:
@@ -281,13 +281,13 @@ func _tubo(p: Node3D, x: float, color: Color) -> void:
 	p.add_child(l)
 
 
-func _poster(p: Node3D) -> void:
-	var textura: Texture2D = load("res://assets/npcs y posters/RATINI1.jpg.jpeg") as Texture2D
+func _poster(p: Node3D, ruta: String, x_poster: float, nombre: String) -> void:
+	var textura: Texture2D = load(ruta) as Texture2D
 	if textura == null:
 		return
 	var proporcion: float = float(textura.get_width()) / float(textura.get_height())
 	var tam: Vector2 = Vector2(poster_alto * proporcion, poster_alto)
-	var centro: Vector3 = Vector3(poster_x, poster_centro_y, Z_FONDO + 0.04)
+	var centro: Vector3 = Vector3(x_poster, poster_centro_y, Z_FONDO + 0.04)
 	_caja(p, Vector3(tam.x + 0.08, tam.y + 0.08, 0.02), centro - Vector3(0, 0, 0.015), _mat(NOCHE))
 	var mat: StandardMaterial3D = StandardMaterial3D.new()
 	mat.albedo_texture = textura
@@ -300,14 +300,14 @@ func _poster(p: Node3D) -> void:
 	var lamina: QuadMesh = QuadMesh.new()
 	lamina.size = tam
 	var poster: MeshInstance3D = MeshInstance3D.new()
-	poster.name = "Poster"
+	poster.name = nombre
 	poster.mesh = lamina
 	poster.material_override = mat
 	poster.position = centro
 	poster.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	p.add_child(poster)
 	var luz: SpotLight3D = SpotLight3D.new()
-	luz.name = "LuzPoster"
+	luz.name = "Luz" + nombre
 	luz.light_color = Color(1.0, 0.86, 0.95)
 	luz.light_energy = poster_luz
 	luz.light_specular = 0.0
@@ -316,28 +316,27 @@ func _poster(p: Node3D) -> void:
 	luz.spot_attenuation = 0.8
 	luz.spot_angle_attenuation = 1.4
 	luz.shadow_enabled = false
-	var origen: Vector3 = Vector3(poster_x, poster_centro_y + tam.y * 0.5 + 0.35, Z_FONDO + 1.1)
+	var origen: Vector3 = Vector3(x_poster, poster_centro_y + tam.y * 0.5 + 0.35, Z_FONDO + 1.1)
 	luz.transform = Transform3D(Basis(), origen).looking_at(centro, Vector3.UP)
 	p.add_child(luz)
-	_textura_poster = textura
-	_borde_poster = Node3D.new()
-	_borde_poster.name = "BordePoster"
-	_borde_poster.visible = false
-	p.add_child(_borde_poster)
+	var borde: Node3D = Node3D.new()
+	borde.name = "Borde" + nombre
+	borde.visible = false
+	p.add_child(borde)
 	var azul: StandardMaterial3D = _mat(Color(0.3, 0.65, 1.0), Color(0.3, 0.65, 1.0), 2.5)
 	var g: float = 0.025
 	var ancho_b: float = tam.x + 0.12
 	var alto_b: float = tam.y + 0.12
-	_caja(_borde_poster, Vector3(ancho_b + g, g, 0.01), centro + Vector3(0, alto_b * 0.5, 0.01), azul)
-	_caja(_borde_poster, Vector3(ancho_b + g, g, 0.01), centro + Vector3(0, -alto_b * 0.5, 0.01), azul)
-	_caja(_borde_poster, Vector3(g, alto_b + g, 0.01), centro + Vector3(-ancho_b * 0.5, 0, 0.01), azul)
-	_caja(_borde_poster, Vector3(g, alto_b + g, 0.01), centro + Vector3(ancho_b * 0.5, 0, 0.01), azul)
-	for hijo: Node in _borde_poster.get_children():
+	_caja(borde, Vector3(ancho_b + g, g, 0.01), centro + Vector3(0, alto_b * 0.5, 0.01), azul)
+	_caja(borde, Vector3(ancho_b + g, g, 0.01), centro + Vector3(0, -alto_b * 0.5, 0.01), azul)
+	_caja(borde, Vector3(g, alto_b + g, 0.01), centro + Vector3(-ancho_b * 0.5, 0, 0.01), azul)
+	_caja(borde, Vector3(g, alto_b + g, 0.01), centro + Vector3(ancho_b * 0.5, 0, 0.01), azul)
+	for hijo: Node in borde.get_children():
 		(hijo as GeometryInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	if Engine.is_editor_hint():
 		return
 	var area: Area3D = Area3D.new()
-	area.name = "ClicPoster"
+	area.name = "Clic" + nombre
 	area.collision_layer = 524288
 	area.collision_mask = 0
 	area.monitoring = false
@@ -350,28 +349,29 @@ func _poster(p: Node3D) -> void:
 	area.position = centro
 	p.add_child(area)
 	get_viewport().physics_object_picking = true
-	area.mouse_entered.connect(_al_entrar_poster)
-	area.mouse_exited.connect(_al_salir_poster)
-	area.input_event.connect(_al_clic_poster)
+	area.mouse_entered.connect(_al_entrar_poster.bind(borde))
+	area.mouse_exited.connect(_al_salir_poster.bind(borde))
+	area.input_event.connect(_al_clic_poster.bind(textura, borde))
 
 
-func _al_entrar_poster() -> void:
+func _al_entrar_poster(borde: Node3D) -> void:
 	if _capa_poster != null:
 		return
-	_borde_poster.visible = true
+	borde.visible = true
 	Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
 
 
-func _al_salir_poster() -> void:
-	_borde_poster.visible = false
+func _al_salir_poster(borde: Node3D) -> void:
+	borde.visible = false
 	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 
 
-func _al_clic_poster(_camara: Node, evento: InputEvent, _punto: Vector3, _normal: Vector3, _forma: int) -> void:
+func _al_clic_poster(_camara: Node, evento: InputEvent, _punto: Vector3, _normal: Vector3, _forma: int, textura: Texture2D, borde: Node3D) -> void:
 	if evento is InputEventMouseButton:
 		var boton: InputEventMouseButton = evento as InputEventMouseButton
 		if boton.pressed and boton.button_index == MOUSE_BUTTON_LEFT:
-			_abrir_poster()
+			_al_salir_poster(borde)
+			_abrir_poster(textura)
 
 
 func _unhandled_input(evento: InputEvent) -> void:
@@ -380,10 +380,9 @@ func _unhandled_input(evento: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
-func _abrir_poster() -> void:
-	if _capa_poster != null or _textura_poster == null:
+func _abrir_poster(textura: Texture2D) -> void:
+	if _capa_poster != null or textura == null:
 		return
-	_al_salir_poster()
 	_capa_poster = CanvasLayer.new()
 	_capa_poster.layer = 10
 	add_child(_capa_poster)
@@ -394,14 +393,14 @@ func _abrir_poster() -> void:
 	oscuro.mouse_filter = Control.MOUSE_FILTER_STOP
 	oscuro.gui_input.connect(_al_tocar_afuera_poster)
 	_capa_poster.add_child(oscuro)
-	var proporcion: float = float(_textura_poster.get_width()) / float(_textura_poster.get_height())
+	var proporcion: float = float(textura.get_width()) / float(textura.get_height())
 	var alto: float = pantalla.y * 0.9
 	var ancho: float = alto * proporcion
 	if ancho > pantalla.x * 0.9:
 		ancho = pantalla.x * 0.9
 		alto = ancho / proporcion
 	var imagen: TextureRect = TextureRect.new()
-	imagen.texture = _textura_poster
+	imagen.texture = textura
 	imagen.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	imagen.stretch_mode = TextureRect.STRETCH_SCALE
 	imagen.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
