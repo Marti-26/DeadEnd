@@ -2,13 +2,13 @@ class_name Personaje
 extends CharacterBody3D
 
 #Tabla Enum
-enum Estado { QUIETO, CAMINAR, SIGILO, AIRE, ESCONDERSE, DASH }
-const RUIDO = [0.0, 3.0, 0.0, 0.0, 0.0, 8.0]
+enum Estado { QUIETO, CAMINAR, SIGILO, ESCONDERSE, DASH }
+const RUIDO = [0.0, 3.0, 0.0, 0.0, 8.0]
 
 #@export var speed = 4.0
 @export var camara: Camera3D
 @export  var speed_caminar = 4.0
-@export var speed_sigilo = 1.5
+@export var speed_sigilo = 2.0
 @export var speed_dash = 7.5
 @export var tiempo_arranque = 0.25
 #se agrega la variable para que la animacion del dash tenga tiempo y se vea en la ejecucion
@@ -434,9 +434,6 @@ func _physics_process(delta):
 	_prueba()
 
 func elegir_estado():
-	if not is_on_floor():
-		return Estado.AIRE
-	
 	#Si esta activo el dash por el tiempo mantenerlo
 	if dash_tiempo > 0.0:
 		return Estado.DASH
@@ -473,8 +470,6 @@ func animar():
 			anim.play("walk")
 		Estado.SIGILO:
 			anim.play("crouch")
-		Estado.AIRE:
-			anim.play("fall")
 		Estado.ESCONDERSE:
 			anim.play("sit")
 		Estado.DASH:
@@ -500,8 +495,6 @@ func animar_2d():
 			reproducir("dash")
 		Estado.SIGILO:
 			reproducir("sigilo", 1.0 if moviendo else 0.0)
-		Estado.AIRE:
-			reproducir("caminar", 0.0)
 		_:
 			reproducir("audifonos_idle" if audifonos_activos else "idle")
 
