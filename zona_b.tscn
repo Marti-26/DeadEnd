@@ -1889,12 +1889,12 @@ transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -6.1826963, 2.1095808, 
 
 [node name="VentilacionAmbiente" type="AudioStreamPlayer" parent="." unique_id=1639133400]
 stream = ExtResource("28_hfju1")
-volume_db = -12.0
+volume_db = -22.0
 autoplay = true
 bus = &"Juego"
 
 [node name="LucesAmbiente" type="AudioStreamPlayer" parent="." unique_id=1535779194]
 stream = ExtResource("29_0slvj")
-volume_db = -18.0
+volume_db = -24.0
 autoplay = true
 bus = &"Juego"

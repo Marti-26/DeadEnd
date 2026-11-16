@@ -109,7 +109,7 @@ var tiene_celular: bool = false
 func _enter_tree() -> void:
 	add_to_group(Grupos.JUGADOR)
 	if Partida != null:
-		Partida.cargar_estado_personaje(self)
+			Partida.cargar_estado_personaje(self)
 
 
 func _ready() -> void:
@@ -525,6 +525,11 @@ func _actualizar_sonido_pasos() -> void:
 		var moviendose = Vector2(velocity.x, velocity.z).length() > 0.2
 		var en_sigilo = Input.is_action_pressed("sigilo")
 		var escondido = estado == Estado.ESCONDERSE
+		if moviendose and Engine.get_physics_frames() % 60 == 0:
+			print("EN SUELO: ", is_on_floor())
+			print("SONIDO PASOS: ", sonido_pasos.playing)
+			print("BUS: ", sonido_pasos.bus)
+		
 
 		if moviendose and not en_sigilo and not escondido and is_on_floor():
 			if estado == Estado.DASH:
@@ -534,6 +539,8 @@ func _actualizar_sonido_pasos() -> void:
 
 			if not sonido_pasos.playing:
 				sonido_pasos.play()
+				print("PASOS POSICIÓN: ", sonido_pasos.global_position)
+				print("CÁMARA ACTIVA: ", get_viewport().get_camera_3d())
 		else:
 			if sonido_pasos.playing:
 				sonido_pasos.stop()

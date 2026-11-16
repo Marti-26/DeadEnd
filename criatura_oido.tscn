@@ -1,6 +1,6 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://df63u4sp6jpyf"]
 
-[ext_resource type="Script" path="res://criatura_oido.gd" id="1_oido"]
+[ext_resource type="Script" uid="uid://boyc0yjoocw7c" path="res://criatura_oido.gd" id="1_oido"]
 [ext_resource type="Texture2D" uid="uid://ob03cg1mua2r" path="res://assets/Criatura_que_escucha/criatura_escucha_idle_frente_1.png" id="2_idle_1"]
 [ext_resource type="Texture2D" uid="uid://ptvgerffy74l" path="res://assets/Criatura_que_escucha/criatura_escucha_idle_frente_2.png" id="3_idle_2"]
 [ext_resource type="Texture2D" uid="uid://o2o5fdkxloee" path="res://assets/Criatura_que_escucha/criatura_escucha_idle_frente_3.png" id="4_idle_3"]
@@ -15,7 +15,8 @@
 [ext_resource type="Texture2D" uid="uid://d1f557wptmtyt" path="res://assets/Criatura_que_escucha/criatura_escucha_caminar_izquierda_3.png" id="13_cam_izquierda_3"]
 [ext_resource type="Texture2D" uid="uid://c68jdddb3r4su" path="res://assets/Criatura_que_escucha/criatura_escucha_caminar_derecha_4.png" id="14_cam_derecha_4"]
 [ext_resource type="Texture2D" uid="uid://bcgut2vs6ji46" path="res://assets/Criatura_que_escucha/criatura_escucha_caminar_izquierda_4.png" id="15_cam_izquierda_4"]
-[ext_resource type="FontFile" path="res://assets/font/ShareTechMono-Regular.ttf" id="fuente_neon"]
+[ext_resource type="AudioStream" uid="uid://b388oaqjio82n" path="res://Sonidos/Criatura/criatura2.wav" id="17_xccfa"]
+[ext_resource type="FontFile" uid="uid://cdufsefxihski" path="res://assets/font/ShareTechMono-Regular.ttf" id="fuente_neon"]
 
 [sub_resource type="CapsuleShape3D" id="CapsulaOido"]
 radius = 0.35
@@ -23,23 +24,6 @@ height = 5.0
 
 [sub_resource type="SpriteFrames" id="AnimacionesOido"]
 animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("2_idle_1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("3_idle_2")
-}, {
-"duration": 1.0,
-"texture": ExtResource("4_idle_3")
-}, {
-"duration": 1.0,
-"texture": ExtResource("3_idle_2")
-}],
-"loop": true,
-"name": &"idle",
-"speed": 4.0
-}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("5_alerta_1")
@@ -53,7 +37,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("6_alerta_2")
 }],
-"loop": true,
+"loop": 1,
 "name": &"alerta",
 "speed": 5.0
 }, {
@@ -70,7 +54,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("9_cam_derecha_2")
 }],
-"loop": true,
+"loop": 1,
 "name": &"caminar_derecha",
 "speed": 4.0
 }, {
@@ -87,31 +71,48 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("10_cam_izquierda_1")
 }],
-"loop": true,
+"loop": 1,
 "name": &"caminar_izquierda",
+"speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_idle_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_idle_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_idle_3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_idle_2")
+}],
+"loop": 1,
+"name": &"idle",
 "speed": 4.0
 }]
 
-[node name="Oido" type="CharacterBody3D"]
+[node name="Oido" type="CharacterBody3D" unique_id=54360221]
 script = ExtResource("1_oido")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1504901185]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
 shape = SubResource("CapsulaOido")
 
-[node name="Sprite" type="AnimatedSprite3D" parent="."]
+[node name="Sprite" type="AnimatedSprite3D" parent="." unique_id=279335394]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.705, 0)
 cast_shadow = 0
-shaded = true
 pixel_size = 0.0069
 billboard = 2
+shaded = true
 alpha_cut = 1
 texture_filter = 1
 sprite_frames = SubResource("AnimacionesOido")
 animation = &"idle"
 autoplay = "idle"
 
-[node name="Exclamacion" type="Label3D" parent="."]
+[node name="Exclamacion" type="Label3D" parent="." unique_id=1673905257]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.4, 0)
 visible = false
 pixel_size = 0.01
@@ -122,3 +123,8 @@ text = "!"
 font = ExtResource("fuente_neon")
 font_size = 96
 outline_size = 0
+
+[node name="Gruñido" type="AudioStreamPlayer3D" parent="." unique_id=562318590]
+stream = ExtResource("17_xccfa")
+max_distance = 15.0
+bus = &"Juego"

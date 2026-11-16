@@ -7,6 +7,7 @@ extends StaticBody3D
 @export var aviso: Label3D
 
 var _mat: StandardMaterial3D
+@onready var sonido_recarga: AudioStreamPlayer3D = $SonidoRecarga
 
 
 func _ready() -> void:
@@ -19,6 +20,7 @@ func _ready() -> void:
 	_pintar()
 
 
+
 func usar() -> void:
 	var pj: Personaje = get_tree().get_first_node_in_group(Grupos.JUGADOR) as Personaje
 	if pj != null:
@@ -26,12 +28,16 @@ func usar() -> void:
 			pj.bateria = carga
 			Partida.bateria = carga
 			Partida.estacion_usada = true
+			# Sonido al recargar la batería
+			sonido_recarga.stop()
+			sonido_recarga.play()
 			print("estación de carga: batería al ", carga, " %")
 		if Partida != null:
 			Partida.guardar_estado_personaje(pj)
 	Partida.guardar(punto_guardado)
 	_pintar()
 	_mostrar("GUARDADO")
+
 
 
 func _pintar() -> void:
