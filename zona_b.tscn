@@ -23,7 +23,7 @@
 [ext_resource type="PackedScene" uid="uid://dk2w3at8nv2xx" path="res://celular.tscn" id="21_s3cy1"]
 [ext_resource type="PackedScene" uid="uid://df2osby5n6wnv" path="res://salida.tscn" id="23_jc8c0"]
 [ext_resource type="PackedScene" uid="uid://dhfme1yx68me0" path="res://cartel_controles.tscn" id="24_mikmk"]
-[ext_resource type="Script" path="res://bombillo.gd" id="bombillo_luz"]
+[ext_resource type="Script" uid="uid://4mdf5onjb7ag" path="res://bombillo.gd" id="bombillo_luz"]
 
 [sub_resource type="Environment" id="Environment_dpv7s"]
 background_mode = 1
@@ -1603,18 +1603,14 @@ objetivo = NodePath("../Personaje")
 [node name="Criatura2" parent="." unique_id=383791410 instance=ExtResource("8_n70iv")]
 transform = Transform3D(-0.99733615, 0, 0.07294283, 0, 1, 0, -0.07294283, 0, -0.99733615, -4.9488373, 0.01345098, -3.0988078)
 
-
-[node name="Bombillo" type="Node3D" parent="Criatura2"]
+[node name="Bombillo" type="Node3D" parent="Criatura2" unique_id=1192142113]
 script = ExtResource("bombillo_luz")
-color = Color(0.45, 1, 0.55, 1)
 
 [node name="Oido1" parent="." unique_id=109917073 instance=ExtResource("14_oido")]
 transform = Transform3D(-0.9291808, 0, 0.36962554, 0, 1, 0, -0.36962554, 0, -0.9291808, 9.972658, -0.0098490715, -3.0043225)
 
-
-[node name="Bombillo" type="Node3D" parent="Oido1"]
+[node name="Bombillo" type="Node3D" parent="Oido1" unique_id=2138610944]
 script = ExtResource("bombillo_luz")
-color = Color(0.45, 1, 0.55, 1)
 alcance = 5.0
 separacion = Vector3(0.7, 4.2, 0.5)
 

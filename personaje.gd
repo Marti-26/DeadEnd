@@ -2,20 +2,19 @@ class_name Personaje
 extends CharacterBody3D
 
 #Tabla Enum
-enum Estado { QUIETO, CAMINAR, SIGILO, AIRE, ESCONDERSE, DASH }
-const RUIDO = [0.0, 3.0, 0.0, 0.0, 0.0, 8.0]
+enum Estado { QUIETO, CAMINAR, SIGILO, ESCONDERSE, DASH }
+const RUIDO = [0.0, 3.0, 0.0, 0.0, 8.0]
 
 #@export var speed = 4.0
 @export var camara: Camera3D
-@export  var speed_caminar = 3.0
-@export var speed_sigilo = 1.5
+@export  var speed_caminar = 4.0
+@export var speed_sigilo = 2.0
 @export var speed_dash = 7.5
 @export var tiempo_arranque = 0.25
 #se agrega la variable para que la animacion del dash tenga tiempo y se vea en la ejecucion
 var dash_tiempo = 0.0 
 
 @export var gravedad = 9.8
-@export var fuerza_salto = 6.0
 @onready var anim = get_node_or_null("Modelo/AnimationPlayer")
 @onready var sprite = get_node_or_null("Sprite")
 var direccion = "frente"
@@ -44,6 +43,13 @@ const RADIO_JADEO: float = 10.0
 signal jadeo(posicion: Vector3)
 
 @export var linterna: Light3D
+
+@export_group("Linterna")
+@export var linterna_energia: float = 6.0
+@export var linterna_alcance: float = 12.0
+@export var linterna_angulo: float = 40.0
+@export var linterna_color: Color = Color(1.0, 0.98, 0.92)
+@export var linterna_inclinacion: float = -10.0
 
 @export_group("Bombillo")
 @export var activar_bombillo: bool = true
@@ -176,12 +182,17 @@ func _preparar_linterna() -> void:
 		var foco: SpotLight3D = SpotLight3D.new()
 		foco.name = "Linterna"
 		foco.position = Vector3(0.0, 1.1, -0.2)
-		foco.rotation_degrees.x = -15.0
-		foco.spot_range = 9.0
-		foco.spot_angle = 45.0
-		foco.light_energy = 3.5
 		add_child(foco)
 		linterna = foco
+	
+	if linterna is SpotLight3D:
+		var spot: SpotLight3D = linterna as SpotLight3D
+		spot.light_energy = linterna_energia
+		spot.spot_range = linterna_alcance
+		spot.spot_angle = linterna_angulo
+		spot.light_color = linterna_color
+		spot.rotation_degrees.x = linterna_inclinacion
+		spot.spot_attenuation = 0.8
 	_actualizar_linterna()
 
 
@@ -422,9 +433,6 @@ func _physics_process(delta):
 	_prueba()
 
 func elegir_estado():
-	if not is_on_floor():
-		return Estado.AIRE
-	
 	#Si esta activo el dash por el tiempo mantenerlo
 	if dash_tiempo > 0.0:
 		return Estado.DASH
@@ -461,8 +469,6 @@ func animar():
 			anim.play("walk")
 		Estado.SIGILO:
 			anim.play("crouch")
-		Estado.AIRE:
-			anim.play("fall")
 		Estado.ESCONDERSE:
 			anim.play("sit")
 		Estado.DASH:
@@ -488,8 +494,6 @@ func animar_2d():
 			reproducir("dash")
 		Estado.SIGILO:
 			reproducir("sigilo", 1.0 if moviendo else 0.0)
-		Estado.AIRE:
-			reproducir("caminar", 0.0)
 		_:
 			reproducir("audifonos_idle" if audifonos_activos else "idle")
 
