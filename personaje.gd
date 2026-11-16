@@ -45,6 +45,13 @@ signal jadeo(posicion: Vector3)
 
 @export var linterna: Light3D
 
+@export_group("Linterna")
+@export var linterna_energia: float = 6.0
+@export var linterna_alcance: float = 12.0
+@export var linterna_angulo: float = 40.0
+@export var linterna_color: Color = Color(1.0, 0.98, 0.92)
+@export var linterna_inclinacion: float = -10.0
+
 @export_group("Bombillo")
 @export var activar_bombillo: bool = true
 @export var energia_bombillo: float = 1.2
@@ -176,12 +183,17 @@ func _preparar_linterna() -> void:
 		var foco: SpotLight3D = SpotLight3D.new()
 		foco.name = "Linterna"
 		foco.position = Vector3(0.0, 1.1, -0.2)
-		foco.rotation_degrees.x = -15.0
-		foco.spot_range = 9.0
-		foco.spot_angle = 45.0
-		foco.light_energy = 3.5
 		add_child(foco)
 		linterna = foco
+	
+	if linterna is SpotLight3D:
+		var spot: SpotLight3D = linterna as SpotLight3D
+		spot.light_energy = linterna_energia
+		spot.spot_range = linterna_alcance
+		spot.spot_angle = linterna_angulo
+		spot.light_color = linterna_color
+		spot.rotation_degrees.x = linterna_inclinacion
+		spot.spot_attenuation = 0.8
 	_actualizar_linterna()
 
 
