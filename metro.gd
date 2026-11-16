@@ -100,7 +100,8 @@ const COLOR_MARCADOR: Color = Color(0.6, 0.9, 1.0)
 const COLOR_ENTRAR: Color = Color(1.0, 0.78, 0.35)
 const ALTO_MARCADOR: float = 3.3
 
-@onready var sonido_llegada: AudioStreamPlayer3D = $Llegada
+@onready var sonido_llegada: AudioStreamPlayer3D = $LlegadaSalida
+@onready var sonido_puertas: AudioStreamPlayer3D = $Puertas
 var estado: Estado = Estado.FUERA
 var reloj: float = 0.0
 var inicio: float = 0.0
@@ -185,11 +186,24 @@ func _physics_process(delta: float) -> void:
 					
 					
 	sonido_llegada.global_position = tren.global_position + Vector3(0, 1, 0)
+	sonido_puertas.global_position = tren.global_position + Vector3(0, 1, -1.5)
 	t = reloj - inicio
 	var abrir: bool = estado == Estado.DETENIDO and t > 0.6 and t < tiempo_detenido - 1.6
+	
+	# Reproducir el sonido cuando empiezan a abrirse
+	if abrir and not _abiertas:
+		print("PUERTAS ABRIENDOSE")
+		sonido_puertas.stop()
+		sonido_puertas.play(0.0)
+
+	# Reproducir el mismo sonido cuando empiezan a cerrarse
 	if _abiertas and not abrir:
+		sonido_puertas.stop()
+		sonido_puertas.play(0.0)
 		_al_cerrar()
+
 	_abiertas = abrir
+
 	apertura = move_toward(apertura, 1.0 if abrir else 0.0, delta / 0.9)
 	_mover_puertas()
 
