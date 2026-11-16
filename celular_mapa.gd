@@ -95,28 +95,48 @@ func alternar() -> void:
 		abrir()
 
 
+
 func abrir() -> void:
 	if abierto:
 		return
 	abierto = true
 	visible = true
+	# Reproducir sonido al abrir el mapa
+	var jugador = get_tree().get_first_node_in_group(Grupos.JUGADOR)
+	if jugador != null:
+		var sonido = jugador.get_node_or_null("Celular") as AudioStreamPlayer
+		if sonido != null:
+			if sonido.stream != null:
+				sonido.play()
+				print("Sonido del mapa reproducido")
+			else:
+				print("ERROR: SonidoAbrirMapa no tiene audio asignado")
+		else:
+			print("ERROR: No se encontró SonidoAbrirMapa")
+	else:
+		print("ERROR: No se encontró al jugador")
+	# Activar cámara del mapa
 	_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	_seguir_jugador()
 	_siguiente_glitch = 0.0
 	_congelado = 0.0
 	_actualizar_textos(0.0)
 	_impulso_charm = 0.35
+	# Animación de apertura del celular
 	var destino: Vector2 = _posicion_abierta()
 	_telefono.position = destino + Vector2(ancho + margen_derecho + 60.0, 0.0)
 	_telefono.rotation_degrees = inclinacion + 8.0
 	_fondo.modulate.a = 0.0
+
 	if _tween != null:
 		_tween.kill()
 	_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	_tween.tween_property(_telefono, "position", destino, 0.42)
 	_tween.tween_property(_telefono, "rotation_degrees", inclinacion, 0.42)
 	_tween.tween_property(_fondo, "modulate:a", 1.0, 0.25)
+
 	abierto_cambiado.emit(true)
+
 
 
 func cerrar() -> void:

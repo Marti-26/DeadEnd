@@ -22,6 +22,7 @@ var dash_tiempo = 0.0
 @onready var sonido_respiracion: AudioStreamPlayer = $Respiracion
 @onready var musica_audifonos: AudioStreamPlayer = $MusicaAudifonos
 @onready var sonido_linterna: AudioStreamPlayer = $Linterna
+@onready var sonido_abrir_mapa: AudioStreamPlayer = $Celular
 
 var fragmentos_snowfall: Array[AudioStream] = [
 	preload("res://Sonidos/Efectos/audio1.wav"),
