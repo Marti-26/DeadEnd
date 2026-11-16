@@ -1,7 +1,8 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://c1cx6mxywrvk8"]
 
-[ext_resource type="Script" path="res://dialogo.gd" id="1_dialogo"]
+[ext_resource type="Script" uid="uid://bxswybajk11x6" path="res://dialogo.gd" id="1_dialogo"]
 [ext_resource type="Theme" path="res://tema.tres" id="2_tema"]
+[ext_resource type="AudioStream" uid="uid://4vxtchj86c4h" path="res://Sonidos/Efectos/Dialogo.mp3" id="3_cmsvf"]
 
 [sub_resource type="StyleBoxFlat" id="EstiloCuadro"]
 content_margin_left = 24.0
@@ -17,11 +18,11 @@ border_color = Color(0.35, 0.9, 1, 0.7)
 shadow_color = Color(0.2, 0.85, 1, 0.15)
 shadow_size = 12
 
-[node name="Dialogo" type="CanvasLayer"]
+[node name="Dialogo" type="CanvasLayer" unique_id=2088259029]
 layer = 5
 script = ExtResource("1_dialogo")
 
-[node name="Cuadro" type="PanelContainer" parent="."]
+[node name="Cuadro" type="PanelContainer" parent="." unique_id=1640365625]
 visible = false
 anchors_preset = 7
 anchor_left = 0.5
@@ -38,21 +39,26 @@ mouse_filter = 2
 theme = ExtResource("2_tema")
 theme_override_styles/panel = SubResource("EstiloCuadro")
 
-[node name="Columnas" type="VBoxContainer" parent="Cuadro"]
+[node name="Columnas" type="VBoxContainer" parent="Cuadro" unique_id=646817089]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 8
 
-[node name="Nombre" type="Label" parent="Cuadro/Columnas"]
+[node name="Nombre" type="Label" parent="Cuadro/Columnas" unique_id=37283437]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.45, 0.92, 1, 1)
 theme_override_font_sizes/font_size = 18
 text = "CHICO"
 
-[node name="Texto" type="Label" parent="Cuadro/Columnas"]
+[node name="Texto" type="Label" parent="Cuadro/Columnas" unique_id=291152033]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 theme_override_font_sizes/font_size = 26
 text = "..."
 autowrap_mode = 3
 visible_characters_behavior = 1
+
+[node name="Dialogo" type="AudioStreamPlayer" parent="." unique_id=1572664393]
+stream = ExtResource("3_cmsvf")
+volume_db = -10.0
+bus = &"Juego"
