@@ -21,6 +21,7 @@ var dash_tiempo = 0.0
 @onready var sonido_latidos: AudioStreamPlayer = $Latidos
 @onready var sonido_respiracion: AudioStreamPlayer = $Respiracion
 @onready var musica_audifonos: AudioStreamPlayer = $MusicaAudifonos
+@onready var sonido_linterna: AudioStreamPlayer = $Linterna
 
 var fragmentos_snowfall: Array[AudioStream] = [
 	preload("res://Sonidos/Efectos/audio1.wav"),
@@ -250,16 +251,18 @@ func _animar_audifonos(poner: bool) -> void:
 		sprite.play_backwards(nombre)
 
 
+
 func alternar_linterna() -> void:
-	# Si NO tiene el celular, cortamos aquí y no hace nada al presionar F
 	if not tiene_celular:
 		return
-	
 	if bateria <= 0.0:
 		linterna_encendida = false
-	else:
-		linterna_encendida = not linterna_encendida
+		return
+	linterna_encendida = not linterna_encendida
 	_actualizar_linterna()
+	if sonido_linterna.stream != null:
+		sonido_linterna.play()
+
 
 
 func _preparar_linterna() -> void:
