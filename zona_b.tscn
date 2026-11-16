@@ -15,14 +15,18 @@
 [ext_resource type="Script" uid="uid://6l6v2g14wi" path="res://esconderse.gd" id="12_escon"]
 [ext_resource type="AudioStream" uid="uid://butc8q385uggq" path="res://Sonidos/Jugador/latidos.wav" id="13_ig1hw"]
 [ext_resource type="AudioStream" uid="uid://c51ft5btj10h4" path="res://Sonidos/Jugador/respircion.wav" id="14_np7jt"]
-[ext_resource type="PackedScene" path="res://criatura_oido.tscn" id="14_oido"]
+[ext_resource type="PackedScene" uid="uid://df63u4sp6jpyf" path="res://criatura_oido.tscn" id="14_oido"]
 [ext_resource type="AudioStream" uid="uid://cxmx5ryegd57" path="res://Sonidos/Efectos/RecogerCelular.wav" id="15_bvosb"]
 [ext_resource type="PackedScene" uid="uid://nhfwj0jc7mm4" path="res://metro.tscn" id="15_metro"]
 [ext_resource type="AudioStream" uid="uid://brrvnuha2x01g" path="res://Sonidos/Efectos/audio1.wav" id="16_5ae7h"]
 [ext_resource type="Script" uid="uid://fqgq0ua6b3dp" path="res://zona_fuera_alcance.gd" id="16_fuera"]
+[ext_resource type="AudioStream" uid="uid://bkiffdughthbl" path="res://Sonidos/Efectos/linterna.wav" id="17_0kvga"]
 [ext_resource type="Script" uid="uid://bvblnav03id4i" path="res://camara_fija.gd" id="17_camara"]
+[ext_resource type="AudioStream" uid="uid://xesjpdslfwad" path="res://Sonidos/Efectos/Celular.mp3" id="18_nvaji"]
 [ext_resource type="Script" uid="uid://cmaoevvcsdw4y" path="res://puerta_escena.gd" id="18_puerta"]
+[ext_resource type="AudioStream" uid="uid://b24hk0wedmjao" path="res://Sonidos/Jugador/meow.wav" id="19_c70ak"]
 [ext_resource type="Script" uid="uid://chlx4hyqucufu" path="res://llegada.gd" id="19_llegada"]
+[ext_resource type="AudioStream" uid="uid://c6xn87qsspf2s" path="res://Sonidos/Jugador/meow2.mp3" id="20_58kpb"]
 [ext_resource type="PackedScene" path="res://zona_segura.tscn" id="20_zona_segura"]
 [ext_resource type="PackedScene" path="res://hud.tscn" id="21_hud"]
 [ext_resource type="PackedScene" uid="uid://dk2w3at8nv2xx" path="res://celular.tscn" id="21_s3cy1"]
@@ -1620,6 +1624,23 @@ stream = ExtResource("15_bvosb")
 stream = ExtResource("16_5ae7h")
 volume_db = -5.0
 bus = &"MusicaAudifonos"
+
+[node name="Linterna" type="AudioStreamPlayer" parent="Personaje" unique_id=672793666]
+stream = ExtResource("17_0kvga")
+
+[node name="Celular" type="AudioStreamPlayer" parent="Personaje" unique_id=1522240973]
+stream = ExtResource("18_nvaji")
+bus = &"Juego"
+
+[node name="MeowDash" type="AudioStreamPlayer" parent="Personaje" unique_id=128083913]
+stream = ExtResource("19_c70ak")
+volume_db = -3.0
+bus = &"Juego"
+
+[node name="MeowEsconderse" type="AudioStreamPlayer" parent="Personaje" unique_id=96827668]
+stream = ExtResource("20_58kpb")
+volume_db = -8.0
+bus = &"Juego"
 
 [node name="Camara" type="Camera3D" parent="." unique_id=567095934 node_paths=PackedStringArray("objetivo")]
 transform = Transform3D(1, 0, 0, 0, 0.76604444, 0.6427876, 0, -0.6427876, 0.76604444, -5.2, 14.141328, 16.052977)
