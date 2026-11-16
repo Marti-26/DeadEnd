@@ -14,19 +14,28 @@ enum Estado { EN_PUESTO, ACERCARSE, AVISO, GOLPE, RECARGA, BUSCAR, VOLVER }
 @export var radio_ver: float = 10.0
 @export var radio_perder: float = 14.0
 @export var tiempo_buscar: float = 3.0
+@export var balanceo_altura: float = 0.08
+@export var balanceo_estiramiento: float = 0.035
 
 var tiempo_visto: float = 0.0
 var estado: Estado = Estado.EN_PUESTO
 var orientacion_inicial: Basis = Basis.IDENTITY
+var lado: String = "derecha"
+var _sprite_y: float = 0.0
+var _balanceo: float = 0.0
+var _atascado: float = 0.0
+var _ultima_distancia: float = INF
 
-@onready var anim: AnimationPlayer = $Modelo/AnimationPlayer
-@onready var sonido_criatura: AudioStreamPlayer3D = $Modelo/SonidoCriatura
+@onready var sprite: AnimatedSprite3D = $Sprite
+@onready var sonido_criatura: AudioStreamPlayer3D = $SonidoCriatura
 @onready var exclamacion: Label3D = get_node_or_null("Exclamacion") as Label3D
 
 
 func _ready() -> void:
 	super._ready()
 	orientacion_inicial = basis
+	if sprite != null:
+		_sprite_y = sprite.position.y
 	mostrar_alerta(false)
 	print("CRIATURA.GD ACTIVO: ", name)
 
@@ -70,6 +79,7 @@ func _physics_process(delta: float) -> void:
 
 		Estado.VOLVER:
 			ir_a(puesto)
+			_vigilar_atasco(delta)
 
 	# Silenciar el sonido de la criatura con audífonos.
 	if sonido_criatura != null:
@@ -78,6 +88,7 @@ func _physics_process(delta: float) -> void:
 		else:
 			sonido_criatura.volume_linear = 1.0
 
+	_balancear(delta)
 	move_and_slide()
 
 
@@ -90,7 +101,7 @@ func decidir() -> Estado:
 			if estado == Estado.BUSCAR and reloj <= 0.001:
 				return Estado.VOLVER
 
-			if estado == Estado.VOLVER and distancia_a(puesto) < 0.15:
+			if estado == Estado.VOLVER and (distancia_a(puesto) < 0.4 or _atascado > 1.0):
 				return Estado.EN_PUESTO
 
 		Estado.ACERCARSE:
@@ -117,6 +128,8 @@ func decidir() -> Estado:
 func cambiar_a(nuevo: Estado) -> void:
 	var antes: Estado = estado
 	estado = nuevo
+	_atascado = 0.0
+	_ultima_distancia = INF
 	tiempo_visto = 0.0
 
 	# Detener el sonido cuando deja de perseguir.
@@ -229,14 +242,48 @@ func ir_a(destino: Vector3) -> void:
 	velocity.z = dir.z * velocidad_actual
 
 	basis = Basis.looking_at(dir)
-	anim.play("walk")
+	if absf(dir.x) > 0.15:
+		lado = "derecha" if dir.x > 0.0 else "izquierda"
+	animar("caminar_" + lado, velocidad_actual / maxf(rapidez, 0.1))
 
 
 func frenar(animacion: String) -> void:
 	velocity.x = 0.0
 	velocity.z = 0.0
-	anim.play(animacion)
+	animar(animacion, 1.0)
+
+
+func animar(nombre: String, ritmo: float) -> void:
+	if sprite == null:
+		return
+	if not sprite.sprite_frames.has_animation(nombre):
+		nombre = "idle"
+	if sprite.animation != nombre or not sprite.is_playing():
+		sprite.play(nombre)
+	sprite.speed_scale = ritmo
 
 
 func distancia() -> float:
 	return distancia_al_jugador()
+
+
+func _balancear(delta: float) -> void:
+	if sprite == null:
+		return
+	var caminando: bool = sprite.animation.begins_with("caminar")
+	_balanceo = move_toward(_balanceo, 1.0 if caminando else 0.0, delta * 4.0)
+	var cuadros: int = maxi(sprite.sprite_frames.get_frame_count(sprite.animation), 1)
+	var fase: float = (float(sprite.frame) + sprite.frame_progress) / float(cuadros)
+	var paso: float = 0.5 - 0.5 * cos(fase * TAU * 2.0)
+	var estiro: float = (paso - 0.5) * 2.0 * balanceo_estiramiento * _balanceo
+	sprite.scale = Vector3(1.0 - estiro * 0.6, 1.0 + estiro, 1.0)
+	sprite.position.y = _sprite_y * (1.0 + estiro) + paso * balanceo_altura * _balanceo
+
+
+func _vigilar_atasco(delta: float) -> void:
+	var d: float = distancia_a(puesto)
+	if _ultima_distancia - d < rapidez * delta * 0.25:
+		_atascado += delta
+	else:
+		_atascado = 0.0
+	_ultima_distancia = d

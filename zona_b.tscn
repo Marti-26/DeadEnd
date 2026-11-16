@@ -1634,6 +1634,8 @@ transform = Transform3D(-0.99733615, 0, 0.07294283, 0, 1, 0, -0.07294283, 0, -0.
 
 [node name="Bombillo" type="Node3D" parent="Criatura2" unique_id=1192142113]
 script = ExtResource("bombillo_luz")
+alcance = 4.5
+separacion = Vector3(0.6, 2.7, 0.4)
 
 [node name="Oido1" parent="." unique_id=109917073 instance=ExtResource("14_oido")]
 transform = Transform3D(-0.9291808, 0, 0.36962554, 0, 1, 0, -0.36962554, 0, -0.9291808, 9.972658, -0.0098490715, -3.0043225)
