@@ -6,7 +6,6 @@
 [ext_resource type="AudioStream" uid="uid://c1mobdmhybuy2" path="res://Sonidos/Criatura/435150__vykroft__creature-deep-growl.wav" id="4_b6hry"]
 [ext_resource type="FontFile" uid="uid://cdufsefxihski" path="res://assets/font/ShareTechMono-Regular.ttf" id="fuente_neon"]
 
-
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3lpp0"]
 radius = 0.35
 height = 1.0
@@ -28,8 +27,9 @@ transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 0
 stream = ExtResource("4_b6hry")
 volume_db = 10.0
 max_distance = 15.0
+bus = &"Juego"
 
-[node name="Exclamacion" type="Label3D" parent="."]
+[node name="Exclamacion" type="Label3D" parent="." unique_id=916738487]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
 visible = false
 pixel_size = 0.01

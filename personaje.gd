@@ -20,6 +20,15 @@ var dash_tiempo = 0.0
 @onready var sonido_pasos: AudioStreamPlayer3D = $Pasos
 @onready var sonido_latidos: AudioStreamPlayer = $Latidos
 @onready var sonido_respiracion: AudioStreamPlayer = $Respiracion
+@onready var musica_audifonos: AudioStreamPlayer = $MusicaAudifonos
+
+var fragmentos_snowfall: Array[AudioStream] = [
+	preload("res://Sonidos/Efectos/audio1.wav"),
+	preload("res://Sonidos/Efectos/audio2.wav"),
+	preload("res://Sonidos/Efectos/audio3.wav")
+]
+
+var siguiente_fragmento: int = 0
 var direccion = "frente"
 
 
@@ -111,6 +120,9 @@ func _ready() -> void:
 
 
 func _exit_tree() -> void:
+	var bus_juego: int = AudioServer.get_bus_index("Juego")
+	if bus_juego >= 0:
+		AudioServer.set_bus_mute(bus_juego, false)
 	_detener_vibracion_camara()
 	if Partida != null:
 		Partida.guardar_estado_personaje(self)
@@ -194,18 +206,35 @@ func _unhandled_input(event: InputEvent) -> void:
 				alternar_audifonos()
 				
 				
+
+
 func alternar_audifonos() -> void:
 	if bateria <= 0.0:
-		audifonos_activos = false
 		return
-
 	audifonos_activos = not audifonos_activos
 	_animar_audifonos(audifonos_activos)
-
+	var bus_juego: int = AudioServer.get_bus_index("Juego")
 	if audifonos_activos:
-		print("Audífonos activados")
+		# Elegir una de las tres partes de Snowfall
+		musica_audifonos.stop()
+		musica_audifonos.stream = fragmentos_snowfall[siguiente_fragmento]
+		musica_audifonos.bus = "MusicaAudifonos"
+		musica_audifonos.volume_db = 0.0
+		# Silenciar los sonidos normales
+		if bus_juego >= 0:
+			AudioServer.set_bus_mute(bus_juego, true)
+		musica_audifonos.play()
+		siguiente_fragmento = (siguiente_fragmento + 1) % fragmentos_snowfall.size()
+		print("Audífonos activados. Música: ", musica_audifonos.playing)
 	else:
-		print("Audífonos desactivados")
+		# Detener Snowfall al quitar los audífonos
+		musica_audifonos.stop()
+		# Recuperar el sonido del juego
+		if bus_juego >= 0:
+			AudioServer.set_bus_mute(bus_juego, false)
+		print("Audífonos desactivados. Música: ", musica_audifonos.playing)
+
+
 
 func _animar_audifonos(poner: bool) -> void:
 	if sprite == null or is_in_group(Grupos.ESCONDIDOS):
