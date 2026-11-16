@@ -7,7 +7,7 @@ const RUIDO = [0.0, 3.0, 0.0, 0.0, 0.0, 8.0]
 
 #@export var speed = 4.0
 @export var camara: Camera3D
-@export  var speed_caminar = 3.0
+@export  var speed_caminar = 4.0
 @export var speed_sigilo = 1.5
 @export var speed_dash = 7.5
 @export var tiempo_arranque = 0.25
