@@ -102,6 +102,8 @@ const ALTO_MARCADOR: float = 3.3
 
 @onready var sonido_llegada: AudioStreamPlayer3D = $LlegadaSalida
 @onready var sonido_puertas: AudioStreamPlayer3D = $Puertas
+@onready var sonido_viaje: AudioStreamPlayer = $Viaje
+
 var estado: Estado = Estado.FUERA
 var reloj: float = 0.0
 var inicio: float = 0.0
@@ -240,6 +242,7 @@ func _cambiar(nuevo: Estado) -> void:
 	inicio = reloj
 	print("metro -> ", Estado.keys()[estado], " a los ", snappedf(reloj, 0.1), " s")
 
+	
 	if estado == Estado.LLEGANDO:
 		sonido_llegada.play(0.0)
 
@@ -247,8 +250,17 @@ func _cambiar(nuevo: Estado) -> void:
 		sonido_llegada.stop()
 		sonido_llegada.play(0.0)
 
+		# Iniciar el sonido del viaje si el jugador está dentro
+		if viajando and not sonido_viaje.playing:
+			sonido_viaje.play()
+
 	elif estado == Estado.FUERA:
 		sonido_llegada.stop()
+
+	# Detener el sonido del viaje al llegar a la estación
+	if estado == Estado.DETENIDO:
+		sonido_viaje.stop()
+
 
 	if estado == Estado.DETENIDO:
 		if viajando:

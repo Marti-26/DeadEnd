@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://bxhjxnadl1anh"
-path="res://.godot/imported/prueba1.wav-3932db4af511ddff39efb68018eca48b.sample"
+uid="uid://c666lg5t6mmsq"
+path="res://.godot/imported/Luces.wav-b0091f7ed761229cc9594feb7863b1cf.sample"
 
 [deps]
 
-source_file="res://Sonidos/Metro/prueba1.wav"
-dest_files=["res://.godot/imported/prueba1.wav-3932db4af511ddff39efb68018eca48b.sample"]
+source_file="res://Sonidos/Ambiente/Luces.wav"
+dest_files=["res://.godot/imported/Luces.wav-b0091f7ed761229cc9594feb7863b1cf.sample"]
 
 [params]
 
