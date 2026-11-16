@@ -83,6 +83,16 @@ class MaterialesMetro:
 @export var mostrar_hamster: bool = true
 @export var asiento_hamster_x: float = 3.71
 @export var alto_hamster: float = 1.6
+@export var frases_ardilla: Array[String] = [
+	"¿Tú también te bajaste en la que no era? Tranquila, eso le pasa a todo el mundo.",
+	"No te sientes en ese puesto. Es de alguien. Nunca lo he visto, pero siempre está calientito.",
+	"Yo solo salí a comprar algo rápido. Oye, ¿qué día es hoy?",
+]
+@export var frases_hamster: Array[String] = [
+	"Aquí no hay señal, pero igual me siguen llegando mensajes. Ninguno es para mí.",
+	"Llevo horas jugando en el celular y la batería no baja. No me quejo, pero raro sí es.",
+	"El otro día vi a uno igualito a mí en el andén. Me saludó primero, qué pena con él.",
+]
 
 const LARGO: float = 24.0
 const ANCHO: float = 3.0
@@ -586,12 +596,12 @@ func _asientos(p: Node3D, s: int) -> void:
 
 func _pasajeros(p: Node3D) -> void:
 	if mostrar_ardilla:
-		_sentar(p, "Ardilla", "res://assets/npcs y posters/ardilla_idle_frente_%d.png", asiento_ardilla_x, alto_ardilla, 465.0, 12.0)
+		_sentar(p, "Ardilla", "res://assets/npcs y posters/ardilla_idle_frente_%d.png", asiento_ardilla_x, alto_ardilla, 465.0, 12.0, "ARDILLA", frases_ardilla)
 	if mostrar_hamster:
-		_sentar(p, "Hamster", "res://assets/npcs y posters/hamster_idle_frente_%d.png", asiento_hamster_x, alto_hamster, 502.0, 18.0)
+		_sentar(p, "Hamster", "res://assets/npcs y posters/hamster_idle_frente_%d.png", asiento_hamster_x, alto_hamster, 502.0, 18.0, "HÁMSTER", frases_hamster)
 
 
-func _sentar(p: Node3D, nombre: String, ruta: String, x: float, alto: float, alto_visible: float, margen: float) -> void:
+func _sentar(p: Node3D, nombre: String, ruta: String, x: float, alto: float, alto_visible: float, margen: float, nombre_dialogo: String, frases: Array[String]) -> void:
 	var marcos: SpriteFrames = SpriteFrames.new()
 	marcos.set_animation_speed("default", 1.6)
 	marcos.set_animation_loop("default", true)
@@ -612,6 +622,11 @@ func _sentar(p: Node3D, nombre: String, ruta: String, x: float, alto: float, alt
 	pasajero.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
 	pasajero.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	pasajero.position = Vector3(x, 0.45 + (alto_imagen * 0.5 - margen) * tamano_pixel, -1.12)
+	var guion: Script = load("res://npc_pasajero.gd") as Script
+	if guion != null:
+		pasajero.set_script(guion)
+		pasajero.set("nombre_dialogo", nombre_dialogo)
+		pasajero.set("frases", frases)
 	p.add_child(pasajero)
 	pasajero.play("default")
 	pasajero.frame = randi() % 2
