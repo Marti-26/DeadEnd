@@ -17,6 +17,7 @@ var dash_tiempo = 0.0
 @export var gravedad = 9.8
 @onready var anim = get_node_or_null("Modelo/AnimationPlayer")
 @onready var sprite = get_node_or_null("Sprite")
+@onready var sonido_pasos: AudioStreamPlayer3D = $Pasos
 var direccion = "frente"
 
 
@@ -431,6 +432,25 @@ func _physics_process(delta):
 		print("estado ", Estado.keys()[estado], " · ruido ", ruido, " m")
 	animar()
 	_prueba()
+	_actualizar_sonido_pasos()
+	
+	
+func _actualizar_sonido_pasos() -> void:
+		var moviendose = Vector2(velocity.x, velocity.z).length() > 0.2
+		var en_sigilo = Input.is_action_pressed("sigilo")
+		var escondido = estado == Estado.ESCONDERSE
+
+		if moviendose and not en_sigilo and not escondido and is_on_floor():
+			if estado == Estado.DASH:
+				sonido_pasos.pitch_scale = 1.5
+			else:
+				sonido_pasos.pitch_scale = 1.0
+
+			if not sonido_pasos.playing:
+				sonido_pasos.play()
+		else:
+			if sonido_pasos.playing:
+				sonido_pasos.stop()
 
 func elegir_estado():
 	#Si esta activo el dash por el tiempo mantenerlo
