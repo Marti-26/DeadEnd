@@ -8,6 +8,8 @@ signal jugador_salio(cuerpo: Node3D)
 @export var bloquear_frente_hueco: bool = true
 @export var poster_x: float = -8.15
 @export var poster2_x: float = 3.97
+@export var poster3_x: float = 13.95
+@export var poster3_alto: float = 1.7
 @export var poster_alto: float = 1.85
 @export var poster_centro_y: float = 1.55
 @export var poster_brillo: float = 0.18
@@ -28,6 +30,7 @@ const NOCHE: Color = Color(0.09, 0.06, 0.12)
 const LADRILLO: Shader = preload("res://zona_b/ladrillo.gdshader")
 const FUENTE: FontFile = preload("res://assets/font/ShareTechMono-Regular.ttf")
 const CONO_LUZ: Shader = preload("res://zona_b/cono_luz.gdshader")
+const POSTER_PARED: Script = preload("res://poster_pared.gd")
 const PISO_AZUL: Color = Color(0.22, 0.25, 0.36)
 const PISO_JUNTA: Color = Color(0.06, 0.07, 0.12)
 const PARED_AZUL: Color = Color(0.13, 0.14, 0.25)
@@ -73,6 +76,17 @@ func _ready() -> void:
 	_detalles(sala)
 	_poster(sala, "res://assets/npcs y posters/RATINI1.jpg.jpeg", poster_x, "Poster")
 	_poster(sala, "res://assets/npcs y posters/felidae1.png", poster2_x, "Poster2")
+	var kitsuny: Node3D = POSTER_PARED.new() as Node3D
+	kitsuny.name = "Poster3"
+	kitsuny.position = Vector3(poster3_x, poster_centro_y, Z_FONDO + 0.04)
+	kitsuny.set("alto", poster3_alto)
+	kitsuny.set("brillo", poster_brillo)
+	kitsuny.set("luz", poster_luz)
+	kitsuny.set("color_luz", Color(1.0, 0.86, 0.95))
+	kitsuny.set("tinte", Color.WHITE)
+	kitsuny.set("saturacion", 1.0)
+	kitsuny.set("textura", load("res://assets/npcs y posters/poster_kitsuny.png"))
+	sala.add_child(kitsuny)
 	if not Engine.is_editor_hint():
 		var area: Area3D = get_node_or_null("AreaZonaSegura") as Area3D
 		if area != null:
