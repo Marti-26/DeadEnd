@@ -6,6 +6,11 @@ signal jugador_salio(cuerpo: Node3D)
 
 @export var grupo: String = Grupos.FUERA_DE_ALCANCE
 @export var bloquear_frente_hueco: bool = true
+@export var poster_x: float = -6.0
+@export var poster_alto: float = 1.85
+@export var poster_centro_y: float = 1.9
+@export var poster_brillo: float = 0.18
+@export var poster_luz: float = 0.9
 
 const ANCHO: float = 30.0
 const Z_FONDO: float = -4.0
@@ -36,6 +41,9 @@ const ASIENTO: Color = Color(0.22, 0.26, 0.42)
 
 var choques: StaticBody3D
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
+var _textura_poster: Texture2D = null
+var _borde_poster: Node3D = null
+var _capa_poster: CanvasLayer = null
 
 
 func _ready() -> void:
@@ -64,6 +72,7 @@ func _ready() -> void:
 	_pilar(sala, Vector3(9.0, 0, -1.6), CIAN)
 	_viga_luz(sala)
 	_detalles(sala)
+	_poster(sala)
 	if not Engine.is_editor_hint():
 		var area: Area3D = get_node_or_null("AreaZonaSegura") as Area3D
 		if area != null:
@@ -270,6 +279,172 @@ func _tubo(p: Node3D, x: float, color: Color) -> void:
 	l.omni_attenuation = 2.0
 	l.position = Vector3(x, 2.75, Z_FONDO + 0.85)
 	p.add_child(l)
+
+
+func _poster(p: Node3D) -> void:
+	var textura: Texture2D = load("res://assets/npcs y posters/RATINI1.jpg.jpeg") as Texture2D
+	if textura == null:
+		return
+	var proporcion: float = float(textura.get_width()) / float(textura.get_height())
+	var tam: Vector2 = Vector2(poster_alto * proporcion, poster_alto)
+	var centro: Vector3 = Vector3(poster_x, poster_centro_y, Z_FONDO + 0.04)
+	_caja(p, Vector3(tam.x + 0.08, tam.y + 0.08, 0.02), centro - Vector3(0, 0, 0.015), _mat(NOCHE))
+	var mat: StandardMaterial3D = StandardMaterial3D.new()
+	mat.albedo_texture = textura
+	mat.emission_enabled = true
+	mat.emission_texture = textura
+	mat.emission = Color.WHITE
+	mat.emission_energy_multiplier = poster_brillo
+	mat.roughness = 0.8
+	mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	var lamina: QuadMesh = QuadMesh.new()
+	lamina.size = tam
+	var poster: MeshInstance3D = MeshInstance3D.new()
+	poster.name = "Poster"
+	poster.mesh = lamina
+	poster.material_override = mat
+	poster.position = centro
+	poster.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	p.add_child(poster)
+	var luz: SpotLight3D = SpotLight3D.new()
+	luz.name = "LuzPoster"
+	luz.light_color = Color(1.0, 0.86, 0.95)
+	luz.light_energy = poster_luz
+	luz.light_specular = 0.0
+	luz.spot_range = 3.2
+	luz.spot_angle = 34.0
+	luz.spot_attenuation = 0.8
+	luz.spot_angle_attenuation = 1.4
+	luz.shadow_enabled = false
+	var origen: Vector3 = Vector3(poster_x, poster_centro_y + tam.y * 0.5 + 0.35, Z_FONDO + 1.1)
+	luz.transform = Transform3D(Basis(), origen).looking_at(centro, Vector3.UP)
+	p.add_child(luz)
+	_textura_poster = textura
+	_borde_poster = Node3D.new()
+	_borde_poster.name = "BordePoster"
+	_borde_poster.visible = false
+	p.add_child(_borde_poster)
+	var azul: StandardMaterial3D = _mat(Color(0.3, 0.65, 1.0), Color(0.3, 0.65, 1.0), 2.5)
+	var g: float = 0.025
+	var ancho_b: float = tam.x + 0.12
+	var alto_b: float = tam.y + 0.12
+	_caja(_borde_poster, Vector3(ancho_b + g, g, 0.01), centro + Vector3(0, alto_b * 0.5, 0.01), azul)
+	_caja(_borde_poster, Vector3(ancho_b + g, g, 0.01), centro + Vector3(0, -alto_b * 0.5, 0.01), azul)
+	_caja(_borde_poster, Vector3(g, alto_b + g, 0.01), centro + Vector3(-ancho_b * 0.5, 0, 0.01), azul)
+	_caja(_borde_poster, Vector3(g, alto_b + g, 0.01), centro + Vector3(ancho_b * 0.5, 0, 0.01), azul)
+	for hijo: Node in _borde_poster.get_children():
+		(hijo as GeometryInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	if Engine.is_editor_hint():
+		return
+	var area: Area3D = Area3D.new()
+	area.name = "ClicPoster"
+	area.collision_layer = 524288
+	area.collision_mask = 0
+	area.monitoring = false
+	area.monitorable = false
+	var forma: CollisionShape3D = CollisionShape3D.new()
+	var caja: BoxShape3D = BoxShape3D.new()
+	caja.size = Vector3(tam.x, tam.y, 0.1)
+	forma.shape = caja
+	area.add_child(forma)
+	area.position = centro
+	p.add_child(area)
+	get_viewport().physics_object_picking = true
+	area.mouse_entered.connect(_al_entrar_poster)
+	area.mouse_exited.connect(_al_salir_poster)
+	area.input_event.connect(_al_clic_poster)
+
+
+func _al_entrar_poster() -> void:
+	if _capa_poster != null:
+		return
+	_borde_poster.visible = true
+	Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
+
+
+func _al_salir_poster() -> void:
+	_borde_poster.visible = false
+	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+
+
+func _al_clic_poster(_camara: Node, evento: InputEvent, _punto: Vector3, _normal: Vector3, _forma: int) -> void:
+	if evento is InputEventMouseButton:
+		var boton: InputEventMouseButton = evento as InputEventMouseButton
+		if boton.pressed and boton.button_index == MOUSE_BUTTON_LEFT:
+			_abrir_poster()
+
+
+func _unhandled_input(evento: InputEvent) -> void:
+	if _capa_poster != null and evento.is_action_pressed("ui_cancel"):
+		_cerrar_poster()
+		get_viewport().set_input_as_handled()
+
+
+func _abrir_poster() -> void:
+	if _capa_poster != null or _textura_poster == null:
+		return
+	_al_salir_poster()
+	_capa_poster = CanvasLayer.new()
+	_capa_poster.layer = 10
+	add_child(_capa_poster)
+	var pantalla: Vector2 = get_viewport().get_visible_rect().size
+	var oscuro: ColorRect = ColorRect.new()
+	oscuro.color = Color(0.0, 0.0, 0.02, 0.75)
+	oscuro.size = pantalla
+	oscuro.mouse_filter = Control.MOUSE_FILTER_STOP
+	oscuro.gui_input.connect(_al_tocar_afuera_poster)
+	_capa_poster.add_child(oscuro)
+	var proporcion: float = float(_textura_poster.get_width()) / float(_textura_poster.get_height())
+	var alto: float = pantalla.y * 0.9
+	var ancho: float = alto * proporcion
+	if ancho > pantalla.x * 0.9:
+		ancho = pantalla.x * 0.9
+		alto = ancho / proporcion
+	var imagen: TextureRect = TextureRect.new()
+	imagen.texture = _textura_poster
+	imagen.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	imagen.stretch_mode = TextureRect.STRETCH_SCALE
+	imagen.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	imagen.size = Vector2(ancho, alto)
+	imagen.position = (pantalla - imagen.size) * 0.5
+	imagen.pivot_offset = imagen.size * 0.5
+	imagen.mouse_filter = Control.MOUSE_FILTER_STOP
+	_capa_poster.add_child(imagen)
+	var x: Button = Button.new()
+	x.text = "X"
+	x.focus_mode = Control.FOCUS_NONE
+	x.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	x.add_theme_font_override("font", FUENTE)
+	x.add_theme_font_size_override("font_size", 26)
+	x.size = Vector2(46.0, 46.0)
+	x.position = Vector2(imagen.position.x + ancho + 10.0, imagen.position.y)
+	if x.position.x + x.size.x > pantalla.x:
+		x.position.x = imagen.position.x + ancho - x.size.x - 8.0
+	x.pressed.connect(_cerrar_poster)
+	_capa_poster.add_child(x)
+	oscuro.modulate.a = 0.0
+	imagen.modulate.a = 0.0
+	imagen.scale = Vector2(0.85, 0.85)
+	var t: Tween = _capa_poster.create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	t.tween_property(oscuro, "modulate:a", 1.0, 0.2)
+	t.tween_property(imagen, "modulate:a", 1.0, 0.2)
+	t.tween_property(imagen, "scale", Vector2.ONE, 0.25)
+
+
+func _al_tocar_afuera_poster(evento: InputEvent) -> void:
+	if evento is InputEventMouseButton and (evento as InputEventMouseButton).pressed:
+		_cerrar_poster()
+
+
+func _cerrar_poster() -> void:
+	if _capa_poster == null:
+		return
+	var capa: CanvasLayer = _capa_poster
+	_capa_poster = null
+	var t: Tween = capa.create_tween().set_parallel(true)
+	for hijo: Node in capa.get_children():
+		t.tween_property(hijo, "modulate:a", 0.0, 0.15)
+	t.chain().tween_callback(capa.queue_free)
 
 
 func _detalles(p: Node3D) -> void:
