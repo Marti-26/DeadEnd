@@ -80,6 +80,9 @@ class MaterialesMetro:
 @export var mostrar_ardilla: bool = true
 @export var asiento_ardilla_x: float = -3.71
 @export var alto_ardilla: float = 1.6
+@export var mostrar_hamster: bool = true
+@export var asiento_hamster_x: float = 3.71
+@export var alto_hamster: float = 1.6
 
 const LARGO: float = 24.0
 const ANCHO: float = 3.0
@@ -582,30 +585,36 @@ func _asientos(p: Node3D, s: int) -> void:
 
 
 func _pasajeros(p: Node3D) -> void:
-	if not mostrar_ardilla:
-		return
+	if mostrar_ardilla:
+		_sentar(p, "Ardilla", "res://assets/npcs y posters/ardilla_idle_frente_%d.png", asiento_ardilla_x, alto_ardilla, 465.0, 12.0)
+	if mostrar_hamster:
+		_sentar(p, "Hamster", "res://assets/npcs y posters/hamster_idle_frente_%d.png", asiento_hamster_x, alto_hamster, 502.0, 18.0)
+
+
+func _sentar(p: Node3D, nombre: String, ruta: String, x: float, alto: float, alto_visible: float, margen: float) -> void:
 	var marcos: SpriteFrames = SpriteFrames.new()
 	marcos.set_animation_speed("default", 1.6)
 	marcos.set_animation_loop("default", true)
 	var alto_imagen: float = 0.0
 	for i: int in [1, 2]:
-		var textura: Texture2D = load("res://assets/npcs y posters/ardilla_idle_frente_%d.png" % i) as Texture2D
+		var textura: Texture2D = load(ruta % i) as Texture2D
 		if textura == null:
 			return
 		alto_imagen = float(textura.get_height())
 		marcos.add_frame("default", textura)
-	var tamano_pixel: float = alto_ardilla / (alto_imagen * 0.94)
-	var ardilla: AnimatedSprite3D = AnimatedSprite3D.new()
-	ardilla.name = "Ardilla"
-	ardilla.sprite_frames = marcos
-	ardilla.pixel_size = tamano_pixel
-	ardilla.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
-	ardilla.shaded = true
-	ardilla.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
-	ardilla.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	ardilla.position = Vector3(asiento_ardilla_x, 0.45 + (alto_imagen * 0.5 - 12.0) * tamano_pixel, -1.12)
-	p.add_child(ardilla)
-	ardilla.play("default")
+	var tamano_pixel: float = alto / alto_visible
+	var pasajero: AnimatedSprite3D = AnimatedSprite3D.new()
+	pasajero.name = nombre
+	pasajero.sprite_frames = marcos
+	pasajero.pixel_size = tamano_pixel
+	pasajero.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+	pasajero.shaded = true
+	pasajero.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
+	pasajero.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	pasajero.position = Vector3(x, 0.45 + (alto_imagen * 0.5 - margen) * tamano_pixel, -1.12)
+	p.add_child(pasajero)
+	pasajero.play("default")
+	pasajero.frame = randi() % 2
 
 
 func _barras_y_agarraderas(p: Node3D) -> void:
