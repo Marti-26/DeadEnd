@@ -1887,7 +1887,7 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 5.8816857, 0.059074253, 2.049
 [node name="Salida" parent="." unique_id=1248284208 instance=ExtResource("23_jc8c0")]
 
 [node name="CartelControles" parent="." unique_id=778062498 instance=ExtResource("24_mikmk")]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -6.1826963, 2.1095808, -3.4051104)
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -12, 2.2, -3.4051104)
 
 [node name="VentilacionAmbiente" type="AudioStreamPlayer" parent="." unique_id=1639133400]
 stream = ExtResource("28_hfju1")
