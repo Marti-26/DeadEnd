@@ -10,11 +10,18 @@
 [ext_resource type="Script" uid="uid://cjb6fbriprfvw" path="res://salud.gd" id="8_2x1d7"]
 [ext_resource type="Script" uid="uid://cxjnco3eeyjf7" path="res://zona_segura.gd" id="8_sala"]
 [ext_resource type="Script" uid="uid://b2ef24cd2g4vs" path="res://estacion_carga.gd" id="9_carga"]
-[ext_resource type="PackedScene" path="res://chico_amable.tscn" id="10_chico"]
+[ext_resource type="AudioStream" uid="uid://dko1vuws25jap" path="res://Sonidos/Jugador/pasos.wav" id="9_rd8g2"]
+[ext_resource type="PackedScene" uid="uid://clixl12f1wg84" path="res://chico_amable.tscn" id="10_chico"]
+[ext_resource type="AudioStream" uid="uid://butc8q385uggq" path="res://Sonidos/Jugador/latidos.wav" id="10_igqbh"]
 [ext_resource type="Script" uid="uid://chlx4hyqucufu" path="res://llegada.gd" id="11_llegada"]
+[ext_resource type="AudioStream" uid="uid://c51ft5btj10h4" path="res://Sonidos/Jugador/respircion.wav" id="11_nkq4h"]
+[ext_resource type="AudioStream" uid="uid://brrvnuha2x01g" path="res://Sonidos/Efectos/audio1.wav" id="12_5do8x"]
+[ext_resource type="AudioStream" uid="uid://fx0giaqm2n3s" path="res://Sonidos/Efectos/recarga.wav" id="12_maprx"]
 [ext_resource type="Script" uid="uid://cmaoevvcsdw4y" path="res://puerta_escena.gd" id="12_puerta"]
-[ext_resource type="FontFile" path="res://assets/font/ShareTechMono-Regular.ttf" id="fuente_neon"]
-[ext_resource type="Script" path="res://bombillo.gd" id="bombillo_luz"]
+[ext_resource type="AudioStream" uid="uid://dw6nrxsaxx3ph" path="res://Sonidos/Ambiente/Ventilador.wav" id="21_nkq4h"]
+[ext_resource type="AudioStream" uid="uid://c666lg5t6mmsq" path="res://Sonidos/Ambiente/Luces.wav" id="22_5do8x"]
+[ext_resource type="Script" uid="uid://4mdf5onjb7ag" path="res://bombillo.gd" id="bombillo_luz"]
+[ext_resource type="FontFile" uid="uid://cdufsefxihski" path="res://assets/font/ShareTechMono-Regular.ttf" id="fuente_neon"]
 
 [sub_resource type="Environment" id="Entorno"]
 background_mode = 1
@@ -126,6 +133,29 @@ script = ExtResource("6_escon")
 [node name="Salud" type="Node" parent="Personaje" unique_id=102925287]
 script = ExtResource("8_2x1d7")
 
+[node name="Pasos" type="AudioStreamPlayer3D" parent="Personaje" unique_id=756395909]
+stream = ExtResource("9_rd8g2")
+attenuation_model = 3
+volume_db = 6.9
+unit_size = 20.0
+max_db = 0.0
+bus = &"Juego"
+
+[node name="Latidos" type="AudioStreamPlayer" parent="Personaje" unique_id=1588640498]
+stream = ExtResource("10_igqbh")
+volume_db = -15.0
+bus = &"Juego"
+
+[node name="Respiracion" type="AudioStreamPlayer" parent="Personaje" unique_id=310992945]
+stream = ExtResource("11_nkq4h")
+volume_db = -15.0
+bus = &"Juego"
+
+[node name="MusicaAudifonos" type="AudioStreamPlayer" parent="Personaje" unique_id=1547369580]
+stream = ExtResource("12_5do8x")
+volume_db = -5.0
+bus = &"MusicaAudifonos"
+
 [node name="Camara" type="Camera3D" parent="." unique_id=767412451 node_paths=PackedStringArray("objetivo")]
 transform = Transform3D(1, 0, 0, 0, 0.76604444, 0.6427876, 0, -0.6427876, 0.76604444, -5.2, 14.141328, 16.052977)
 projection = 1
@@ -219,10 +249,10 @@ surface_material_override/0 = SubResource("MatLuzCasillero")
 [node name="Rotulo" type="Label3D" parent="EstacionCarga" unique_id=129085769]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85, 0.32)
 pixel_size = 0.006
-font = ExtResource("fuente_neon")
 modulate = Color(0.6, 1.6, 1.15, 1)
 outline_modulate = Color(0, 0.1, 0.07, 1)
 text = "CARGA"
+font = ExtResource("fuente_neon")
 font_size = 48
 outline_size = 8
 
@@ -232,10 +262,10 @@ visible = false
 pixel_size = 0.006
 billboard = 1
 no_depth_test = true
-font = ExtResource("fuente_neon")
 modulate = Color(1.5, 1.7, 1.8, 1)
 outline_modulate = Color(0, 0.12, 0.18, 1)
 text = "GUARDADO"
+font = ExtResource("fuente_neon")
 font_size = 56
 
 [node name="Luz" type="OmniLight3D" parent="EstacionCarga" unique_id=728851988]
@@ -243,6 +273,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0.8)
 light_color = Color(0.45, 1, 0.75, 1)
 light_energy = 1.2
 omni_range = 3.0
+
+[node name="SonidoRecarga" type="AudioStreamPlayer3D" parent="EstacionCarga" unique_id=774301069]
+stream = ExtResource("12_maprx")
+bus = &"Juego"
 
 [node name="PuntoGuardado" type="Marker3D" parent="." unique_id=290221043]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0.1, -2.4)
@@ -266,7 +300,18 @@ shape = SubResource("FormaBajada")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0.8)
 senalar = NodePath("../EstacionCarga")
 
-[node name="Bombillo" type="Node3D" parent="ChicoAmable"]
+[node name="Bombillo" type="Node3D" parent="ChicoAmable" unique_id=536134219]
 script = ExtResource("bombillo_luz")
 color = Color(0.4, 0.6, 1, 1)
 
+[node name="LucesAmbiente" type="AudioStreamPlayer" parent="." unique_id=1845625369]
+stream = ExtResource("22_5do8x")
+volume_db = -24.0
+autoplay = true
+bus = &"Juego"
+
+[node name="VentilacionAmbiente" type="AudioStreamPlayer" parent="." unique_id=1286282514]
+stream = ExtResource("21_nkq4h")
+volume_db = -22.0
+autoplay = true
+bus = &"Juego"

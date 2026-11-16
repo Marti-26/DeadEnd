@@ -17,6 +17,18 @@ var dash_tiempo = 0.0
 @export var gravedad = 9.8
 @onready var anim = get_node_or_null("Modelo/AnimationPlayer")
 @onready var sprite = get_node_or_null("Sprite")
+@onready var sonido_pasos: AudioStreamPlayer3D = $Pasos
+@onready var sonido_latidos: AudioStreamPlayer = $Latidos
+@onready var sonido_respiracion: AudioStreamPlayer = $Respiracion
+@onready var musica_audifonos: AudioStreamPlayer = $MusicaAudifonos
+
+var fragmentos_snowfall: Array[AudioStream] = [
+	preload("res://Sonidos/Efectos/audio1.wav"),
+	preload("res://Sonidos/Efectos/audio2.wav"),
+	preload("res://Sonidos/Efectos/audio3.wav")
+]
+
+var siguiente_fragmento: int = 0
 var direccion = "frente"
 
 
@@ -97,7 +109,7 @@ var tiene_celular: bool = false
 func _enter_tree() -> void:
 	add_to_group(Grupos.JUGADOR)
 	if Partida != null:
-		Partida.cargar_estado_personaje(self)
+			Partida.cargar_estado_personaje(self)
 
 
 func _ready() -> void:
@@ -108,6 +120,9 @@ func _ready() -> void:
 
 
 func _exit_tree() -> void:
+	var bus_juego: int = AudioServer.get_bus_index("Juego")
+	if bus_juego >= 0:
+		AudioServer.set_bus_mute(bus_juego, false)
 	_detener_vibracion_camara()
 	if Partida != null:
 		Partida.guardar_estado_personaje(self)
@@ -120,6 +135,61 @@ func _process(delta: float) -> void:
 	_reducir_estres_audifonos(delta)
 	_actualizar_vibracion_camara()
 	_actualizar_bombillo()
+	_actualizar_sonidos_estres(delta)
+	
+
+
+func _actualizar_sonidos_estres(delta: float) -> void:
+	var nivel = clampf(estres, 0.0, 100.0)
+
+	# LATIDOS: empiezan al 65 % y aumentan progresivamente.
+	if nivel >= 40.0:
+		var intensidad = (nivel - 40.0) / 60.0
+		var volumen = lerpf(-10.0, 0.0, intensidad)
+		var velocidad = lerpf(0.85, 1.4, intensidad)
+
+		if not sonido_latidos.playing:
+			sonido_latidos.volume_db = -10.0
+			sonido_latidos.play()
+
+		sonido_latidos.volume_db = move_toward(
+			sonido_latidos.volume_db, volumen, delta * 20.0
+		)
+		sonido_latidos.pitch_scale = move_toward(
+			sonido_latidos.pitch_scale, velocidad, delta * 0.5
+		)
+	else:
+		sonido_latidos.volume_db = move_toward(
+			sonido_latidos.volume_db, -45.0, delta * 25.0
+		)
+		if sonido_latidos.volume_db <= -44.9:
+			sonido_latidos.stop()
+
+	# RESPIRACION: empieza al 70 %, lenta y audible.
+	if nivel >= 70.0:
+		var intensidad = (nivel - 70.0) / 30.0
+		var volumen = lerpf(-10.0, -2.0, intensidad)
+		var velocidad = lerpf(0.7, 1.05, intensidad)
+
+		if not sonido_respiracion.playing:
+			sonido_respiracion.volume_db = -10.0
+			sonido_respiracion.pitch_scale = 0.7
+			sonido_respiracion.play()
+
+		sonido_respiracion.volume_db = move_toward(
+			sonido_respiracion.volume_db, volumen, delta * 15.0
+		)
+		sonido_respiracion.pitch_scale = move_toward(
+			sonido_respiracion.pitch_scale, velocidad, delta * 0.3
+		)
+	else:
+		sonido_respiracion.volume_db = move_toward(
+			sonido_respiracion.volume_db, -45.0, delta * 25.0
+		)
+		if sonido_respiracion.volume_db <= -44.9:
+			sonido_respiracion.stop()
+
+
 
 func _reducir_estres_audifonos(delta: float) -> void:
 	if not audifonos_activos:
@@ -136,18 +206,35 @@ func _unhandled_input(event: InputEvent) -> void:
 				alternar_audifonos()
 				
 				
+
+
 func alternar_audifonos() -> void:
 	if bateria <= 0.0:
-		audifonos_activos = false
 		return
-
 	audifonos_activos = not audifonos_activos
 	_animar_audifonos(audifonos_activos)
-
+	var bus_juego: int = AudioServer.get_bus_index("Juego")
 	if audifonos_activos:
-		print("Audífonos activados")
+		# Elegir una de las tres partes de Snowfall
+		musica_audifonos.stop()
+		musica_audifonos.stream = fragmentos_snowfall[siguiente_fragmento]
+		musica_audifonos.bus = "MusicaAudifonos"
+		musica_audifonos.volume_db = 0.0
+		# Silenciar los sonidos normales
+		if bus_juego >= 0:
+			AudioServer.set_bus_mute(bus_juego, true)
+		musica_audifonos.play()
+		siguiente_fragmento = (siguiente_fragmento + 1) % fragmentos_snowfall.size()
+		print("Audífonos activados. Música: ", musica_audifonos.playing)
 	else:
-		print("Audífonos desactivados")
+		# Detener Snowfall al quitar los audífonos
+		musica_audifonos.stop()
+		# Recuperar el sonido del juego
+		if bus_juego >= 0:
+			AudioServer.set_bus_mute(bus_juego, false)
+		print("Audífonos desactivados. Música: ", musica_audifonos.playing)
+
+
 
 func _animar_audifonos(poner: bool) -> void:
 	if sprite == null or is_in_group(Grupos.ESCONDIDOS):
@@ -431,6 +518,32 @@ func _physics_process(delta):
 		print("estado ", Estado.keys()[estado], " · ruido ", ruido, " m")
 	animar()
 	_prueba()
+	_actualizar_sonido_pasos()
+	
+	
+func _actualizar_sonido_pasos() -> void:
+		var moviendose = Vector2(velocity.x, velocity.z).length() > 0.2
+		var en_sigilo = Input.is_action_pressed("sigilo")
+		var escondido = estado == Estado.ESCONDERSE
+		if moviendose and Engine.get_physics_frames() % 60 == 0:
+			print("EN SUELO: ", is_on_floor())
+			print("SONIDO PASOS: ", sonido_pasos.playing)
+			print("BUS: ", sonido_pasos.bus)
+		
+
+		if moviendose and not en_sigilo and not escondido and is_on_floor():
+			if estado == Estado.DASH:
+				sonido_pasos.pitch_scale = 1.5
+			else:
+				sonido_pasos.pitch_scale = 1.0
+
+			if not sonido_pasos.playing:
+				sonido_pasos.play()
+				print("PASOS POSICIÓN: ", sonido_pasos.global_position)
+				print("CÁMARA ACTIVA: ", get_viewport().get_camera_3d())
+		else:
+			if sonido_pasos.playing:
+				sonido_pasos.stop()
 
 func elegir_estado():
 	#Si esta activo el dash por el tiempo mantenerlo

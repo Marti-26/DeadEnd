@@ -22,6 +22,7 @@ var ruido_en: Vector3 = Vector3.ZERO
 @onready var sprite: AnimatedSprite3D = $Sprite
 var lado: String = "derecha"
 @onready var exclamacion: Node = get_node_or_null("Exclamacion")
+@onready var sonido_alerta: AudioStreamPlayer3D = $Gruñido
 
 
 func _ready() -> void:
@@ -72,6 +73,9 @@ func cambiar_a(nuevo):
 		reloj = tiempo_mirar
 	elif estado == Estado.INVESTIGAR:
 		reloj = tiempo_max_investigar
+	# Gruñido cuando Oído comienza a investigar
+	if sonido_alerta != null:
+		sonido_alerta.play()
 	mostrar_alerta()
 
 

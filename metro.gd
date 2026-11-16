@@ -100,6 +100,10 @@ const COLOR_MARCADOR: Color = Color(0.6, 0.9, 1.0)
 const COLOR_ENTRAR: Color = Color(1.0, 0.78, 0.35)
 const ALTO_MARCADOR: float = 3.3
 
+@onready var sonido_llegada: AudioStreamPlayer3D = $LlegadaSalida
+@onready var sonido_puertas: AudioStreamPlayer3D = $Puertas
+@onready var sonido_viaje: AudioStreamPlayer = $Viaje
+
 var estado: Estado = Estado.FUERA
 var reloj: float = 0.0
 var inicio: float = 0.0
@@ -181,12 +185,27 @@ func _physics_process(delta: float) -> void:
 				_x_antes += salto
 				if viajando and jugador:
 					jugador.global_position.x += salto
-
+					
+					
+	sonido_llegada.global_position = tren.global_position + Vector3(0, 1, 0)
+	sonido_puertas.global_position = tren.global_position + Vector3(0, 1, -1.5)
 	t = reloj - inicio
 	var abrir: bool = estado == Estado.DETENIDO and t > 0.6 and t < tiempo_detenido - 1.6
+	
+	# Reproducir el sonido cuando empiezan a abrirse
+	if abrir and not _abiertas:
+		print("PUERTAS ABRIENDOSE")
+		sonido_puertas.stop()
+		sonido_puertas.play(0.0)
+
+	# Reproducir el mismo sonido cuando empiezan a cerrarse
 	if _abiertas and not abrir:
+		sonido_puertas.stop()
+		sonido_puertas.play(0.0)
 		_al_cerrar()
+
 	_abiertas = abrir
+
 	apertura = move_toward(apertura, 1.0 if abrir else 0.0, delta / 0.9)
 	_mover_puertas()
 
@@ -217,10 +236,32 @@ func _physics_process(delta: float) -> void:
 		camara_vagon.global_position = tren.to_global(Vector3(_cam_x_actual, _offset_camara.y, _offset_camara.z))
 
 
+
 func _cambiar(nuevo: Estado) -> void:
 	estado = nuevo
 	inicio = reloj
 	print("metro -> ", Estado.keys()[estado], " a los ", snappedf(reloj, 0.1), " s")
+
+	
+	if estado == Estado.LLEGANDO:
+		sonido_llegada.play(0.0)
+
+	elif estado == Estado.SALIENDO:
+		sonido_llegada.stop()
+		sonido_llegada.play(0.0)
+
+		# Iniciar el sonido del viaje si el jugador está dentro
+		if viajando and not sonido_viaje.playing:
+			sonido_viaje.play()
+
+	elif estado == Estado.FUERA:
+		sonido_llegada.stop()
+
+	# Detener el sonido del viaje al llegar a la estación
+	if estado == Estado.DETENIDO:
+		sonido_viaje.stop()
+
+
 	if estado == Estado.DETENIDO:
 		if viajando:
 			viajando = false
@@ -229,7 +270,9 @@ func _cambiar(nuevo: Estado) -> void:
 		llego.emit()
 	elif estado == Estado.FUERA:
 		se_fue.emit()
+
 	_actualizar_vista()
+
 
 
 func _al_cerrar() -> void:

@@ -76,6 +76,7 @@ func _physics_process(delta):
 			mirar(jugador.global_position)
 			if reloj <= 0.001:
 				estado = Estado.GOLPE
+				print("Chico Amable -> GOLPE cuadro ", Engine.get_physics_frames())
 				reloj = 0.45
 		Estado.GOLPE:
 			frenar("attack-melee-right")
@@ -87,7 +88,7 @@ func _physics_process(delta):
 						print("ERROR: No se encontró el nodo Salud en Gatita")
 					else:
 						salud.recibir_dano(20.0)
-						print("Golpe acertado. Vida restante: ", salud.vida_actual)
+						print("Vida ", salud.vida_actual, "en el golpe del cuadro ", Engine.get_physics_frames())
 				else:
 					print("Golpe fallido: jugador fuera del alcance")
 				estado = Estado.RECARGA
@@ -122,6 +123,7 @@ func interactuar():
 		agresivo = true
 		mirar(jugador.global_position)
 		estado = Estado.AVISO
+		print("Chico Amable -> AVISO cuadro ", Engine.get_physics_frames())
 		reloj = tiempo_aviso
 		return
 	_dialogo().mostrar(nombre_dialogo, frases[mini(n - 1, frases.size() - 1)], 4.0)
@@ -176,6 +178,9 @@ func _al_cambiar_vida(actual: float, maxima: float) -> void:
 		estado = Estado.HUIR
 		_dialogo().ocultar()
 		print("Chico Amable comienza a huir. Vida: ", actual)
+		print("Atacante vida ", actual, " y HUIR cuadro ",
+			Engine.get_physics_frames(), " a ",
+			snappedf(distancia(), 0.01), " m: se aleja")
 
 
 func _dialogo():
