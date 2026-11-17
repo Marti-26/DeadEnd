@@ -83,6 +83,10 @@ class MaterialesMetro:
 @export var mostrar_hamster: bool = true
 @export var asiento_hamster_x: float = 3.71
 @export var alto_hamster: float = 1.6
+@export var mostrar_zorro: bool = true
+@export var asiento_zorro_x: float = 10.92
+@export var alto_zorro: float = 1.65
+@export var tinte_zorro: Color = Color(0.7, 0.72, 0.92)
 @export var frases_ardilla: Array[String] = [
 	"¿Tú también te bajaste en la que no era? Tranquila, eso le pasa a todo el mundo.",
 	"No te sientes en ese puesto. Es de alguien. Nunca lo he visto, pero siempre está calientito.",
@@ -92,6 +96,11 @@ class MaterialesMetro:
 	"Aquí no hay señal, pero igual me siguen llegando mensajes. Ninguno es para mí.",
 	"Llevo horas jugando en el celular y la batería no baja. No me quejo, pero raro sí es.",
 	"El otro día vi a uno igualito a mí en el andén. Me saludó primero, qué pena con él.",
+]
+@export var frases_zorro: Array[String] = [
+	"Oye, ¿tú sabes cuándo sale el próximo tren? Yo pregunté y nadie me quiere decir.",
+	"Por esta ventana a veces pasan unas luces bien raras. Yo digo que son estrellas.",
+	"Mi mamá me dijo que no hablara con desconocidos. Pero aquí todos somos desconocidos, entonces no sé.",
 ]
 
 const LARGO: float = 24.0
@@ -599,9 +608,13 @@ func _pasajeros(p: Node3D) -> void:
 		_sentar(p, "Ardilla", "res://assets/npcs y posters/ardilla_idle_frente_%d.png", asiento_ardilla_x, alto_ardilla, 465.0, 12.0, "ARDILLA", frases_ardilla)
 	if mostrar_hamster:
 		_sentar(p, "Hamster", "res://assets/npcs y posters/hamster_idle_frente_%d.png", asiento_hamster_x, alto_hamster, 502.0, 18.0, "HÁMSTER", frases_hamster)
+	if mostrar_zorro:
+		var zorro: AnimatedSprite3D = _sentar(p, "Zorro", "res://assets/npcs y posters/zorro_idle_frente_%d.png", asiento_zorro_x, alto_zorro, 785.0, 16.0, "ZORRO", frases_zorro)
+		if zorro != null:
+			zorro.modulate = tinte_zorro
 
 
-func _sentar(p: Node3D, nombre: String, ruta: String, x: float, alto: float, alto_visible: float, margen: float, nombre_dialogo: String, frases: Array[String]) -> void:
+func _sentar(p: Node3D, nombre: String, ruta: String, x: float, alto: float, alto_visible: float, margen: float, nombre_dialogo: String, frases: Array[String]) -> AnimatedSprite3D:
 	var marcos: SpriteFrames = SpriteFrames.new()
 	marcos.set_animation_speed("default", 1.6)
 	marcos.set_animation_loop("default", true)
@@ -609,7 +622,7 @@ func _sentar(p: Node3D, nombre: String, ruta: String, x: float, alto: float, alt
 	for i: int in [1, 2]:
 		var textura: Texture2D = load(ruta % i) as Texture2D
 		if textura == null:
-			return
+			return null
 		alto_imagen = float(textura.get_height())
 		marcos.add_frame("default", textura)
 	var tamano_pixel: float = alto / alto_visible
@@ -630,6 +643,7 @@ func _sentar(p: Node3D, nombre: String, ruta: String, x: float, alto: float, alt
 	p.add_child(pasajero)
 	pasajero.play("default")
 	pasajero.frame = randi() % 2
+	return pasajero
 
 
 func _barras_y_agarraderas(p: Node3D) -> void:
