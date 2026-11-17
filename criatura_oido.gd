@@ -1,10 +1,5 @@
 class_name CriaturaOido
 extends CriaturaBase
-## Tarea B · Restrepo Sanabria María Camila — Oido, la criatura que oye.
-## Receta C. No mira al jugador cada cuadro: espera en su puesto hasta que
-## alguien la llama con oir(punto). Entonces va a donde sonó, mira 5 s
-## (la alerta del documento) y vuelve. Si estaba tranquila, avisa a las
-## criaturas que tenga a menos de radio_aviso (alerta en cadena).
 
 enum Estado { EN_PUESTO, INVESTIGAR, MIRAR, VOLVER }
 
@@ -14,8 +9,31 @@ enum Estado { EN_PUESTO, INVESTIGAR, MIRAR, VOLVER }
 @export var radio_aviso: float = 5.0      # u, hasta dónde avisa a otras criaturas
 @export var radio_audicion: float = 8.0   # u, lo máximo que oye: llega al dash en todas las estaciones
 @export var tiempo_max_investigar: float = 8.0
+@export var nombre_dialogo: String = "???"
+@export var radio_hablar: float = 10.0
+@export var pausa_hablar: Vector2 = Vector2(4.0, 7.0)
+@export var duracion_frase: float = 3.0
+@export var frases: Array[String] = [
+	"Te escuché.",
+	"¿Por qué corres?",
+	"Sé que estás ahí.",
+	"Tus pasos suenan bonito.",
+	"Quédate quieta. Solo un momento.",
+	"Ya casi.",
+	"Respiras muy fuerte.",
+	"No te voy a hacer nada.",
+	"Escucho tu corazón.",
+	"Ven. Aquí está más oscuro.",
+	"Otra vez tú.",
+	"Shhh. Ya te oí.",
+	"Puedo esperar.",
+	"No eres la primera.",
+	"Aquí todo se escucha.",
+]
 
 var estado: Estado = Estado.EN_PUESTO
+var _espera_hablar: float = 0.0
+var _ultima_frase: int = -1
 var ruido_en: Vector3 = Vector3.ZERO
 # Sprites: idle y alerta van 1 2 3 2 en bucle (1 2 3 2 1 2 3...), sin saltos.
 # Caminar tiene dos lados; el eje X del mundo es izquierda/derecha en pantalla.
@@ -48,6 +66,22 @@ func _physics_process(delta: float) -> void:
 		Estado.VOLVER:
 			ir_a(puesto)
 	move_and_slide()
+	_hablar(delta)
+
+
+func _hablar(delta: float) -> void:
+	if estado != Estado.INVESTIGAR and estado != Estado.MIRAR:
+		_espera_hablar = 0.0
+		return
+	_espera_hablar -= delta
+	if _espera_hablar > 0.0 or frases.is_empty() or distancia_al_jugador() > radio_hablar:
+		return
+	var i: int = randi() % frases.size()
+	if frases.size() > 1 and i == _ultima_frase:
+		i = (i + 1) % frases.size()
+	_ultima_frase = i
+	Dialogo.obtener(get_tree()).mostrar(nombre_dialogo, frases[i], duracion_frase, true)
+	_espera_hablar = randf_range(pausa_hablar.x, pausa_hablar.y)
 
 
 func decidir():
