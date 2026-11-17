@@ -350,11 +350,13 @@ func _asegurar_hud() -> void:
 
 
 func sumar_estres(cantidad: float) -> void:
+	if cantidad > 0.0 and is_in_group(Grupos.ZONA_SEGURA):
+		return
 	estres = clampf(estres + cantidad, 0.0, ESTRES_MAX)
 
 
 func _actualizar_estres(delta: float) -> void:
-	if is_in_group(Grupos.ESCONDIDOS):
+	if is_in_group(Grupos.ESCONDIDOS) or is_in_group(Grupos.ZONA_SEGURA):
 		if estres < ESTRES_MAX:
 			_jadeo_disparado = false
 		return
