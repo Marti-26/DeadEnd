@@ -89,6 +89,18 @@ func _ready() -> void:
 	sala.add_child(kitsuny)
 	if not Engine.is_editor_hint():
 		var area: Area3D = get_node_or_null("AreaZonaSegura") as Area3D
+		if area == null:
+			area = Area3D.new()
+			area.name = "AreaZonaSegura"
+			area.collision_layer = 0
+			area.collision_mask = 1
+			var forma: CollisionShape3D = CollisionShape3D.new()
+			var caja: BoxShape3D = BoxShape3D.new()
+			caja.size = Vector3(ANCHO, 5.0, Z_FRENTE - Z_FONDO + 0.6)
+			forma.shape = caja
+			forma.position = Vector3(0, 2.3, (Z_FONDO + Z_FRENTE) / 2.0 + 0.3)
+			area.add_child(forma)
+			add_child(area)
 		if area != null:
 			if not area.body_entered.is_connected(_on_area_zona_segura_body_entered):
 				area.body_entered.connect(_on_area_zona_segura_body_entered)
@@ -568,6 +580,7 @@ func _vidrio(color: Color) -> StandardMaterial3D:
 
 func _on_area_zona_segura_body_entered(cuerpo: Node3D) -> void:
 	if cuerpo.is_in_group(Grupos.JUGADOR):
+		cuerpo.add_to_group(Grupos.ZONA_SEGURA)
 		if grupo != "":
 			cuerpo.add_to_group(grupo)
 		jugador_entro.emit(cuerpo)
@@ -575,6 +588,7 @@ func _on_area_zona_segura_body_entered(cuerpo: Node3D) -> void:
 
 func _on_area_zona_segura_body_exited(cuerpo: Node3D) -> void:
 	if cuerpo.is_in_group(Grupos.JUGADOR):
+		cuerpo.remove_from_group(Grupos.ZONA_SEGURA)
 		if grupo != "" and not _sigue_en_otra_zona(cuerpo):
 			cuerpo.remove_from_group(grupo)
 		jugador_salio.emit(cuerpo)
