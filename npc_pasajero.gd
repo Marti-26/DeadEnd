@@ -7,6 +7,7 @@ extends Node3D
 @export var frases: Array[String] = []
 @export var duracion: float = 4.5
 @export var mitad_ancho_vagon: float = 1.5
+@export var solo_dentro_vagon: bool = true
 
 var _indice: int = 0
 var _hablando: bool = false
@@ -37,6 +38,8 @@ func _al_alcance(jugador: Node3D) -> bool:
 	var b: Vector2 = Vector2(jugador.global_position.x, jugador.global_position.z)
 	if a.distance_to(b) > alcance:
 		return false
+	if not solo_dentro_vagon:
+		return true
 	var vagon: Node3D = get_parent() as Node3D
 	if vagon == null:
 		return true

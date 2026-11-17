@@ -25,6 +25,16 @@ signal jugador_salio(cuerpo: Node3D)
 @export var color_luz_caniche: Color = Color(1.0, 0.9, 0.95)
 @export var luz_gato: float = 0.55
 @export var color_luz_gato: Color = Color(0.55, 0.65, 1.0)
+@export var frases_gato: Array[String] = [
+	"Se tragó mi plata.",
+	"Ni el paquete ni el cambio. Nada.",
+	"No le metas monedas. En serio.",
+]
+@export var frases_caniche: Array[String] = [
+	"Aquí no se oye nada. Mejor así.",
+	"Estoy esperando a alguien.",
+	"Ya debería haber llegado.",
+]
 @export_group("")
 
 const ANCHO: float = 30.0
@@ -83,9 +93,9 @@ func _ready() -> void:
 	_sillas(sala, Vector3(-6.0, 0, -0.4), 4)
 	_sillas(sala, Vector3(1.5, 0, 1.4), 4)
 	if mostrar_gato:
-		_visitante(sala, "Gato", ["res://assets/npcs y posters/gato_2_idle_frente_1 (1).png", "res://assets/npcs y posters/gato_2_idle_frente_1 (2).png"], gato_pos, alto_gato, 25.0, 644.0, color_luz_gato, luz_gato)
+		_visitante(sala, "Gato", ["res://assets/npcs y posters/gato_2_idle_frente_1 (1).png", "res://assets/npcs y posters/gato_2_idle_frente_1 (2).png"], gato_pos, alto_gato, 25.0, 644.0, color_luz_gato, luz_gato, "GATO", frases_gato)
 	if mostrar_caniche:
-		_visitante(sala, "Caniche", ["res://assets/npcs y posters/caniche_idle_frente_1.png", "res://assets/npcs y posters/caniche_idle_frente_2.png"], caniche_pos, alto_caniche, 24.0, 688.0, color_luz_caniche, luz_caniche)
+		_visitante(sala, "Caniche", ["res://assets/npcs y posters/caniche_idle_frente_1.png", "res://assets/npcs y posters/caniche_idle_frente_2.png"], caniche_pos, alto_caniche, 24.0, 688.0, color_luz_caniche, luz_caniche, "CANICHE", frases_caniche)
 	_pilar(sala, Vector3(-2.2, 0, -1.6), ROJO)
 	_pilar(sala, Vector3(9.0, 0, -1.6), CIAN)
 	_viga_luz(sala)
@@ -261,7 +271,7 @@ func _sillas(p: Node3D, pos: Vector3, n: int) -> void:
 	_caja(p, Vector3(largo + 0.3, 0.004, 0.8), Vector3(pos.x, 0.003, pos.z), sombra)
 
 
-func _visitante(p: Node3D, nombre: String, rutas: Array[String], pies: Vector3, alto: float, arriba: float, abajo: float, color_luz: Color, energia_luz: float) -> void:
+func _visitante(p: Node3D, nombre: String, rutas: Array[String], pies: Vector3, alto: float, arriba: float, abajo: float, color_luz: Color, energia_luz: float, nombre_dialogo: String, frases: Array[String]) -> void:
 	var marcos: SpriteFrames = SpriteFrames.new()
 	marcos.set_animation_speed("default", 1.6)
 	marcos.set_animation_loop("default", true)
@@ -282,6 +292,13 @@ func _visitante(p: Node3D, nombre: String, rutas: Array[String], pies: Vector3, 
 	sprite.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
 	sprite.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	sprite.position = pies + Vector3(0, (abajo - alto_imagen * 0.5) * tamano_pixel, 0)
+	if not Engine.is_editor_hint():
+		var guion: Script = load("res://npc_pasajero.gd") as Script
+		if guion != null:
+			sprite.set_script(guion)
+			sprite.set("nombre_dialogo", nombre_dialogo)
+			sprite.set("frases", frases)
+			sprite.set("solo_dentro_vagon", false)
 	p.add_child(sprite)
 	sprite.play("default")
 	sprite.frame = _rng.randi() % 2
