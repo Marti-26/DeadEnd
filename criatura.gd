@@ -16,6 +16,7 @@ enum Estado { EN_PUESTO, ACERCARSE, AVISO, GOLPE, RECARGA, BUSCAR, VOLVER }
 @export var tiempo_buscar: float = 3.0
 @export var balanceo_altura: float = 0.08
 @export var balanceo_estiramiento: float = 0.035
+@export var alto_base_sprite: float = 688.0
 
 var tiempo_visto: float = 0.0
 var estado: Estado = Estado.EN_PUESTO
@@ -58,24 +59,24 @@ func _physics_process(delta: float) -> void:
 	# Ejecutar el comportamiento correspondiente al estado.
 	match estado:
 		Estado.EN_PUESTO:
-			frenar("idle")
+			frenar("alerta" if tiempo_visto > 0.0 else "idle")
 
 		Estado.ACERCARSE:
 			if jugador != null:
 				ir_a(jugador.global_position)
 
 		Estado.AVISO:
-			frenar("interact-right")
+			frenar("alerta")
 
 		Estado.GOLPE:
-			frenar("attack-melee-right")
+			frenar("alerta")
 			golpear()
 
 		Estado.RECARGA:
-			frenar("idle")
+			frenar("alerta")
 
 		Estado.BUSCAR:
-			frenar("idle")
+			frenar("alerta")
 
 		Estado.VOLVER:
 			ir_a(puesto)
@@ -260,6 +261,9 @@ func animar(nombre: String, ritmo: float) -> void:
 		nombre = "idle"
 	if sprite.animation != nombre or not sprite.is_playing():
 		sprite.play(nombre)
+		var textura: Texture2D = sprite.sprite_frames.get_frame_texture(nombre, 0)
+		if textura != null:
+			sprite.offset.y = (float(textura.get_height()) - alto_base_sprite) * 0.5
 	sprite.speed_scale = ritmo
 
 
