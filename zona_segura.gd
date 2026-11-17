@@ -14,6 +14,18 @@ signal jugador_salio(cuerpo: Node3D)
 @export var poster_centro_y: float = 1.55
 @export var poster_brillo: float = 0.18
 @export var poster_luz: float = 0.9
+@export_group("Visitantes")
+@export var mostrar_gato: bool = true
+@export var gato_pos: Vector3 = Vector3(-13.55, 0.0, -2.55)
+@export var alto_gato: float = 1.85
+@export var mostrar_caniche: bool = true
+@export var caniche_pos: Vector3 = Vector3(-5.07, 0.5, -0.38)
+@export var alto_caniche: float = 1.45
+@export var luz_caniche: float = 0.9
+@export var color_luz_caniche: Color = Color(1.0, 0.9, 0.95)
+@export var luz_gato: float = 0.55
+@export var color_luz_gato: Color = Color(0.55, 0.65, 1.0)
+@export_group("")
 
 const ANCHO: float = 30.0
 const Z_FONDO: float = -4.0
@@ -70,6 +82,10 @@ func _ready() -> void:
 	_maquinas(sala, 5.6, luces_der)
 	_sillas(sala, Vector3(-6.0, 0, -0.4), 4)
 	_sillas(sala, Vector3(1.5, 0, 1.4), 4)
+	if mostrar_gato:
+		_visitante(sala, "Gato", ["res://assets/npcs y posters/gato_2_idle_frente_1 (1).png", "res://assets/npcs y posters/gato_2_idle_frente_1 (2).png"], gato_pos, alto_gato, 25.0, 644.0, color_luz_gato, luz_gato)
+	if mostrar_caniche:
+		_visitante(sala, "Caniche", ["res://assets/npcs y posters/caniche_idle_frente_1.png", "res://assets/npcs y posters/caniche_idle_frente_2.png"], caniche_pos, alto_caniche, 24.0, 688.0, color_luz_caniche, luz_caniche)
 	_pilar(sala, Vector3(-2.2, 0, -1.6), ROJO)
 	_pilar(sala, Vector3(9.0, 0, -1.6), CIAN)
 	_viga_luz(sala)
@@ -243,6 +259,42 @@ func _sillas(p: Node3D, pos: Vector3, n: int) -> void:
 	_forma(Vector3(largo, 1.0, 0.55), Vector3(pos.x, 0.5, pos.z - 0.03))
 	var sombra: StandardMaterial3D = _mat(Color(0.02, 0.03, 0.05))
 	_caja(p, Vector3(largo + 0.3, 0.004, 0.8), Vector3(pos.x, 0.003, pos.z), sombra)
+
+
+func _visitante(p: Node3D, nombre: String, rutas: Array[String], pies: Vector3, alto: float, arriba: float, abajo: float, color_luz: Color, energia_luz: float) -> void:
+	var marcos: SpriteFrames = SpriteFrames.new()
+	marcos.set_animation_speed("default", 1.6)
+	marcos.set_animation_loop("default", true)
+	var alto_imagen: float = 0.0
+	for ruta: String in rutas:
+		var textura: Texture2D = load(ruta) as Texture2D
+		if textura == null:
+			return
+		alto_imagen = float(textura.get_height())
+		marcos.add_frame("default", textura)
+	var tamano_pixel: float = alto / (abajo - arriba)
+	var sprite: AnimatedSprite3D = AnimatedSprite3D.new()
+	sprite.name = nombre
+	sprite.sprite_frames = marcos
+	sprite.pixel_size = tamano_pixel
+	sprite.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+	sprite.shaded = true
+	sprite.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
+	sprite.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	sprite.position = pies + Vector3(0, (abajo - alto_imagen * 0.5) * tamano_pixel, 0)
+	p.add_child(sprite)
+	sprite.play("default")
+	sprite.frame = _rng.randi() % 2
+	var luz: OmniLight3D = OmniLight3D.new()
+	luz.name = "LuzAura_" + nombre
+	luz.light_color = color_luz
+	luz.light_energy = energia_luz
+	luz.light_specular = 0.0
+	luz.omni_range = alto * 1.1
+	luz.omni_attenuation = 1.6
+	luz.shadow_enabled = false
+	luz.position = pies + Vector3(0, alto * 0.6, 0.7)
+	p.add_child(luz)
 
 
 func _pilar(p: Node3D, pos: Vector3, acento: Color) -> void:
