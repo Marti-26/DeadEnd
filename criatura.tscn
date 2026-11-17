@@ -13,6 +13,9 @@
 [ext_resource type="Texture2D" path="res://assets/criatura_ve/criatura_ve_caminar_izquierda_2.png" id="ve_caminar_izquierda_2"]
 [ext_resource type="Texture2D" path="res://assets/criatura_ve/criatura_ve_caminar_izquierda_3.png" id="ve_caminar_izquierda_3"]
 [ext_resource type="Texture2D" path="res://assets/criatura_ve/criatura_ve_caminar_izquierda_4.png" id="ve_caminar_izquierda_4"]
+[ext_resource type="Texture2D" path="res://assets/criatura_ve/criatura_ve_alerta_frente_1.png" id="ve_alerta_frente_1"]
+[ext_resource type="Texture2D" path="res://assets/criatura_ve/criatura_ve_alerta_frente_2.png" id="ve_alerta_frente_2"]
+[ext_resource type="Texture2D" path="res://assets/criatura_ve/criatura_ve_alerta_frente_3.png" id="ve_alerta_frente_3"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3lpp0"]
 radius = 0.35
@@ -64,6 +67,23 @@ animations = [{
 "loop": true,
 "name": &"caminar_izquierda",
 "speed": 9.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("ve_alerta_frente_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("ve_alerta_frente_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("ve_alerta_frente_3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("ve_alerta_frente_2")
+}],
+"loop": true,
+"name": &"alerta",
+"speed": 6.0
 }]
 
 [node name="Criatura" type="CharacterBody3D" unique_id=383791410]
@@ -91,7 +111,7 @@ max_distance = 15.0
 bus = &"Juego"
 
 [node name="Exclamacion" type="Label3D" parent="." unique_id=916738487]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.91, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.4, 0)
 visible = false
 pixel_size = 0.01
 billboard = 1
