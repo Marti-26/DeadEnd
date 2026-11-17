@@ -498,7 +498,7 @@ func _ladrillo(c1: Color, c2: Color, tam: Vector2, piso: bool, manchas: float) -
 	m.set_shader_parameter("junta", 0.04)
 	m.set_shader_parameter("variacion", 0.08)
 	m.set_shader_parameter("pixel", 0.04)
-	m.set_shader_parameter("rugosidad", 0.4 if piso else 0.85)
+	m.set_shader_parameter("rugosidad", 0.85)
 	m.set_shader_parameter("en_piso", piso)
 	m.set_shader_parameter("manchas", manchas)
 	return m
