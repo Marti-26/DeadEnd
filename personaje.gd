@@ -613,9 +613,9 @@ func animar_2d():
 		Estado.CAMINAR:
 			reproducir("audifonos_caminar" if audifonos_activos else "caminar")
 		Estado.DASH:
-			reproducir("dash")
+			reproducir("audifonos_dash" if audifonos_activos else "dash")
 		Estado.SIGILO:
-			reproducir("sigilo", 1.0 if moviendo else 0.0)
+			reproducir("audifonos_sigilo" if audifonos_activos else "sigilo", 1.0 if moviendo else 0.0)
 		_:
 			reproducir("audifonos_idle" if audifonos_activos else "idle")
 
