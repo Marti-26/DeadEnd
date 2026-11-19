@@ -85,6 +85,36 @@
 [ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_izquierda_4.png" id="aud_izquierda_4"]
 [ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_izquierda_5.png" id="aud_izquierda_5"]
 [ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_izquierda_6.png" id="aud_izquierda_6"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_dash_derecha_1.png" id="aud_dash_derecha_1"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_dash_derecha_2.png" id="aud_dash_derecha_2"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_dash_derecha_3.png" id="aud_dash_derecha_3"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_dash_derecha_4.png" id="aud_dash_derecha_4"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_dash_derecha_5.png" id="aud_dash_derecha_5"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_dash_espalda_1.png" id="aud_dash_espalda_1"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_dash_espalda_2.png" id="aud_dash_espalda_2"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_dash_espalda_3.png" id="aud_dash_espalda_3"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_dash_espalda_4.png" id="aud_dash_espalda_4"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_dash_espalda_5.png" id="aud_dash_espalda_5"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_dash_frente_1.png" id="aud_dash_frente_1"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_dash_frente_2.png" id="aud_dash_frente_2"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_dash_frente_3.png" id="aud_dash_frente_3"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_dash_frente_4.png" id="aud_dash_frente_4"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_dash_frente_5.png" id="aud_dash_frente_5"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_dash_izquierda_1.png" id="aud_dash_izquierda_1"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_dash_izquierda_2.png" id="aud_dash_izquierda_2"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_dash_izquierda_3.png" id="aud_dash_izquierda_3"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_dash_izquierda_4.png" id="aud_dash_izquierda_4"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_dash_izquierda_5.png" id="aud_dash_izquierda_5"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_sigilo_derecha_1.png" id="aud_sigilo_derecha_1"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_sigilo_derecha_2.png" id="aud_sigilo_derecha_2"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_sigilo_derecha_3.png" id="aud_sigilo_derecha_3"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_sigilo_espalda_1.png" id="aud_sigilo_espalda_1"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_sigilo_espalda_2.png" id="aud_sigilo_espalda_2"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_sigilo_frente_1.png" id="aud_sigilo_frente_1"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_sigilo_frente_2.png" id="aud_sigilo_frente_2"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_sigilo_izquierda_1.png" id="aud_sigilo_izquierda_1"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_sigilo_izquierda_2.png" id="aud_sigilo_izquierda_2"]
+[ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_sigilo_izquierda_3.png" id="aud_sigilo_izquierda_3"]
 
 [sub_resource type="SpriteFrames" id="AnimacionesGatita"]
 animations = [{
@@ -531,6 +561,136 @@ animations = [{
 "loop": true,
 "name": &"audifonos_idle_izquierda",
 "speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("aud_dash_derecha_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_dash_derecha_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_dash_derecha_3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_dash_derecha_4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_dash_derecha_5")
+}],
+"loop": 0,
+"name": &"audifonos_dash_derecha",
+"speed": 6.5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("aud_sigilo_derecha_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_sigilo_derecha_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_sigilo_derecha_3")
+}],
+"loop": 1,
+"name": &"audifonos_sigilo_derecha",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("aud_dash_espalda_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_dash_espalda_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_dash_espalda_3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_dash_espalda_4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_dash_espalda_5")
+}],
+"loop": 0,
+"name": &"audifonos_dash_espalda",
+"speed": 6.5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("aud_sigilo_espalda_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_sigilo_espalda_2")
+}],
+"loop": 1,
+"name": &"audifonos_sigilo_espalda",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("aud_dash_frente_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_dash_frente_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_dash_frente_3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_dash_frente_4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_dash_frente_5")
+}],
+"loop": 0,
+"name": &"audifonos_dash_frente",
+"speed": 6.5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("aud_sigilo_frente_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_sigilo_frente_2")
+}],
+"loop": 1,
+"name": &"audifonos_sigilo_frente",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("aud_dash_izquierda_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_dash_izquierda_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_dash_izquierda_3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_dash_izquierda_4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_dash_izquierda_5")
+}],
+"loop": 0,
+"name": &"audifonos_dash_izquierda",
+"speed": 6.5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("aud_sigilo_izquierda_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_sigilo_izquierda_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("aud_sigilo_izquierda_3")
+}],
+"loop": 1,
+"name": &"audifonos_sigilo_izquierda",
+"speed": 5.0
 }]
 
 [node name="Gatita" type="AnimatedSprite3D" unique_id=489570899]
