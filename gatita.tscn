@@ -115,6 +115,7 @@
 [ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_sigilo_izquierda_1.png" id="aud_sigilo_izquierda_1"]
 [ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_sigilo_izquierda_2.png" id="aud_sigilo_izquierda_2"]
 [ext_resource type="Texture2D" path="res://assets/gatita/gatita_audifonos_sigilo_izquierda_3.png" id="aud_sigilo_izquierda_3"]
+[ext_resource type="Script" path="res://sombra_pies.gd" id="sombra_pies"]
 
 [sub_resource type="SpriteFrames" id="AnimacionesGatita"]
 animations = [{
@@ -702,3 +703,7 @@ alpha_cut = 1
 sprite_frames = SubResource("AnimacionesGatita")
 animation = &"idle_frente"
 autoplay = "idle_frente"
+
+[node name="Sombra" type="Node3D" parent="."]
+script = ExtResource("sombra_pies")
+tamano = Vector2(0.85, 0.45)

@@ -312,6 +312,13 @@ func _visitante(p: Node3D, nombre: String, rutas: Array[String], pies: Vector3, 
 	luz.shadow_enabled = false
 	luz.position = pies + Vector3(0, alto * 0.6, 0.7)
 	p.add_child(luz)
+	if pies.y < 0.1:
+		var sombra: Node3D = Node3D.new()
+		sombra.name = "Sombra_" + nombre
+		sombra.set_script(load("res://sombra_pies.gd"))
+		sombra.set("tamano", Vector2(alto * 0.46, alto * 0.24))
+		sombra.position = pies
+		p.add_child(sombra)
 
 
 func _pilar(p: Node3D, pos: Vector3, acento: Color) -> void:
