@@ -27,6 +27,8 @@
 [ext_resource type="Script" uid="uid://4mdf5onjb7ag" path="res://bombillo.gd" id="bombillo_luz"]
 [ext_resource type="FontFile" uid="uid://cdufsefxihski" path="res://assets/font/ShareTechMono-Regular.ttf" id="fuente_neon"]
 
+[ext_resource type="Script" path="res://terminal.gd" id="terminal_extra"]
+
 [sub_resource type="Environment" id="Entorno"]
 background_mode = 1
 background_color = Color(0.01, 0.012, 0.03, 1)
@@ -94,6 +96,28 @@ emission_energy_multiplier = 3.0
 
 [sub_resource type="BoxShape3D" id="FormaBajada"]
 size = Vector3(2.9, 2, 2.6)
+
+[sub_resource type="StandardMaterial3D" id="MatTerminalCuerpo"]
+albedo_color = Color(0.32, 0.43, 0.48, 1)
+emission_enabled = true
+emission = Color(0.08, 0.12, 0.13, 1)
+emission_energy_multiplier = 0.12
+roughness = 0.65
+
+[sub_resource type="StandardMaterial3D" id="MatTerminalPantalla"]
+albedo_color = Color(0.19, 0.62, 0.55, 1)
+emission_enabled = true
+emission = Color(0.09, 0.38, 0.31, 1)
+emission_energy_multiplier = 0.7
+
+[sub_resource type="BoxMesh" id="MallaTerminal"]
+size = Vector3(1, 1.5, 0.5)
+
+[sub_resource type="BoxShape3D" id="ColisionTerminal"]
+size = Vector3(1, 1.5, 0.5)
+
+[sub_resource type="BoxMesh" id="MallaPantallaTerminal"]
+size = Vector3(0.68, 0.42, 0.025)
 
 [node name="SegundoPiso" type="Node3D" unique_id=352055503]
 
@@ -338,3 +362,28 @@ stream = ExtResource("21_nkq4h")
 volume_db = -22.0
 autoplay = true
 bus = &"Juego"
+
+[node name="Terminal2" type="StaticBody3D" parent="." node_paths=PackedStringArray("pantalla") groups=["interactivos"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.75, -2.9)
+script = ExtResource("terminal_extra")
+numero_terminal = 2
+pantalla = NodePath("Pantalla")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Terminal2"]
+shape = SubResource("ColisionTerminal")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Terminal2"]
+material_override = SubResource("MatTerminalCuerpo")
+mesh = SubResource("MallaTerminal")
+
+[node name="Pantalla" type="MeshInstance3D" parent="Terminal2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.32, 0.27)
+material_override = SubResource("MatTerminalPantalla")
+mesh = SubResource("MallaPantallaTerminal")
+
+[node name="LuzTerminal" type="OmniLight3D" parent="Terminal2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0.6)
+light_color = Color(0.6, 0.92, 0.83, 1)
+light_energy = 0.12
+omni_range = 1.6
+shadow_enabled = false
