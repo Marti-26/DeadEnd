@@ -21,6 +21,8 @@
 [ext_resource type="Script" uid="uid://bh2bylh8kjoo8" path="res://dash.gd" id="ZC_9_dash"]
 [ext_resource type="PackedScene" path="res://salida.tscn" id="ZC_salida"]
 [ext_resource type="Script" path="res://zona_c_final.gd" id="ZC_final"]
+[ext_resource type="PackedScene" path="res://metro.tscn" id="ZC_metro_llegada"]
+[ext_resource type="Script" path="res://zona_c_llegada.gd" id="ZC_llegada_script"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gdjdl"]
 render_priority = 0
@@ -431,7 +433,7 @@ height = 0.7
 
 [sub_resource type="Environment" id="Environment_1vivr"]
 background_mode = 1
-background_color = Color(0.5019608, 0.5019608, 0.5019608, 1)
+background_color = Color(0.035, 0.045, 0.065, 1)
 ambient_light_source = 2
 ambient_light_energy = 0.0
 reflected_light_source = 1
@@ -835,6 +837,7 @@ multimesh = SubResource("MultiMesh_7kag1")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 5.85)
 
 [node name="Forma0" type="CollisionShape3D" parent="Estacion/MuroBarrera" unique_id=2137208397]
+disabled = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.2, 0, 0)
 shape = SubResource("BoxShape3D_6ose4")
 
@@ -1320,7 +1323,7 @@ omni_range = 9.0
 omni_attenuation = 1.5
 
 [node name="Personaje" type="CharacterBody3D" parent="." unique_id=241134809 node_paths=PackedStringArray("camara") groups=["jugador"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27, 0.2, 1.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0.25, 7.0)
 script = ExtResource("ZC_6_r0ps7")
 camara = NodePath("../Camara")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Personaje" unique_id=1801526638]
@@ -1371,6 +1374,15 @@ bus = &"Juego"
 stream = ExtResource("ZC_20_58kpb")
 volume_db = -8.0
 bus = &"Juego"
+
+[node name="MetroLlegada" parent="." node_paths=PackedStringArray("camara_estacion") instance=ExtResource("ZC_metro_llegada")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7.0)
+camara_estacion = NodePath("../Camara")
+x_parada = -18.0
+primera_llegada = 99999.0
+
+[node name="ControlLlegada" type="Node" parent="."]
+script = ExtResource("ZC_llegada_script")
 
 [node name="TorniqueteFinal" parent="." instance=ExtResource("ZC_salida")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 0, 1.2)
