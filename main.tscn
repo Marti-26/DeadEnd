@@ -132,6 +132,7 @@ outline_color = Color(0, 0, 0, 0.5)
 
 [node name="IntroVagon" type="Node3D" unique_id=674032148]
 script = ExtResource("1_intro")
+siguiente_escena = "res://pantalla_carga.tscn"
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=308417194]
 environment = SubResource("Environment_Intro")
