@@ -138,6 +138,8 @@ var proxima: float = 0.0
 var apertura: float = 0.0
 var dentro: bool = false
 var viajando: bool = false
+var viaje_final_pendiente: bool = false
+var cambiando_zona_c: bool = false
 var jugador: CharacterBody3D = null
 var _abiertas: bool = false
 var _capas_plataforma: int = 0
@@ -189,6 +191,13 @@ func _physics_process(delta: float) -> void:
 		return
 	reloj += delta
 	var t: float = reloj - inicio
+	if viaje_final_pendiente and estado == Estado.SALIENDO and t >= 3.0 and not cambiando_zona_c:
+		cambiando_zona_c = true
+		if jugador is Personaje:
+			Partida.guardar_estado_personaje(jugador as Personaje)
+		Partida.estres = 0.0
+		Partida.cambiar_escena("res://zona_c_final.tscn")
+		return
 	match estado:
 		Estado.FUERA:
 			if reloj >= proxima:
@@ -290,6 +299,7 @@ func _cambiar(nuevo: Estado) -> void:
 
 
 	if estado == Estado.DETENIDO:
+		viaje_final_pendiente = false
 		if viajando:
 			viajando = false
 			jugador.platform_floor_layers = _capas_plataforma
@@ -314,6 +324,11 @@ func _al_cerrar() -> void:
 		l = tren.to_local(jugador.global_position)
 	if absf(l.x) < LARGO / 2.0 - 0.1 and absf(l.z) < ANCHO / 2.0 - 0.05:
 		viajando = true
+		viaje_final_pendiente = Partida.terminales_completadas()
+		if viaje_final_pendiente:
+			print("Metro: destino Zona C Final habilitado")
+		else:
+			print("Metro: faltan terminales por activar")
 		_capas_plataforma = jugador.platform_floor_layers
 		jugador.platform_floor_layers = 0
 		if not dentro:
