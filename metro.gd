@@ -200,7 +200,7 @@ func _physics_process(delta: float) -> void:
 			Partida.set_meta("posicion_vagon_final", lugar)
 			print("Metro: posicion guardada dentro del vagon: ", lugar)
 		Partida.estres = 0.0
-		Partida.cambiar_escena("res://zona_c_final.tscn")
+		_iniciar_transicion_final()
 		return
 	match estado:
 		Estado.FUERA:
@@ -276,6 +276,27 @@ func _physics_process(delta: float) -> void:
 		camara_vagon.global_position = tren.to_global(Vector3(_cam_x_actual, _offset_camara.y, _offset_camara.z))
 
 
+
+
+
+func _iniciar_transicion_final() -> void:
+	var capa: CanvasLayer = CanvasLayer.new()
+	capa.name = "TransicionMetroFinal"
+	capa.layer = 120
+	get_tree().root.add_child(capa)
+
+	var negro: ColorRect = ColorRect.new()
+	negro.name = "Fondo"
+	negro.color = Color(0.0, 0.0, 0.0, 0.0)
+	negro.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	negro.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	capa.add_child(negro)
+
+	var animacion: Tween = create_tween()
+	animacion.tween_property(negro, "color:a", 1.0, 0.75)
+	animacion.tween_interval(0.2)
+	await animacion.finished
+	Partida.cambiar_escena("res://zona_c_final.tscn")
 
 func _cambiar(nuevo: Estado) -> void:
 	estado = nuevo
