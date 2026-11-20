@@ -1,22 +1,78 @@
 [gd_scene format=3 uid="uid://clixl12f1wg84"]
 
 [ext_resource type="Script" uid="uid://841mhttusjtm" path="res://chico_amable.gd" id="1_amable"]
-[ext_resource type="PackedScene" uid="uid://b3vnx6dprague" path="res://personaje/character-female-b.glb" id="2_modelo"]
+[ext_resource type="Texture2D" path="res://assets/chico amable/chico_amable_idle_frente_1.png" id="chico_idle_1"]
+[ext_resource type="Texture2D" path="res://assets/chico amable/chico_amable_idle_frente_2.png" id="chico_idle_2"]
+[ext_resource type="Texture2D" path="res://assets/chico amable/chico_amable_idle_frente_3.png" id="chico_idle_3"]
+[ext_resource type="Texture2D" path="res://assets/chico amable/chico_amable_idle_frente_4.png" id="chico_idle_4"]
+[ext_resource type="Texture2D" path="res://assets/chico amable/chico_amable_idle_frente_5.png" id="chico_idle_5"]
+[ext_resource type="Texture2D" path="res://assets/chico amable/chico_amable_idle_frente_6.png" id="chico_idle_6"]
 [ext_resource type="Script" uid="uid://cjb6fbriprfvw" path="res://salud.gd" id="3_3near"]
+[ext_resource type="Script" path="res://sombra_pies.gd" id="sombra_pies"]
 
 [sub_resource type="CapsuleShape3D" id="CapsulaChico"]
-radius = 0.35
-height = 1.75
+radius = 0.45
+height = 2.6
+
+[sub_resource type="SpriteFrames" id="AnimacionesChico"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("chico_idle_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("chico_idle_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("chico_idle_3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("chico_idle_4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("chico_idle_5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("chico_idle_6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("chico_idle_5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("chico_idle_4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("chico_idle_3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("chico_idle_2")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 6.0
+}]
 
 [node name="ChicoAmable" type="CharacterBody3D" unique_id=1461023450]
 script = ExtResource("1_amable")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=877815686]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0)
 shape = SubResource("CapsulaChico")
 
-[node name="Modelo" parent="." unique_id=330717089 instance=ExtResource("2_modelo")]
-transform = Transform3D(-2.6, 0, -2.2729921e-07, 0, 2.6, 0, 2.2729921e-07, 0, -2.6, 0, 0, 0)
+[node name="Sprite" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.724, 0)
+cast_shadow = 0
+pixel_size = 0.006925
+billboard = 2
+shaded = true
+alpha_cut = 1
+sprite_frames = SubResource("AnimacionesChico")
+animation = &"idle"
+autoplay = "idle"
 
 [node name="Salud" type="Node" parent="." unique_id=368293153]
 script = ExtResource("3_3near")
+
+[node name="Sombra" type="Node3D" parent="."]
+script = ExtResource("sombra_pies")
+tamano = Vector2(0.8, 0.42)

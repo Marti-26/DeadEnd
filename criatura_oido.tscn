@@ -17,6 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://bcgut2vs6ji46" path="res://assets/Criatura_que_escucha/criatura_escucha_caminar_izquierda_4.png" id="15_cam_izquierda_4"]
 [ext_resource type="AudioStream" uid="uid://b388oaqjio82n" path="res://Sonidos/Criatura/criatura2.wav" id="17_xccfa"]
 [ext_resource type="FontFile" uid="uid://cdufsefxihski" path="res://assets/font/ShareTechMono-Regular.ttf" id="fuente_neon"]
+[ext_resource type="Script" path="res://sombra_pies.gd" id="sombra_pies"]
 
 [sub_resource type="CapsuleShape3D" id="CapsulaOido"]
 radius = 0.35
@@ -128,3 +129,7 @@ outline_size = 0
 stream = ExtResource("17_xccfa")
 max_distance = 15.0
 bus = &"Juego"
+
+[node name="Sombra" type="Node3D" parent="."]
+script = ExtResource("sombra_pies")
+tamano = Vector2(1.2, 0.55)
