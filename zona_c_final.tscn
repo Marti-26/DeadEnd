@@ -446,6 +446,18 @@ size = Vector3(80, 0.4, 9.8)
 radius = 0.35
 height = 1.75
 
+
+[sub_resource type="BoxMesh" id="ZC_TorniquetePoste"]
+size = Vector3(0.18, 1.45, 0.18)
+
+[sub_resource type="StandardMaterial3D" id="ZC_TorniqueteMetal"]
+albedo_color = Color(0.67, 0.72, 0.75, 1)
+metallic = 0.7
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="ZC_TorniqueteSuperior"]
+size = Vector3(0.25, 0.14, 1.8)
+
 [node name="ZonaCFinal" type="Node3D" unique_id=990845547]
 script = ExtResource("ZC_final")
 
@@ -1378,13 +1390,28 @@ bus = &"Juego"
 [node name="MetroLlegada" parent="." node_paths=PackedStringArray("camara_estacion") instance=ExtResource("ZC_metro_llegada")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7.0)
 camara_estacion = NodePath("../Camara")
-x_parada = -18.0
+x_parada = 0.0
 primera_llegada = 99999.0
 
 [node name="ControlLlegada" type="Node" parent="."]
 script = ExtResource("ZC_llegada_script")
 
 [node name="TorniqueteFinal" parent="." instance=ExtResource("ZC_salida")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 0, 1.2)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 32, 0, 1.2)
+
+[node name="PosteIzquierdo" type="MeshInstance3D" parent="TorniqueteFinal"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.725, -0.85)
+mesh = SubResource("ZC_TorniquetePoste")
+material_override = SubResource("ZC_TorniqueteMetal")
+
+[node name="PosteDerecho" type="MeshInstance3D" parent="TorniqueteFinal"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.725, 0.85)
+mesh = SubResource("ZC_TorniquetePoste")
+material_override = SubResource("ZC_TorniqueteMetal")
+
+[node name="Travesano" type="MeshInstance3D" parent="TorniqueteFinal"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
+mesh = SubResource("ZC_TorniqueteSuperior")
+material_override = SubResource("ZC_TorniqueteMetal")
 
 [connection signal="body_entered" from="TorniqueteFinal" to="." method="_on_torniquete_final_body_entered"]

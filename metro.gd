@@ -195,6 +195,10 @@ func _physics_process(delta: float) -> void:
 		cambiando_zona_c = true
 		if jugador is Personaje:
 			Partida.guardar_estado_personaje(jugador as Personaje)
+		if jugador != null:
+			var lugar: Vector3 = tren.to_local(jugador.global_position)
+			Partida.set_meta("posicion_vagon_final", lugar)
+			print("Metro: posicion guardada dentro del vagon: ", lugar)
 		Partida.estres = 0.0
 		Partida.cambiar_escena("res://zona_c_final.tscn")
 		return

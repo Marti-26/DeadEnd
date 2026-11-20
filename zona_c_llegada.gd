@@ -11,7 +11,13 @@ func _ready() -> void:
     metro.tiempo_detenido = 99999.0
     metro.tren.position.x = metro.x_parada + metro.distancia
     metro._x_antes = metro.tren.position.x
-    gata.global_position = metro.tren.to_global(Vector3(0, 0.3, 0))
+    var lugar: Vector3 = Partida.get_meta("posicion_vagon_final", Vector3(0.0, 0.3, 0.0))
+    if absf(lugar.x) > Metro.LARGO / 2.0 - 0.4 or absf(lugar.z) > Metro.ANCHO / 2.0 - 0.1:
+        push_warning("Zona C: posicion original fuera del vagon: " + str(lugar))
+    gata.global_position = metro.tren.to_global(lugar)
+    gata.velocity = Vector3.ZERO
+    Partida.remove_meta("posicion_vagon_final")
+    print("Zona C: misma posicion dentro del vagon: ", lugar)
     metro._capas_plataforma = gata.platform_floor_layers
     gata.platform_floor_layers = 0
     gata.set_physics_process(false)
