@@ -18,7 +18,7 @@ size = Vector3(0.12, 0.018, 0.26)
 size = Vector3(0.106, 0.003, 0.22)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vs0hq"]
-albedo_color = Color(0.6039216, 1, 0.99607843, 1)
+albedo_color = Color(0.85537255, 0.2292369, 0.6914051, 1)
 emission_enabled = true
 emission = Color(0.6039216, 1, 0.99607843, 1)
 emission_energy_multiplier = 2.0
@@ -33,7 +33,7 @@ shape = SubResource("BoxShape3D_3lpp0")
 mesh = SubResource("BoxMesh_3lpp0")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="MeshInstance3D" unique_id=260484486]
-light_color = Color(7.02709e-06, 0.74142313, 0.7423472, 1)
+light_color = Color(0.85490197, 0.22745098, 0.6901961, 1)
 light_energy = 0.86
 omni_range = 1.5
 
@@ -44,5 +44,6 @@ surface_material_override/0 = SubResource("StandardMaterial3D_vs0hq")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=1499386745]
 transform = Transform3D(1, 0, 0, 0, 0.98751825, -0.15750477, 0, 0.15750477, 0.98751825, 0, 0.012, -0.13)
+light_color = Color(0.9534356, 0.5771797, 0.82715404, 1)
 light_energy = 2.5
 spot_range = 3.5
