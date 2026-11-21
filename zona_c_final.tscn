@@ -1,8 +1,10 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bx06a41dsc2ba"]
 
 [ext_resource type="Shader" uid="uid://f3mgq7yukk58" path="res://zona_b/ladrillo.gdshader" id="1_q4wug"]
 [ext_resource type="Script" uid="uid://bvblnav03id4i" path="res://camara_fija.gd" id="20_yfmon"]
-
+[ext_resource type="Script" uid="uid://1jydpg4suwgi" path="res://personaje_zona_c.gd" id="ZC_6_r0ps7"]
+[ext_resource type="PackedScene" uid="uid://j5agalseuliu" path="res://gatita.tscn" id="ZC_7_61dqb"]
+[ext_resource type="Script" uid="uid://bh2bylh8kjoo8" path="res://dash.gd" id="ZC_9_dash"]
 [ext_resource type="Script" uid="uid://cqv5bh23wl3n3" path="res://interactuar.gd" id="ZC_10_inter"]
 [ext_resource type="Script" uid="uid://cjb6fbriprfvw" path="res://salud.gd" id="ZC_11_dnf35"]
 [ext_resource type="Script" uid="uid://bh3ei7hjfvyk5" path="res://ruido.gd" id="ZC_11_ruido"]
@@ -16,13 +18,13 @@
 [ext_resource type="AudioStream" uid="uid://xesjpdslfwad" path="res://Sonidos/Efectos/Celular.mp3" id="ZC_18_nvaji"]
 [ext_resource type="AudioStream" uid="uid://b24hk0wedmjao" path="res://Sonidos/Jugador/meow.wav" id="ZC_19_c70ak"]
 [ext_resource type="AudioStream" uid="uid://c6xn87qsspf2s" path="res://Sonidos/Jugador/meow2.mp3" id="ZC_20_58kpb"]
-[ext_resource type="Script" path="res://personaje_zona_c.gd" id="ZC_6_r0ps7"]
-[ext_resource type="PackedScene" uid="uid://j5agalseuliu" path="res://gatita.tscn" id="ZC_7_61dqb"]
-[ext_resource type="Script" uid="uid://bh2bylh8kjoo8" path="res://dash.gd" id="ZC_9_dash"]
-[ext_resource type="PackedScene" path="res://salida.tscn" id="ZC_salida"]
-[ext_resource type="Script" path="res://zona_c_final.gd" id="ZC_final"]
-[ext_resource type="PackedScene" path="res://metro.tscn" id="ZC_metro_llegada"]
-[ext_resource type="Script" path="res://zona_c_llegada.gd" id="ZC_llegada_script"]
+[ext_resource type="Script" uid="uid://cevsd0nr8ygop" path="res://zona_c_final.gd" id="ZC_final"]
+[ext_resource type="Script" uid="uid://cnvq1n54jkdfm" path="res://zona_c_llegada.gd" id="ZC_llegada_script"]
+[ext_resource type="PackedScene" uid="uid://nhfwj0jc7mm4" path="res://metro.tscn" id="ZC_metro_llegada"]
+[ext_resource type="PackedScene" uid="uid://df2osby5n6wnv" path="res://salida.tscn" id="ZC_salida"]
+
+[sub_resource type="BoxShape3D" id="ZC_SueloContinuo"]
+size = Vector3(80, 0.4, 9.8)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gdjdl"]
 render_priority = 0
@@ -439,32 +441,48 @@ ambient_light_energy = 0.0
 reflected_light_source = 1
 ssao_enabled = true
 
-[sub_resource type="BoxShape3D" id="ZC_SueloContinuo"]
-size = Vector3(80, 0.4, 9.8)
-
 [sub_resource type="CapsuleShape3D" id="ZC_Capsula"]
 radius = 0.35
 height = 1.75
-
-
-[sub_resource type="BoxMesh" id="ZC_TorniquetePoste"]
-size = Vector3(0.18, 1.45, 0.18)
 
 [sub_resource type="StandardMaterial3D" id="ZC_TorniqueteMetal"]
 albedo_color = Color(0.67, 0.72, 0.75, 1)
 metallic = 0.7
 roughness = 0.3
 
+[sub_resource type="BoxMesh" id="ZC_TorniquetePoste"]
+size = Vector3(0.18, 1.45, 0.18)
+
 [sub_resource type="BoxMesh" id="ZC_TorniqueteSuperior"]
 size = Vector3(0.25, 0.14, 1.8)
+
+
+[sub_resource type="BoxMesh" id="ZC_Ext_Barrera"]
+size = Vector3(18, 0.32, 0.05)
+
+[sub_resource type="BoxMesh" id="ZC_Ext_Superior"]
+size = Vector3(18, 0.05, 0.07)
+
+[sub_resource type="BoxShape3D" id="ZC_Ext_Colision"]
+size = Vector3(18, 2, 0.3)
+
+
+[sub_resource type="BoxMesh" id="ZC_RielPasilloPrincipal"]
+size = Vector3(18.4, 0.32, 0.05)
+
+[sub_resource type="BoxMesh" id="ZC_RielPasilloSuperior"]
+size = Vector3(18.4, 0.05, 0.07)
+
+[sub_resource type="BoxShape3D" id="ZC_RielPasilloChoque"]
+size = Vector3(18.4, 2, 0.3)
 
 [node name="ZonaCFinal" type="Node3D" unique_id=990845547]
 script = ExtResource("ZC_final")
 
-[node name="SueloContinuo" type="StaticBody3D" parent="."]
+[node name="SueloContinuo" type="StaticBody3D" parent="." unique_id=766542454]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.19, 1.2)
 
-[node name="Colision" type="CollisionShape3D" parent="SueloContinuo"]
+[node name="Colision" type="CollisionShape3D" parent="SueloContinuo" unique_id=1708820908]
 shape = SubResource("ZC_SueloContinuo")
 
 [node name="Estacion" type="Node3D" parent="." unique_id=606961767]
@@ -803,16 +821,19 @@ cast_shadow = 0
 mesh = SubResource("BoxMesh_y1l4h")
 
 [node name="Barrera0" type="MeshInstance3D" parent="Estacion" unique_id=1858054656]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.2, 0.62, 5.85)
 material_override = SubResource("ShaderMaterial_l7v0x")
 mesh = SubResource("BoxMesh_7q8t3")
 
 [node name="Barrera1" type="MeshInstance3D" parent="Estacion" unique_id=1701372814]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.75, 0.62, 5.85)
 material_override = SubResource("ShaderMaterial_l7v0x")
 mesh = SubResource("BoxMesh_o47im")
 
 [node name="Barrera2" type="MeshInstance3D" parent="Estacion" unique_id=224354803]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.75, 0.62, 5.85)
 material_override = SubResource("ShaderMaterial_l7v0x")
 mesh = SubResource("BoxMesh_o47im")
@@ -823,16 +844,19 @@ material_override = SubResource("ShaderMaterial_l7v0x")
 mesh = SubResource("BoxMesh_7q8t3")
 
 [node name="BarreraArriba0" type="MeshInstance3D" parent="Estacion" unique_id=1674920041]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.2, 0.8, 5.85)
 material_override = SubResource("StandardMaterial3D_lwqmj")
 mesh = SubResource("BoxMesh_fbpvk")
 
 [node name="BarreraArriba1" type="MeshInstance3D" parent="Estacion" unique_id=365331056]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.75, 0.8, 5.85)
 material_override = SubResource("StandardMaterial3D_lwqmj")
 mesh = SubResource("BoxMesh_5r1lg")
 
 [node name="BarreraArriba2" type="MeshInstance3D" parent="Estacion" unique_id=1877351949]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.75, 0.8, 5.85)
 material_override = SubResource("StandardMaterial3D_lwqmj")
 mesh = SubResource("BoxMesh_5r1lg")
@@ -849,21 +873,133 @@ multimesh = SubResource("MultiMesh_7kag1")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 5.85)
 
 [node name="Forma0" type="CollisionShape3D" parent="Estacion/MuroBarrera" unique_id=2137208397]
-disabled = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.2, 0, 0)
 shape = SubResource("BoxShape3D_6ose4")
+disabled = true
 
 [node name="Forma1" type="CollisionShape3D" parent="Estacion/MuroBarrera" unique_id=30833484]
+disabled = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.75, 0, 0)
 shape = SubResource("BoxShape3D_uoavy")
 
 [node name="Forma2" type="CollisionShape3D" parent="Estacion/MuroBarrera" unique_id=1938122867]
+disabled = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.75, 0, 0)
 shape = SubResource("BoxShape3D_uoavy")
 
 [node name="Forma3" type="CollisionShape3D" parent="Estacion/MuroBarrera" unique_id=405627288]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.2, 0, 0)
 shape = SubResource("BoxShape3D_6ose4")
+
+
+[node name="BarandasExtremos" type="Node3D" parent="Estacion"]
+
+[node name="PrincipalIzquierda" type="MeshInstance3D" parent="Estacion/BarandasExtremos"]
+visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29, 0.62, 5.85)
+material_override = SubResource("ShaderMaterial_l7v0x")
+mesh = SubResource("ZC_Ext_Barrera")
+
+[node name="SuperiorIzquierda" type="MeshInstance3D" parent="Estacion/BarandasExtremos"]
+visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29, 0.8, 5.85)
+material_override = SubResource("StandardMaterial3D_lwqmj")
+mesh = SubResource("ZC_Ext_Superior")
+
+[node name="ColisionIzquierda" type="StaticBody3D" parent="Estacion/BarandasExtremos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29, 1, 5.85)
+
+[node name="Forma" type="CollisionShape3D" parent="Estacion/BarandasExtremos/ColisionIzquierda"]
+disabled = true
+shape = SubResource("ZC_Ext_Colision")
+
+[node name="PrincipalDerecha" type="MeshInstance3D" parent="Estacion/BarandasExtremos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 0.62, 5.85)
+material_override = SubResource("ShaderMaterial_l7v0x")
+mesh = SubResource("ZC_Ext_Barrera")
+
+[node name="SuperiorDerecha" type="MeshInstance3D" parent="Estacion/BarandasExtremos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 0.8, 5.85)
+material_override = SubResource("StandardMaterial3D_lwqmj")
+mesh = SubResource("ZC_Ext_Superior")
+
+[node name="ColisionDerecha" type="StaticBody3D" parent="Estacion/BarandasExtremos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 1, 5.85)
+
+[node name="Forma" type="CollisionShape3D" parent="Estacion/BarandasExtremos/ColisionDerecha"]
+shape = SubResource("ZC_Ext_Colision")
+
+[node name="PosteIzq375" type="MeshInstance3D" parent="Estacion/BarandasExtremos"]
+visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -37.5, 0.42, 5.85)
+mesh = SubResource("BoxMesh_kxeo3")
+
+[node name="PosteIzq350" type="MeshInstance3D" parent="Estacion/BarandasExtremos"]
+visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35, 0.42, 5.85)
+mesh = SubResource("BoxMesh_kxeo3")
+
+[node name="PosteIzq325" type="MeshInstance3D" parent="Estacion/BarandasExtremos"]
+visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.5, 0.42, 5.85)
+mesh = SubResource("BoxMesh_kxeo3")
+
+[node name="PosteIzq300" type="MeshInstance3D" parent="Estacion/BarandasExtremos"]
+visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0.42, 5.85)
+mesh = SubResource("BoxMesh_kxeo3")
+
+[node name="PosteIzq275" type="MeshInstance3D" parent="Estacion/BarandasExtremos"]
+visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.5, 0.42, 5.85)
+mesh = SubResource("BoxMesh_kxeo3")
+
+[node name="PosteIzq250" type="MeshInstance3D" parent="Estacion/BarandasExtremos"]
+visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25, 0.42, 5.85)
+mesh = SubResource("BoxMesh_kxeo3")
+
+[node name="PosteIzq225" type="MeshInstance3D" parent="Estacion/BarandasExtremos"]
+visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.5, 0.42, 5.85)
+mesh = SubResource("BoxMesh_kxeo3")
+
+[node name="PosteIzq200" type="MeshInstance3D" parent="Estacion/BarandasExtremos"]
+visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0.42, 5.85)
+mesh = SubResource("BoxMesh_kxeo3")
+
+[node name="PosteDer200" type="MeshInstance3D" parent="Estacion/BarandasExtremos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0.42, 5.85)
+mesh = SubResource("BoxMesh_kxeo3")
+
+[node name="PosteDer225" type="MeshInstance3D" parent="Estacion/BarandasExtremos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.5, 0.42, 5.85)
+mesh = SubResource("BoxMesh_kxeo3")
+
+[node name="PosteDer250" type="MeshInstance3D" parent="Estacion/BarandasExtremos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 0.42, 5.85)
+mesh = SubResource("BoxMesh_kxeo3")
+
+[node name="PosteDer275" type="MeshInstance3D" parent="Estacion/BarandasExtremos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.5, 0.42, 5.85)
+mesh = SubResource("BoxMesh_kxeo3")
+
+[node name="PosteDer300" type="MeshInstance3D" parent="Estacion/BarandasExtremos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0.42, 5.85)
+mesh = SubResource("BoxMesh_kxeo3")
+
+[node name="PosteDer325" type="MeshInstance3D" parent="Estacion/BarandasExtremos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.5, 0.42, 5.85)
+mesh = SubResource("BoxMesh_kxeo3")
+
+[node name="PosteDer350" type="MeshInstance3D" parent="Estacion/BarandasExtremos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35, 0.42, 5.85)
+mesh = SubResource("BoxMesh_kxeo3")
+
+[node name="PosteDer375" type="MeshInstance3D" parent="Estacion/BarandasExtremos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.5, 0.42, 5.85)
+mesh = SubResource("BoxMesh_kxeo3")
 
 [node name="LimiteIzq" type="StaticBody3D" parent="Estacion" unique_id=253949037]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39.5, 2, 1.2)
@@ -1247,7 +1383,6 @@ current = true
 size = 10.0
 script = ExtResource("20_yfmon")
 objetivo = NodePath("../Personaje")
-desfase = Vector3(0, 14.141, 15.253)
 limite_x = 29.5
 limite_z = Vector2(0.8, 1.8)
 suavizado = 5.0
@@ -1257,35 +1392,35 @@ environment = SubResource("Environment_1vivr")
 
 [node name="Luces" type="Node3D" parent="." unique_id=1634789228]
 
-[node name="LuzCamino1" type="OmniLight3D" parent="Luces"]
+[node name="LuzCamino1" type="OmniLight3D" parent="Luces" unique_id=539113866]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 3.4, -1)
 light_color = Color(1, 0.86, 0.65, 1)
 light_energy = 0.3
 omni_range = 9.0
 omni_attenuation = 1.7
 
-[node name="LuzCamino2" type="OmniLight3D" parent="Luces"]
+[node name="LuzCamino2" type="OmniLight3D" parent="Luces" unique_id=1219834206]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 3.4, -1)
 light_color = Color(1, 0.86, 0.65, 1)
 light_energy = 0.42
 omni_range = 9.0
 omni_attenuation = 1.7
 
-[node name="LuzCamino3" type="OmniLight3D" parent="Luces"]
+[node name="LuzCamino3" type="OmniLight3D" parent="Luces" unique_id=1674092570]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 3.4, -1)
 light_color = Color(1, 0.86, 0.65, 1)
 light_energy = 0.55
 omni_range = 9.0
 omni_attenuation = 1.7
 
-[node name="LuzCamino4" type="OmniLight3D" parent="Luces"]
+[node name="LuzCamino4" type="OmniLight3D" parent="Luces" unique_id=1909463758]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 3.4, -1)
 light_color = Color(1, 0.86, 0.65, 1)
 light_energy = 0.7
 omni_range = 9.0
 omni_attenuation = 1.7
 
-[node name="LuzCamino5" type="OmniLight3D" parent="Luces"]
+[node name="LuzCamino5" type="OmniLight3D" parent="Luces" unique_id=1629445382]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, -1)
 light_color = Color(1, 0.86, 0.65, 1)
 light_energy = 0.85
@@ -1335,83 +1470,119 @@ omni_range = 9.0
 omni_attenuation = 1.5
 
 [node name="Personaje" type="CharacterBody3D" parent="." unique_id=241134809 node_paths=PackedStringArray("camara") groups=["jugador"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0.25, 7.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0.25, 7)
 script = ExtResource("ZC_6_r0ps7")
 camara = NodePath("../Camara")
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Personaje" unique_id=1801526638]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
 shape = SubResource("ZC_Capsula")
+
 [node name="Sprite" parent="Personaje" unique_id=1470565326 instance=ExtResource("ZC_7_61dqb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.98, 0)
+
 [node name="Dash" type="Node" parent="Personaje" unique_id=1769768472]
 script = ExtResource("ZC_9_dash")
+
 [node name="Interactuar" type="Node" parent="Personaje" unique_id=1152520143]
 script = ExtResource("ZC_10_inter")
+
 [node name="Ruido" type="Node" parent="Personaje" unique_id=822150098]
 script = ExtResource("ZC_11_ruido")
 radio = 4.0
+
 [node name="Esconderse" type="Node" parent="Personaje" unique_id=1816471655]
 script = ExtResource("ZC_12_escon")
+
 [node name="Salud" type="Node" parent="Personaje" unique_id=1551528763]
 script = ExtResource("ZC_11_dnf35")
+
 [node name="EscuchaJugador" type="AudioListener3D" parent="Personaje" unique_id=728419293]
 current = true
+
 [node name="Pasos" type="AudioStreamPlayer3D" parent="Personaje" unique_id=1229568540]
 stream = ExtResource("ZC_12_ajsmc")
 bus = &"Juego"
+
 [node name="Latidos" type="AudioStreamPlayer" parent="Personaje" unique_id=1594835931]
 stream = ExtResource("ZC_13_ig1hw")
 volume_db = -15.0
 bus = &"Juego"
+
 [node name="Respiracion" type="AudioStreamPlayer" parent="Personaje" unique_id=515183154]
 stream = ExtResource("ZC_14_np7jt")
 volume_db = -15.0
 bus = &"Juego"
+
 [node name="RecogerCelular" type="AudioStreamPlayer" parent="Personaje" unique_id=103972895]
 stream = ExtResource("ZC_15_bvosb")
+
 [node name="MusicaAudifonos" type="AudioStreamPlayer" parent="Personaje" unique_id=1810221598]
 stream = ExtResource("ZC_16_5ae7h")
 volume_db = -5.0
 bus = &"MusicaAudifonos"
+
 [node name="Linterna" type="AudioStreamPlayer" parent="Personaje" unique_id=672793666]
 stream = ExtResource("ZC_17_0kvga")
+
 [node name="Celular" type="AudioStreamPlayer" parent="Personaje" unique_id=1522240973]
 stream = ExtResource("ZC_18_nvaji")
 bus = &"Juego"
+
 [node name="MeowDash" type="AudioStreamPlayer" parent="Personaje" unique_id=128083913]
 stream = ExtResource("ZC_19_c70ak")
 volume_db = -3.0
 bus = &"Juego"
+
 [node name="MeowEsconderse" type="AudioStreamPlayer" parent="Personaje" unique_id=96827668]
 stream = ExtResource("ZC_20_58kpb")
 volume_db = -8.0
 bus = &"Juego"
 
-[node name="MetroLlegada" parent="." node_paths=PackedStringArray("camara_estacion") instance=ExtResource("ZC_metro_llegada")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7.0)
+[node name="MetroLlegada" parent="." unique_id=596009858 node_paths=PackedStringArray("camara_estacion") instance=ExtResource("ZC_metro_llegada")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7)
 camara_estacion = NodePath("../Camara")
-x_parada = 0.0
+x_parada = -23.0
 primera_llegada = 99999.0
 
-[node name="ControlLlegada" type="Node" parent="."]
+[node name="ControlLlegada" type="Node" parent="." unique_id=281579106]
 script = ExtResource("ZC_llegada_script")
 
-[node name="TorniqueteFinal" parent="." instance=ExtResource("ZC_salida")]
+[node name="TorniqueteFinal" parent="." unique_id=237516017 instance=ExtResource("ZC_salida")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 32, 0, 1.2)
 
-[node name="PosteIzquierdo" type="MeshInstance3D" parent="TorniqueteFinal"]
+[node name="PosteIzquierdo" type="MeshInstance3D" parent="TorniqueteFinal" unique_id=2110538307]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.725, -0.85)
-mesh = SubResource("ZC_TorniquetePoste")
 material_override = SubResource("ZC_TorniqueteMetal")
+mesh = SubResource("ZC_TorniquetePoste")
 
-[node name="PosteDerecho" type="MeshInstance3D" parent="TorniqueteFinal"]
+[node name="PosteDerecho" type="MeshInstance3D" parent="TorniqueteFinal" unique_id=1896394146]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.725, 0.85)
+material_override = SubResource("ZC_TorniqueteMetal")
 mesh = SubResource("ZC_TorniquetePoste")
-material_override = SubResource("ZC_TorniqueteMetal")
 
-[node name="Travesano" type="MeshInstance3D" parent="TorniqueteFinal"]
+[node name="Travesano" type="MeshInstance3D" parent="TorniqueteFinal" unique_id=1810796663]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
-mesh = SubResource("ZC_TorniqueteSuperior")
 material_override = SubResource("ZC_TorniqueteMetal")
+mesh = SubResource("ZC_TorniqueteSuperior")
+
+
+[node name="BarandaPasilloDespuesMetro" type="Node3D" parent="Estacion"]
+
+[node name="BarraPrincipal" type="MeshInstance3D" parent="Estacion/BarandaPasilloDespuesMetro"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0.62, 5.85)
+material_override = SubResource("ShaderMaterial_l7v0x")
+mesh = SubResource("ZC_RielPasilloPrincipal")
+
+[node name="BarraSuperior" type="MeshInstance3D" parent="Estacion/BarandaPasilloDespuesMetro"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0.8, 5.85)
+material_override = SubResource("StandardMaterial3D_lwqmj")
+mesh = SubResource("ZC_RielPasilloSuperior")
+
+[node name="Colision" type="StaticBody3D" parent="Estacion/BarandaPasilloDespuesMetro"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 1, 5.85)
+
+[node name="Forma" type="CollisionShape3D" parent="Estacion/BarandaPasilloDespuesMetro/Colision"]
+shape = SubResource("ZC_RielPasilloChoque")
 
 [connection signal="body_entered" from="TorniqueteFinal" to="." method="_on_torniquete_final_body_entered"]

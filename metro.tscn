@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://nhfwj0jc7mm4"]
 
-[ext_resource type="Script" uid="uid://c6bfglccmjtlq" path="res://metro.gd" id="1_metro"]
+[ext_resource type="Script" path="res://metro.gd" id="1_metro"]
 [ext_resource type="AudioStream" uid="uid://bxhjxnadl1anh" path="res://Sonidos/Metro/Llegadaysalida.wav" id="2_0ydtg"]
 [ext_resource type="AudioStream" uid="uid://bgrvv462dtje2" path="res://Sonidos/Metro/Puertas.wav" id="3_lmo8h"]
 [ext_resource type="AudioStream" uid="uid://bx0tlax5luvo4" path="res://Sonidos/Metro/Viaje.wav" id="4_6xgky"]
