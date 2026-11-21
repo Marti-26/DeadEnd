@@ -351,7 +351,7 @@ func _actualizar_linterna() -> void:
 
 
 func _asegurar_hud() -> void:
-	if get_tree() == null or get_tree().get_first_node_in_group(Grupos.HUD) != null:
+	if get_tree() == null or get_tree().get_first_node_in_group(Grupos.GRUPO_HUD) != null:
 		return
 	var hud: Node = ESCENA_HUD.instantiate()
 	var destino: Node = get_parent() if get_parent() != null else self

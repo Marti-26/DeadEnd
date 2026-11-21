@@ -13,7 +13,7 @@ var _celular: CelularMapa = null
 
 
 func _enter_tree() -> void:
-	add_to_group(Grupos.HUD)
+	add_to_group(Grupos.GRUPO_HUD)
 
 
 func _ready() -> void:
