@@ -8,16 +8,16 @@ extends Node3D
 const INICIO_LUZ: float = -32.0
 const FIN_LUZ: float = 34.0
 const BALDOSA_OSCURA: Color = Color(0.20, 0.28, 0.29)
-const BALDOSA_DORADA: Color = Color(0.90, 0.69, 0.30)
+const BALDOSA_DORADA: Color = Color(0.69, 0.61, 0.43)
 const JUNTA_OSCURA: Color = Color(0.09, 0.13, 0.14)
-const JUNTA_DORADA: Color = Color(0.38, 0.29, 0.15)
+const JUNTA_DORADA: Color = Color(0.30, 0.27, 0.21)
 const PARED_OSCURA: Color = Color(0.22, 0.34, 0.33)
-const PARED_DORADA: Color = Color(0.82, 0.63, 0.32)
+const PARED_DORADA: Color = Color(0.68, 0.60, 0.44)
 const PARED_JUNTA_OSCURA: Color = Color(0.08, 0.13, 0.13)
-const PARED_JUNTA_DORADA: Color = Color(0.35, 0.26, 0.14)
-const VENTANA_DORADA: Color = Color(0.87, 0.65, 0.28)
-const LUZ_VENTANA: Color = Color(1.0, 0.76, 0.40)
-const PARTELUZ_DORADO: Color = Color(0.61, 0.44, 0.23)
+const PARED_JUNTA_DORADA: Color = Color(0.29, 0.27, 0.22)
+const VENTANA_DORADA: Color = Color(0.74, 0.65, 0.47)
+const LUZ_VENTANA: Color = Color(1.0, 0.92, 0.76)
+const PARTELUZ_DORADO: Color = Color(0.55, 0.48, 0.36)
 
 var energias: Dictionary = {}
 var baldosas: Array[Dictionary] = []
@@ -82,12 +82,12 @@ func _process(delta: float) -> void:
 	avance_maximo = maxf(avance_maximo, personaje.global_position.x)
 	var progreso: float = smoothstep(INICIO_LUZ, FIN_LUZ, avance_maximo)
 
-	ambiente.environment.ambient_light_energy = lerpf(0.045, 0.95, progreso)
-	ambiente.environment.ambient_light_color = Color(1.0, 0.85, 0.63).lerp(Color(1.0, 0.91, 0.73), progreso)
+	ambiente.environment.ambient_light_energy = lerpf(0.045, 0.70, progreso)
+	ambiente.environment.ambient_light_color = Color(1.0, 0.85, 0.63).lerp(Color(1.0, 0.96, 0.87), progreso)
 
 	for luz in energias:
 		var cercania: float = smoothstep(-9.0, 7.0, avance_maximo - luz.global_position.x)
-		var intensidad: float = lerpf(0.65, 1.9, progreso)
+		var intensidad: float = lerpf(0.65, 1.3, progreso)
 		var objetivo: float = energias[luz] * cercania * intensidad
 		luz.light_energy = move_toward(luz.light_energy, objetivo, delta * 2.5)
 
@@ -116,7 +116,7 @@ func _process(delta: float) -> void:
 		ventana["mezcla"] = move_toward(ventana["mezcla"], objetivo, delta * 0.65)
 		var material: StandardMaterial3D = ventana["material"]
 		material.albedo_color = ventana["inicial"].lerp(VENTANA_DORADA, ventana["mezcla"])
-		material.emission_energy_multiplier = 0.45 * ventana["mezcla"]
+		material.emission_energy_multiplier = 0.20 * ventana["mezcla"]
 
 	for parteluz in parteluces:
 		var tramo: float = smoothstep(-16.0, FIN_LUZ, parteluz["x"])
