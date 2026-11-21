@@ -44,9 +44,11 @@ var avance = Vector3.ZERO
 
 # 
 const ESCENA_HUD: PackedScene = preload("res://hud.tscn")
-const TASA_BATERIA_REPOSO: float = 1.0 / 6.0
-const TASA_BATERIA_LINTERNA: float = 1.0 / 4.0
-const TASA_BATERIA_AUDIFONOS: float = 1.0 / 5.0
+const TASA_BATERIA_REPOSO: float = 1.0 / 4.0
+const TASA_BATERIA_LINTERNA: float = 1.0 / 2.0
+const TASA_BATERIA_AUDIFONOS: float = 1.0 / 3.0
+const TASA_BATERIA_CELULAR: float = 1.0 / 3.0
+
 const REDUCCION_ESTRES_AUDIFONOS: float = 10.0
 const RADIO_AUDICION_AUDIFONOS: float = 3.0
 const ESTRES_MAX: float = 100.0
@@ -328,12 +330,19 @@ func _consumir_bateria(delta: float) -> void:
 		tasa = TASA_BATERIA_LINTERNA
 	elif audifonos_activos:
 		tasa = TASA_BATERIA_AUDIFONOS
+	if _celular_abierto():
+		tasa += TASA_BATERIA_CELULAR
 	bateria = maxf(0.0, bateria - tasa * delta)
 
 	if bateria <= 0.0:
 		bateria = 0.0
 		linterna_encendida = false
 		Partida.perder()
+
+
+func _celular_abierto() -> bool:
+	var mapa: CelularMapa = get_tree().get_first_node_in_group(&"mapa_celular") as CelularMapa
+	return mapa != null and mapa.abierto
 
 
 func _actualizar_linterna() -> void:

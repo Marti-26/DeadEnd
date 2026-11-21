@@ -69,6 +69,7 @@ var _impulso_charm: float = 0.0
 
 
 func _ready() -> void:
+	add_to_group(&"mapa_celular")
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	theme = load("res://tema.tres") as Theme
