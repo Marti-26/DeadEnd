@@ -18,12 +18,13 @@
 [ext_resource type="AudioStream" uid="uid://xesjpdslfwad" path="res://Sonidos/Efectos/Celular.mp3" id="ZC_18_nvaji"]
 [ext_resource type="AudioStream" uid="uid://b24hk0wedmjao" path="res://Sonidos/Jugador/meow.wav" id="ZC_19_c70ak"]
 [ext_resource type="AudioStream" uid="uid://c6xn87qsspf2s" path="res://Sonidos/Jugador/meow2.mp3" id="ZC_20_58kpb"]
-[ext_resource type="Script" uid="uid://cevsd0nr8ygop" path="res://zona_c_final.gd" id="ZC_final"]
+[ext_resource type="Texture2D" uid="uid://b0nwn6powkllx" path="res://zona_c/exit_pixel_verde.png" id="ZC_ExitPixelTexture"]
+[ext_resource type="Script" uid="uid://cusc3wuj0ko33" path="res://zona_c_final.gd" id="ZC_final"]
 [ext_resource type="Script" uid="uid://cnvq1n54jkdfm" path="res://zona_c_llegada.gd" id="ZC_llegada_script"]
 [ext_resource type="PackedScene" uid="uid://nhfwj0jc7mm4" path="res://metro.tscn" id="ZC_metro_llegada"]
 [ext_resource type="PackedScene" uid="uid://df2osby5n6wnv" path="res://salida.tscn" id="ZC_salida"]
-
-[ext_resource type="Texture2D" path="res://exit_pixel_verde.png" id="ZC_ExitPixelTexture"]
+[ext_resource type="PackedScene" path="res://zona_c/escaleras_salida.tscn" id="ZC_escaleras"]
+[ext_resource type="Script" path="res://zona_c/pasajeros_anden.gd" id="ZC_peatones"]
 
 [sub_resource type="BoxShape3D" id="ZC_SueloContinuo"]
 size = Vector3(80, 0.4, 9.8)
@@ -101,6 +102,9 @@ shader_parameter/manchas = 0.072
 
 [sub_resource type="BoxMesh" id="BoxMesh_yc48o"]
 size = Vector3(80, 4.6, 0.4)
+
+[sub_resource type="BoxMesh" id="ZC_ParedTramoMesh"]
+size = Vector3(5, 4.6, 0.4)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yfmon"]
 albedo_color = Color(0.10215686, 0.13196078, 0.19156864, 1)
@@ -217,7 +221,7 @@ albedo_color = Color(0.09270588, 0.12282354, 0.18305883, 1)
 roughness = 0.9
 
 [sub_resource type="BoxMesh" id="BoxMesh_y1l4h"]
-size = Vector3(80, 1.1, 0.2)
+size = Vector3(74, 1.1, 0.2)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_l7v0x"]
 render_priority = 0
@@ -275,10 +279,10 @@ size = Vector3(18, 0.05, 0.07)
 [sub_resource type="BoxShape3D" id="ZC_Ext_Colision"]
 size = Vector3(18, 2, 0.3)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_meirr"]
-size = Vector3(0.4, 4, 10.3)
+[sub_resource type="BoxShape3D" id="ZC_Ext_ColisionSalida"]
+size = Vector3(13.8, 2, 0.3)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_8elvs"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_meirr"]
 size = Vector3(0.4, 4, 10.3)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u2bew"]
@@ -476,20 +480,6 @@ size = Vector3(0.18, 1.45, 0.18)
 [sub_resource type="BoxMesh" id="ZC_TorniqueteSuperior"]
 size = Vector3(0.25, 0.14, 1.8)
 
-
-[sub_resource type="BoxMesh" id="ZC_ExitPanelMesh"]
-size = Vector3(3.2, 0.85, 0.08)
-
-[sub_resource type="StandardMaterial3D" id="ZC_ExitPanelMaterial"]
-albedo_color = Color(0.07, 0.28, 0.12, 1)
-emission_enabled = true
-emission = Color(0.25, 1, 0.45, 1)
-emission_energy_multiplier = 1.25
-roughness = 0.4
-
-[sub_resource type="BoxMesh" id="ZC_ParedTramoMesh"]
-size = Vector3(5, 4.6, 0.4)
-
 [node name="ZonaCFinal" type="Node3D" unique_id=990845547]
 script = ExtResource("ZC_final")
 
@@ -651,90 +641,95 @@ cast_shadow = 0
 mesh = SubResource("BoxMesh_fcx76")
 
 [node name="Pared" type="MeshInstance3D" parent="Estacion" unique_id=725123765]
-visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9938812, 2.3, -3.9)
+visible = false
 material_override = SubResource("ShaderMaterial_3wdyd")
 mesh = SubResource("BoxMesh_yc48o")
 
-[node name="ParedTramos" type="Node3D" parent="Estacion"]
+[node name="ParedTramos" type="Node3D" parent="Estacion" unique_id=615801042]
 
-[node name="Tramo00" type="MeshInstance3D" parent="Estacion/ParedTramos"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.5061188, 2.3, -3.9)
+[node name="Tramo00" type="MeshInstance3D" parent="Estacion/ParedTramos" unique_id=393458660]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.50612, 2.3, -3.9)
 material_override = SubResource("ShaderMaterial_3wdyd")
 mesh = SubResource("ZC_ParedTramoMesh")
 
-[node name="Tramo01" type="MeshInstance3D" parent="Estacion/ParedTramos"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31.5061188, 2.3, -3.9)
+[node name="Tramo01" type="MeshInstance3D" parent="Estacion/ParedTramos" unique_id=1668537188]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31.506119, 2.3, -3.9)
 material_override = SubResource("ShaderMaterial_3wdyd")
 mesh = SubResource("ZC_ParedTramoMesh")
 
-[node name="Tramo02" type="MeshInstance3D" parent="Estacion/ParedTramos"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.5061188, 2.3, -3.9)
+[node name="Tramo02" type="MeshInstance3D" parent="Estacion/ParedTramos" unique_id=2108184015]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.506119, 2.3, -3.9)
 material_override = SubResource("ShaderMaterial_3wdyd")
 mesh = SubResource("ZC_ParedTramoMesh")
 
-[node name="Tramo03" type="MeshInstance3D" parent="Estacion/ParedTramos"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.5061188, 2.3, -3.9)
+[node name="Tramo03" type="MeshInstance3D" parent="Estacion/ParedTramos" unique_id=188449657]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.506119, 2.3, -3.9)
 material_override = SubResource("ShaderMaterial_3wdyd")
 mesh = SubResource("ZC_ParedTramoMesh")
 
-[node name="Tramo04" type="MeshInstance3D" parent="Estacion/ParedTramos"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5061188, 2.3, -3.9)
+[node name="Tramo04" type="MeshInstance3D" parent="Estacion/ParedTramos" unique_id=27204386]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.506119, 2.3, -3.9)
 material_override = SubResource("ShaderMaterial_3wdyd")
 mesh = SubResource("ZC_ParedTramoMesh")
 
-[node name="Tramo05" type="MeshInstance3D" parent="Estacion/ParedTramos"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5061188, 2.3, -3.9)
+[node name="Tramo05" type="MeshInstance3D" parent="Estacion/ParedTramos" unique_id=1292892755]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.506119, 2.3, -3.9)
 material_override = SubResource("ShaderMaterial_3wdyd")
 mesh = SubResource("ZC_ParedTramoMesh")
 
-[node name="Tramo06" type="MeshInstance3D" parent="Estacion/ParedTramos"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5061188, 2.3, -3.9)
+[node name="Tramo06" type="MeshInstance3D" parent="Estacion/ParedTramos" unique_id=688123751]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.506119, 2.3, -3.9)
 material_override = SubResource("ShaderMaterial_3wdyd")
 mesh = SubResource("ZC_ParedTramoMesh")
 
-[node name="Tramo07" type="MeshInstance3D" parent="Estacion/ParedTramos"]
+[node name="Tramo07" type="MeshInstance3D" parent="Estacion/ParedTramos" unique_id=1729390766]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5061188, 2.3, -3.9)
 material_override = SubResource("ShaderMaterial_3wdyd")
 mesh = SubResource("ZC_ParedTramoMesh")
 
-[node name="Tramo08" type="MeshInstance3D" parent="Estacion/ParedTramos"]
+[node name="Tramo08" type="MeshInstance3D" parent="Estacion/ParedTramos" unique_id=679086045]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.4938812, 2.3, -3.9)
 material_override = SubResource("ShaderMaterial_3wdyd")
 mesh = SubResource("ZC_ParedTramoMesh")
 
-[node name="Tramo09" type="MeshInstance3D" parent="Estacion/ParedTramos"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.4938812, 2.3, -3.9)
+[node name="Tramo09" type="MeshInstance3D" parent="Estacion/ParedTramos" unique_id=1865250561]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.493881, 2.3, -3.9)
 material_override = SubResource("ShaderMaterial_3wdyd")
 mesh = SubResource("ZC_ParedTramoMesh")
 
-[node name="Tramo10" type="MeshInstance3D" parent="Estacion/ParedTramos"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.4938812, 2.3, -3.9)
+[node name="Tramo10" type="MeshInstance3D" parent="Estacion/ParedTramos" unique_id=2018002332]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.493881, 2.3, -3.9)
 material_override = SubResource("ShaderMaterial_3wdyd")
 mesh = SubResource("ZC_ParedTramoMesh")
 
-[node name="Tramo11" type="MeshInstance3D" parent="Estacion/ParedTramos"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.4938812, 2.3, -3.9)
+[node name="Tramo11" type="MeshInstance3D" parent="Estacion/ParedTramos" unique_id=349564365]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.493881, 2.3, -3.9)
 material_override = SubResource("ShaderMaterial_3wdyd")
 mesh = SubResource("ZC_ParedTramoMesh")
 
-[node name="Tramo12" type="MeshInstance3D" parent="Estacion/ParedTramos"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.4938812, 2.3, -3.9)
+[node name="Tramo12" type="MeshInstance3D" parent="Estacion/ParedTramos" unique_id=1987584897]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.493881, 2.3, -3.9)
 material_override = SubResource("ShaderMaterial_3wdyd")
 mesh = SubResource("ZC_ParedTramoMesh")
 
-[node name="Tramo13" type="MeshInstance3D" parent="Estacion/ParedTramos"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.4938812, 2.3, -3.9)
+[node name="Tramo13" type="MeshInstance3D" parent="Estacion/ParedTramos" unique_id=289440633]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.493881, 2.3, -3.9)
 material_override = SubResource("ShaderMaterial_3wdyd")
 mesh = SubResource("ZC_ParedTramoMesh")
 
-[node name="Tramo14" type="MeshInstance3D" parent="Estacion/ParedTramos"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.4938812, 2.3, -3.9)
+[node name="Tramo14" type="MeshInstance3D" parent="Estacion/ParedTramos" unique_id=1031743058]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.49388, 2.3, -3.9)
 material_override = SubResource("ShaderMaterial_3wdyd")
 mesh = SubResource("ZC_ParedTramoMesh")
 
-[node name="Tramo15" type="MeshInstance3D" parent="Estacion/ParedTramos"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.4938812, 2.3, -3.9)
+[node name="Tramo15" type="MeshInstance3D" parent="Estacion/ParedTramos" unique_id=100479545]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.49388, 2.3, -3.9)
+material_override = SubResource("ShaderMaterial_3wdyd")
+mesh = SubResource("ZC_ParedTramoMesh")
+
+[node name="TramoSalida" type="MeshInstance3D" parent="Estacion/ParedTramos"]
+position = Vector3(43.49388, 2.3, -3.9)
 material_override = SubResource("ShaderMaterial_3wdyd")
 mesh = SubResource("ZC_ParedTramoMesh")
 
@@ -912,7 +907,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.575, 0, 0)
 shape = SubResource("BoxShape3D_o64cw")
 
 [node name="Borde" type="MeshInstance3D" parent="Estacion" unique_id=1146634566]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.55, 6.15)
+position = Vector3(-3, -0.55, 6.15)
 material_override = SubResource("StandardMaterial3D_ki7i3")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_y1l4h")
@@ -1010,20 +1005,22 @@ shape = SubResource("ZC_Ext_Colision")
 disabled = true
 
 [node name="PrincipalDerecha" type="MeshInstance3D" parent="Estacion/BarandasExtremos" unique_id=911637441]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 0.62, 5.85)
+position = Vector3(26.9, 0.62, 5.85)
+scale = Vector3(0.7666667, 1, 1)
 material_override = SubResource("ShaderMaterial_l7v0x")
 mesh = SubResource("ZC_Ext_Barrera")
 
 [node name="SuperiorDerecha" type="MeshInstance3D" parent="Estacion/BarandasExtremos" unique_id=938631745]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 0.8, 5.85)
+position = Vector3(26.9, 0.8, 5.85)
+scale = Vector3(0.7666667, 1, 1)
 material_override = SubResource("StandardMaterial3D_lwqmj")
 mesh = SubResource("ZC_Ext_Superior")
 
 [node name="ColisionDerecha" type="StaticBody3D" parent="Estacion/BarandasExtremos" unique_id=1334976968]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 1, 5.85)
+position = Vector3(26.9, 1, 5.85)
 
 [node name="Forma" type="CollisionShape3D" parent="Estacion/BarandasExtremos/ColisionDerecha" unique_id=1842635363]
-shape = SubResource("ZC_Ext_Colision")
+shape = SubResource("ZC_Ext_ColisionSalida")
 
 [node name="PosteIzq375" type="MeshInstance3D" parent="Estacion/BarandasExtremos" unique_id=630602469]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -37.5, 0.42, 5.85)
@@ -1089,28 +1086,14 @@ mesh = SubResource("BoxMesh_kxeo3")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.5, 0.42, 5.85)
 mesh = SubResource("BoxMesh_kxeo3")
 
-[node name="PosteDer350" type="MeshInstance3D" parent="Estacion/BarandasExtremos" unique_id=44161434]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35, 0.42, 5.85)
-mesh = SubResource("BoxMesh_kxeo3")
-
-[node name="PosteDer375" type="MeshInstance3D" parent="Estacion/BarandasExtremos" unique_id=1795182962]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.5, 0.42, 5.85)
-mesh = SubResource("BoxMesh_kxeo3")
-
 [node name="LimiteIzq" type="StaticBody3D" parent="Estacion" unique_id=253949037]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39.5, 2, 1.2)
 
 [node name="Forma" type="CollisionShape3D" parent="Estacion/LimiteIzq" unique_id=1124200609]
 shape = SubResource("BoxShape3D_meirr")
 
-[node name="LimiteDer" type="StaticBody3D" parent="Estacion" unique_id=833858205]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39.5, 2, 1.2)
-
-[node name="Forma" type="CollisionShape3D" parent="Estacion/LimiteDer" unique_id=1501823583]
-shape = SubResource("BoxShape3D_8elvs")
-
 [node name="Balasto" type="MeshInstance3D" parent="Estacion" unique_id=314515163]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 9.7)
+transform = Transform3D(1.1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -1, 9.7)
 material_override = SubResource("StandardMaterial3D_u2bew")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_fy6hu")
@@ -1119,25 +1102,25 @@ mesh = SubResource("BoxMesh_fy6hu")
 multimesh = SubResource("MultiMesh_nctbo")
 
 [node name="RielA5" type="MeshInstance3D" parent="Estacion" unique_id=305341171]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.77, 7)
+transform = Transform3D(1.1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -0.77, 7)
 material_override = SubResource("StandardMaterial3D_b27oy")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_1gvtk")
 
 [node name="RielB5" type="MeshInstance3D" parent="Estacion" unique_id=157647864]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.77, 8.4)
+transform = Transform3D(1.1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -0.77, 8.4)
 material_override = SubResource("StandardMaterial3D_b27oy")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_7w0qi")
 
 [node name="RielA8" type="MeshInstance3D" parent="Estacion" unique_id=1345158777]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.77, 10.7)
+transform = Transform3D(1.1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -0.77, 10.7)
 material_override = SubResource("StandardMaterial3D_b27oy")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_qeasw")
 
 [node name="RielB8" type="MeshInstance3D" parent="Estacion" unique_id=1403340592]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.77, 12.1)
+transform = Transform3D(1.1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -0.77, 12.1)
 material_override = SubResource("StandardMaterial3D_b27oy")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_u6o4d")
@@ -1490,16 +1473,208 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 1, 5.85)
 [node name="Forma" type="CollisionShape3D" parent="Estacion/BarandaPasilloDespuesMetro/Colision" unique_id=509828189]
 shape = SubResource("ZC_RielPasilloChoque")
 
+[node name="LetreroExitUnico" type="Node3D" parent="Estacion" unique_id=236642206]
+
+[node name="CartelExitPixel" type="Sprite3D" parent="Estacion/LetreroExitUnico" unique_id=728492625]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 2.5, -3.45)
+modulate = Color(0.78, 0.78, 0.78, 1)
+pixel_size = 0.014
+shaded = true
+texture_filter = 0
+texture = ExtResource("ZC_ExitPixelTexture")
+
+[node name="Ventana23" type="MeshInstance3D" parent="Estacion" unique_id=796396944]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 3.95, -3.68)
+material_override = SubResource("StandardMaterial3D_s13g8")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_nl18t")
+
+[node name="Parteluz23" type="MeshInstance3D" parent="Estacion" unique_id=1248269179]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 3.95, -3.66)
+material_override = SubResource("StandardMaterial3D_jodm4")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_fguuj")
+
+[node name="Ventana24" type="MeshInstance3D" parent="Estacion" unique_id=1904935968]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 3.95, -3.68)
+material_override = SubResource("StandardMaterial3D_s13g8")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_nl18t")
+
+[node name="Parteluz24" type="MeshInstance3D" parent="Estacion" unique_id=2091385303]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 3.95, -3.66)
+material_override = SubResource("StandardMaterial3D_jodm4")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_fguuj")
+
+[node name="Ventana25" type="MeshInstance3D" parent="Estacion" unique_id=914725588]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 3.95, -3.68)
+material_override = SubResource("StandardMaterial3D_s13g8")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_nl18t")
+
+[node name="Parteluz25" type="MeshInstance3D" parent="Estacion" unique_id=1980146562]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 3.95, -3.66)
+material_override = SubResource("StandardMaterial3D_jodm4")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_fguuj")
+
+[node name="Ventana26" type="MeshInstance3D" parent="Estacion" unique_id=1762488658]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 3.95, -3.68)
+material_override = SubResource("StandardMaterial3D_iqfy8")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_nl18t")
+
+[node name="Parteluz26" type="MeshInstance3D" parent="Estacion" unique_id=1011428347]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 3.95, -3.66)
+material_override = SubResource("StandardMaterial3D_jodm4")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_fguuj")
+
+[node name="Ventana27" type="MeshInstance3D" parent="Estacion" unique_id=1880368546]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 3.95, -3.68)
+material_override = SubResource("StandardMaterial3D_iqfy8")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_nl18t")
+
+[node name="Parteluz27" type="MeshInstance3D" parent="Estacion" unique_id=56931251]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 3.95, -3.66)
+material_override = SubResource("StandardMaterial3D_jodm4")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_fguuj")
+
+[node name="Ventana28" type="MeshInstance3D" parent="Estacion" unique_id=1950874975]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 3.95, -3.68)
+material_override = SubResource("StandardMaterial3D_iqfy8")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_nl18t")
+
+[node name="Parteluz28" type="MeshInstance3D" parent="Estacion" unique_id=208098210]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 3.95, -3.66)
+material_override = SubResource("StandardMaterial3D_jodm4")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_fguuj")
+
+[node name="Ventana29" type="MeshInstance3D" parent="Estacion" unique_id=2074092434]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 3.95, -3.68)
+material_override = SubResource("StandardMaterial3D_s13g8")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_nl18t")
+
+[node name="Parteluz29" type="MeshInstance3D" parent="Estacion" unique_id=1222715041]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 3.95, -3.66)
+material_override = SubResource("StandardMaterial3D_jodm4")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_fguuj")
+
+[node name="Ventana30" type="MeshInstance3D" parent="Estacion" unique_id=472741587]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23, 3.95, -3.68)
+material_override = SubResource("StandardMaterial3D_s13g8")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_nl18t")
+
+[node name="Parteluz30" type="MeshInstance3D" parent="Estacion" unique_id=1991948365]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23, 3.95, -3.66)
+material_override = SubResource("StandardMaterial3D_jodm4")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_fguuj")
+
+[node name="Ventana31" type="MeshInstance3D" parent="Estacion" unique_id=1441972449]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 3.95, -3.68)
+material_override = SubResource("StandardMaterial3D_s13g8")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_nl18t")
+
+[node name="Parteluz31" type="MeshInstance3D" parent="Estacion" unique_id=1074674115]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 3.95, -3.66)
+material_override = SubResource("StandardMaterial3D_jodm4")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_fguuj")
+
+[node name="Ventana32" type="MeshInstance3D" parent="Estacion" unique_id=964270436]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27, 3.95, -3.68)
+material_override = SubResource("StandardMaterial3D_iqfy8")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_nl18t")
+
+[node name="Parteluz32" type="MeshInstance3D" parent="Estacion" unique_id=33409656]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27, 3.95, -3.66)
+material_override = SubResource("StandardMaterial3D_jodm4")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_fguuj")
+
+[node name="Ventana33" type="MeshInstance3D" parent="Estacion" unique_id=448628732]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 3.95, -3.68)
+material_override = SubResource("StandardMaterial3D_iqfy8")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_nl18t")
+
+[node name="Parteluz33" type="MeshInstance3D" parent="Estacion" unique_id=52272168]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 3.95, -3.66)
+material_override = SubResource("StandardMaterial3D_jodm4")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_fguuj")
+
+[node name="Ventana34" type="MeshInstance3D" parent="Estacion" unique_id=422102190]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31, 3.95, -3.68)
+material_override = SubResource("StandardMaterial3D_iqfy8")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_nl18t")
+
+[node name="Parteluz34" type="MeshInstance3D" parent="Estacion" unique_id=1326011569]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31, 3.95, -3.66)
+material_override = SubResource("StandardMaterial3D_jodm4")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_fguuj")
+
+[node name="Ventana35" type="MeshInstance3D" parent="Estacion" unique_id=1060254987]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33, 3.95, -3.68)
+material_override = SubResource("StandardMaterial3D_s13g8")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_nl18t")
+
+[node name="Parteluz35" type="MeshInstance3D" parent="Estacion" unique_id=276627136]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33, 3.95, -3.66)
+material_override = SubResource("StandardMaterial3D_jodm4")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_fguuj")
+
+[node name="Ventana36" type="MeshInstance3D" parent="Estacion" unique_id=472304850]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35, 3.95, -3.68)
+material_override = SubResource("StandardMaterial3D_s13g8")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_nl18t")
+
+[node name="Parteluz36" type="MeshInstance3D" parent="Estacion" unique_id=1952129401]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35, 3.95, -3.66)
+material_override = SubResource("StandardMaterial3D_jodm4")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_fguuj")
+
+[node name="Ventana37" type="MeshInstance3D" parent="Estacion" unique_id=913252711]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37, 3.95, -3.68)
+material_override = SubResource("StandardMaterial3D_s13g8")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_nl18t")
+
+[node name="Parteluz37" type="MeshInstance3D" parent="Estacion" unique_id=755578390]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37, 3.95, -3.66)
+material_override = SubResource("StandardMaterial3D_jodm4")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_fguuj")
+
 [node name="Camara" type="Camera3D" parent="." unique_id=923045290 node_paths=PackedStringArray("objetivo")]
 transform = Transform3D(1, 0, 0, 0, 0.76604444, 0.6427876, 0, -0.6427876, 0.76604444, -5.2, 14.141312, 16.052979)
 projection = 1
+keep_aspect = 0
 current = true
-size = 10.0
+size = 17.6
 script = ExtResource("20_yfmon")
 objetivo = NodePath("../Personaje")
-limite_x = 29.5
+limite_x = 38.2
 limite_z = Vector2(0.8, 1.8)
 suavizado = 5.0
+fijar_encuadre_en_limite = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1441288618]
 environment = SubResource("Environment_1vivr")
@@ -1583,10 +1758,11 @@ light_energy = 3.2
 omni_range = 9.0
 omni_attenuation = 1.5
 
-[node name="Personaje" type="CharacterBody3D" parent="." unique_id=241134809 node_paths=PackedStringArray("camara") groups=["jugador"]]
+[node name="Personaje" type="CharacterBody3D" parent="." unique_id=241134809 node_paths=PackedStringArray("camara", "escaleras") groups=["jugador"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0.25, 7)
 script = ExtResource("ZC_6_r0ps7")
 camara = NodePath("../Camara")
+escaleras = NodePath("../EscalerasSalida")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Personaje" unique_id=1801526638]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
@@ -1680,198 +1856,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
 material_override = SubResource("ZC_TorniqueteMetal")
 mesh = SubResource("ZC_TorniqueteSuperior")
 
+[node name="EscalerasSalida" parent="." instance=ExtResource("ZC_escaleras")]
+position = Vector3(34, 0, 1.2)
 
+[node name="PasajerosAnden" type="Node3D" parent="." node_paths=PackedStringArray("jugador", "camara", "letrero_exit")]
+script = ExtResource("ZC_peatones")
+jugador = NodePath("../Personaje")
+camara = NodePath("../Camara")
+letrero_exit = NodePath("../Estacion/LetreroExitUnico/CartelExitPixel")
 
-
-[node name="LetreroExitUnico" type="Node3D" parent="Estacion"]
-
-[node name="CartelExitPixel" type="Sprite3D" parent="Estacion/LetreroExitUnico"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 2.5, -3.45)
-pixel_size = 0.014
-texture = ExtResource("ZC_ExitPixelTexture")
-texture_filter = 0
-shaded = true
-modulate = Color(0.78, 0.78, 0.78, 1)
-
-
-[node name="Ventana23" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 3.95, -3.68)
-material_override = SubResource("StandardMaterial3D_s13g8")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_nl18t")
-
-[node name="Parteluz23" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 3.95, -3.66)
-material_override = SubResource("StandardMaterial3D_jodm4")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_fguuj")
-
-[node name="Ventana24" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 3.95, -3.68)
-material_override = SubResource("StandardMaterial3D_s13g8")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_nl18t")
-
-[node name="Parteluz24" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 3.95, -3.66)
-material_override = SubResource("StandardMaterial3D_jodm4")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_fguuj")
-
-[node name="Ventana25" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 3.95, -3.68)
-material_override = SubResource("StandardMaterial3D_s13g8")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_nl18t")
-
-[node name="Parteluz25" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 3.95, -3.66)
-material_override = SubResource("StandardMaterial3D_jodm4")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_fguuj")
-
-[node name="Ventana26" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 3.95, -3.68)
-material_override = SubResource("StandardMaterial3D_iqfy8")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_nl18t")
-
-[node name="Parteluz26" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 3.95, -3.66)
-material_override = SubResource("StandardMaterial3D_jodm4")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_fguuj")
-
-[node name="Ventana27" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 3.95, -3.68)
-material_override = SubResource("StandardMaterial3D_iqfy8")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_nl18t")
-
-[node name="Parteluz27" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 3.95, -3.66)
-material_override = SubResource("StandardMaterial3D_jodm4")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_fguuj")
-
-[node name="Ventana28" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 3.95, -3.68)
-material_override = SubResource("StandardMaterial3D_iqfy8")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_nl18t")
-
-[node name="Parteluz28" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 3.95, -3.66)
-material_override = SubResource("StandardMaterial3D_jodm4")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_fguuj")
-
-[node name="Ventana29" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 3.95, -3.68)
-material_override = SubResource("StandardMaterial3D_s13g8")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_nl18t")
-
-[node name="Parteluz29" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 3.95, -3.66)
-material_override = SubResource("StandardMaterial3D_jodm4")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_fguuj")
-
-[node name="Ventana30" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23, 3.95, -3.68)
-material_override = SubResource("StandardMaterial3D_s13g8")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_nl18t")
-
-[node name="Parteluz30" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23, 3.95, -3.66)
-material_override = SubResource("StandardMaterial3D_jodm4")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_fguuj")
-
-[node name="Ventana31" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 3.95, -3.68)
-material_override = SubResource("StandardMaterial3D_s13g8")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_nl18t")
-
-[node name="Parteluz31" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 3.95, -3.66)
-material_override = SubResource("StandardMaterial3D_jodm4")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_fguuj")
-
-[node name="Ventana32" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27, 3.95, -3.68)
-material_override = SubResource("StandardMaterial3D_iqfy8")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_nl18t")
-
-[node name="Parteluz32" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27, 3.95, -3.66)
-material_override = SubResource("StandardMaterial3D_jodm4")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_fguuj")
-
-[node name="Ventana33" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 3.95, -3.68)
-material_override = SubResource("StandardMaterial3D_iqfy8")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_nl18t")
-
-[node name="Parteluz33" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 3.95, -3.66)
-material_override = SubResource("StandardMaterial3D_jodm4")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_fguuj")
-
-[node name="Ventana34" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31, 3.95, -3.68)
-material_override = SubResource("StandardMaterial3D_iqfy8")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_nl18t")
-
-[node name="Parteluz34" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31, 3.95, -3.66)
-material_override = SubResource("StandardMaterial3D_jodm4")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_fguuj")
-
-[node name="Ventana35" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33, 3.95, -3.68)
-material_override = SubResource("StandardMaterial3D_s13g8")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_nl18t")
-
-[node name="Parteluz35" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33, 3.95, -3.66)
-material_override = SubResource("StandardMaterial3D_jodm4")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_fguuj")
-
-[node name="Ventana36" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35, 3.95, -3.68)
-material_override = SubResource("StandardMaterial3D_s13g8")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_nl18t")
-
-[node name="Parteluz36" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35, 3.95, -3.66)
-material_override = SubResource("StandardMaterial3D_jodm4")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_fguuj")
-
-[node name="Ventana37" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37, 3.95, -3.68)
-material_override = SubResource("StandardMaterial3D_s13g8")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_nl18t")
-
-[node name="Parteluz37" type="MeshInstance3D" parent="Estacion"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37, 3.95, -3.66)
-material_override = SubResource("StandardMaterial3D_jodm4")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_fguuj")
-
-[connection signal="body_entered" from="TorniqueteFinal" to="." method="_on_torniquete_final_body_entered"]
+[connection signal="body_entered" from="EscalerasSalida/Meta" to="." method="_on_salida_superficie_body_entered"]

@@ -4,6 +4,7 @@ extends Node3D
 @onready var luces: Node3D = $Luces
 @onready var ambiente: WorldEnvironment = $WorldEnvironment
 @onready var estacion: Node3D = $Estacion
+@onready var destello: Sprite3D = $EscalerasSalida/Destello
 
 const INICIO_LUZ: float = -32.0
 const FIN_LUZ: float = 34.0
@@ -18,7 +19,6 @@ const PARED_JUNTA_DORADA: Color = Color(0.29, 0.27, 0.22)
 const VENTANA_DORADA: Color = Color(0.74, 0.65, 0.47)
 const LUZ_VENTANA: Color = Color(1.0, 0.92, 0.76)
 const PARTELUZ_DORADO: Color = Color(0.55, 0.48, 0.36)
-
 var energias: Dictionary = {}
 var baldosas: Array[Dictionary] = []
 var paredes: Array[Dictionary] = []
@@ -139,23 +139,31 @@ func _ocultar_barra_estres() -> void:
 	if barra != null:
 		barra.hide()
 
-func _on_torniquete_final_body_entered(cuerpo: Node3D) -> void:
+func _on_salida_superficie_body_entered(cuerpo: Node3D) -> void:
 	if terminado or not cuerpo.is_in_group("jugador"):
 		return
 	if cuerpo.bateria <= 0.0:
 		return
 	terminado = true
 	cuerpo.set_physics_process(false)
+	cuerpo.set_process(false)
 	var capa := CanvasLayer.new()
+	capa.layer = 20
 	add_child(capa)
 	var fondo := ColorRect.new()
-	fondo.color = Color(0.02, 0.03, 0.05, 0.88)
-	fondo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	fondo.color = Color(1.0, 1.0, 1.0, 0.0)
 	capa.add_child(fondo)
+	fondo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var mensaje := Label.new()
 	mensaje.text = "FIN\nDEAD END"
 	mensaje.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	mensaje.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	mensaje.add_theme_font_size_override("font_size", 44)
-	mensaje.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	mensaje.modulate.a = 0.0
 	fondo.add_child(mensaje)
+	mensaje.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var cierre := create_tween()
+	cierre.tween_property(destello, "modulate:a", 1.0, 0.22)
+	cierre.tween_interval(0.16)
+	cierre.tween_property(fondo, "color", Color(0.02, 0.03, 0.05), 0.65)
+	cierre.parallel().tween_property(mensaje, "modulate:a", 1.0, 0.65)
