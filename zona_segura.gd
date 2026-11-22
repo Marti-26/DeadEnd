@@ -53,6 +53,7 @@ const LADRILLO: Shader = preload("res://zona_b/ladrillo.gdshader")
 const FUENTE: FontFile = preload("res://assets/font/ShareTechMono-Regular.ttf")
 const CONO_LUZ: Shader = preload("res://zona_b/cono_luz.gdshader")
 const POSTER_PARED: Script = preload("res://poster_pared.gd")
+const DESTELLOS: Script = preload("res://destellos.gd")
 const PISO_AZUL: Color = Color(0.22, 0.25, 0.36)
 const PISO_JUNTA: Color = Color(0.06, 0.07, 0.12)
 const PARED_AZUL: Color = Color(0.13, 0.14, 0.25)
@@ -435,6 +436,11 @@ func _poster(p: Node3D, ruta: String, x_poster: float, nombre: String) -> void:
 	_caja(borde, Vector3(g, alto_b + g, 0.01), centro + Vector3(ancho_b * 0.5, 0, 0.01), azul)
 	for hijo: Node in borde.get_children():
 		(hijo as GeometryInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	var brillo: MeshInstance3D = DESTELLOS.new() as MeshInstance3D
+	brillo.name = "Brillo" + nombre
+	brillo.set("tamano", tam)
+	brillo.position = centro + Vector3(0, 0, 0.006)
+	p.add_child(brillo)
 	if Engine.is_editor_hint():
 		return
 	var area: Area3D = Area3D.new()

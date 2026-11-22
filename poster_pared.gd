@@ -31,6 +31,7 @@ extends Node3D
 		_reconstruir()
 
 const FUENTE: FontFile = preload("res://assets/font/ShareTechMono-Regular.ttf")
+const DESTELLOS: Script = preload("res://destellos.gd")
 const CODIGO_SOMBREADO: String = """
 shader_type spatial;
 uniform sampler2D textura : source_color, filter_linear_mipmap_anisotropic;
@@ -119,6 +120,12 @@ func _reconstruir() -> void:
 	_linea(azul, Vector3(ancho_b + g, g, 0.01), Vector3(0, -alto_b * 0.5, 0.01))
 	_linea(azul, Vector3(g, alto_b + g, 0.01), Vector3(-ancho_b * 0.5, 0, 0.01))
 	_linea(azul, Vector3(g, alto_b + g, 0.01), Vector3(ancho_b * 0.5, 0, 0.01))
+	var brillo: MeshInstance3D = DESTELLOS.new() as MeshInstance3D
+	brillo.name = "Brillo"
+	brillo.set("tamano", tam)
+	brillo.set("textura", textura)
+	brillo.position = Vector3(0, 0, 0.006)
+	contenido.add_child(brillo)
 	if Engine.is_editor_hint():
 		return
 	var area: Area3D = Area3D.new()
