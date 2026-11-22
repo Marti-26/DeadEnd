@@ -11,6 +11,9 @@ const ESCENA: String = "res://dialogo.tscn"
 @export var rojo_texto_enemigo: Color = Color(1.0, 0.7, 0.7)
 @export var borde_letra_enemigo: Color = Color(0.45, 0.02, 0.05, 0.9)
 @export var brillo_letra_enemigo: Color = Color(1.0, 0.12, 0.18, 0.45)
+@export var altura_retrato: float = 0.55
+@export var retrato_tapado: float = 0.3
+@export var salto_retrato: float = 22.0
 
 @onready var cuadro: Control = $Cuadro
 @onready var nombre: Label = $Cuadro/Columnas/Nombre
@@ -23,6 +26,13 @@ var _tween: Tween = null
 var _estilo_normal: StyleBox = null
 var _estilo_enemigo: StyleBox = null
 var _color_nombre: Color = Color.WHITE
+var _retrato: TextureRect = null
+var _marcos: SpriteFrames = null
+var _animacion: StringName = &"default"
+var _cuadro_retrato: int = 0
+var _tiempo_retrato: float = 0.0
+var _base_retrato: float = 0.0
+var _tween_salto: Tween = null
 
 
 static func obtener(arbol: SceneTree) -> Dialogo:
@@ -43,6 +53,15 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	cuadro.visible = false
 	cuadro.modulate.a = 0.0
+	_retrato = TextureRect.new()
+	_retrato.name = "Retrato"
+	_retrato.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_retrato.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_retrato.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	_retrato.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_retrato.visible = false
+	add_child(_retrato)
+	move_child(_retrato, 0)
 	_estilo_normal = cuadro.get_theme_stylebox("panel")
 	_color_nombre = nombre.get_theme_color("font_color")
 	if _estilo_normal is StyleBoxFlat:
@@ -58,6 +77,7 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	_animar_retrato(delta)
 	if not cuadro.visible:
 		if sonido_texto.playing:
 			sonido_texto.stop()
@@ -84,8 +104,9 @@ func _process(delta: float) -> void:
 			ocultar()
 
 
-func mostrar(quien: String, frase: String, duracion: float = 4.0, enemigo: bool = false) -> void:
+func mostrar(quien: String, frase: String, duracion: float = 4.0, enemigo: bool = false, marcos: SpriteFrames = null, animacion: StringName = &"default") -> void:
 	_aplicar_estilo(enemigo)
+	_poner_retrato(marcos, animacion)
 	nombre.text = quien
 	texto.text = frase
 	texto.visible_characters = 0
@@ -110,12 +131,9 @@ func mostrar(quien: String, frase: String, duracion: float = 4.0, enemigo: bool 
 
 	if estaba_oculto:
 		cuadro.modulate.a = 0.0
-		_tween.tween_property(cuadro, "modulate:a", 0.8, 0.05)
-		_tween.tween_property(cuadro, "modulate:a", 0.15, 0.05)
-		_tween.tween_property(cuadro, "modulate:a", 1.0, 0.06)
-		_tween.tween_property(cuadro, "modulate:a", 0.45, 0.04)
 
-	_tween.tween_property(cuadro, "modulate:a", 1.0, 0.1)
+	_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	_tween.tween_property(cuadro, "modulate:a", 1.0, tiempo_fundido * 0.6)
 
 
 func ocultar() -> void:
@@ -161,6 +179,64 @@ func _aplicar_estilo(enemigo: bool) -> void:
 		for etiqueta: Label in [nombre, texto]:
 			etiqueta.remove_theme_color_override("font_outline_color")
 			etiqueta.remove_theme_color_override("font_shadow_color")
+
+
+func _poner_retrato(marcos: SpriteFrames, animacion: StringName) -> void:
+	if marcos == null or not marcos.has_animation(animacion) or marcos.get_frame_count(animacion) == 0:
+		_marcos = null
+		_retrato.visible = false
+		return
+	var mismo: bool = marcos == _marcos and animacion == _animacion and _retrato.visible
+	_marcos = marcos
+	_animacion = animacion
+	if not mismo:
+		_cuadro_retrato = 0
+		_tiempo_retrato = 0.0
+		_retrato.texture = marcos.get_frame_texture(animacion, 0)
+		_retrato.modulate.a = cuadro.modulate.a if cuadro.visible else 0.0
+	_ubicar_retrato()
+	_retrato.visible = true
+	_saltar_retrato()
+
+
+func _ubicar_retrato() -> void:
+	var textura: Texture2D = _retrato.texture
+	if textura == null:
+		return
+	var pantalla: Vector2 = get_viewport().get_visible_rect().size
+	var alto: float = pantalla.y * altura_retrato
+	var ancho: float = alto * float(textura.get_width()) / float(textura.get_height())
+	_retrato.size = Vector2(ancho, alto)
+	var arriba_caja: float = pantalla.y * cuadro.anchor_top + cuadro.offset_top
+	var derecha_caja: float = pantalla.x * cuadro.anchor_right + cuadro.offset_right
+	_base_retrato = arriba_caja - alto * (1.0 - retrato_tapado)
+	_retrato.position = Vector2(derecha_caja - ancho - 12.0, _base_retrato)
+
+
+func _saltar_retrato() -> void:
+	if _tween_salto != null:
+		_tween_salto.kill()
+	_retrato.position.y = _base_retrato
+	_tween_salto = create_tween()
+	_tween_salto.tween_property(_retrato, "position:y", _base_retrato - salto_retrato, 0.11).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_tween_salto.tween_property(_retrato, "position:y", _base_retrato, 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+
+
+func _animar_retrato(delta: float) -> void:
+	if _retrato == null:
+		return
+	if not cuadro.visible or _marcos == null:
+		_retrato.visible = false
+		return
+	_retrato.modulate.a = cuadro.modulate.a
+	var cantidad: int = _marcos.get_frame_count(_animacion)
+	if cantidad <= 1:
+		return
+	_tiempo_retrato += delta * _marcos.get_animation_speed(_animacion)
+	if _tiempo_retrato >= 1.0:
+		_tiempo_retrato -= 1.0
+		_cuadro_retrato = (_cuadro_retrato + 1) % cantidad
+		_retrato.texture = _marcos.get_frame_texture(_animacion, _cuadro_retrato)
 
 
 func esta_visible() -> bool:
