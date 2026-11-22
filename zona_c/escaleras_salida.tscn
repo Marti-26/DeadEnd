@@ -1,0 +1,367 @@
+[gd_scene format=3]
+
+[ext_resource type="Shader" path="res://zona_b/ladrillo.gdshader" id="1_ladrillo"]
+
+[sub_resource type="ShaderMaterial" id="MuroLateral"]
+shader = ExtResource("1_ladrillo")
+shader_parameter/color_ladrillo = Color(0.45, 0.42, 0.33, 1)
+shader_parameter/color_junta = Color(0.20, 0.19, 0.15, 1)
+shader_parameter/tamano = Vector2(0.62, 0.28)
+shader_parameter/manchas = 0.09
+
+[sub_resource type="StandardMaterial3D" id="Hormigon"]
+albedo_color = Color(0.53, 0.52, 0.46, 1)
+roughness = 0.92
+
+[sub_resource type="StandardMaterial3D" id="Antideslizante"]
+albedo_color = Color(0.78, 0.65, 0.31, 1)
+roughness = 0.88
+
+[sub_resource type="StandardMaterial3D" id="Metal"]
+albedo_color = Color(0.28, 0.36, 0.34, 1)
+metallic = 0.6
+roughness = 0.33
+
+[sub_resource type="BoxShape3D" id="Rampa"]
+size = Vector3(12.52836781, 0.2, 9.8)
+
+[sub_resource type="BoxMesh" id="Peldano"]
+material = SubResource("Hormigon")
+size = Vector3(1, 0.3, 9.8)
+
+[sub_resource type="BoxMesh" id="Franja"]
+material = SubResource("Antideslizante")
+size = Vector3(0.065, 0.012, 9.7)
+
+[sub_resource type="StandardMaterial3D" id="MaterialContrahuella"]
+albedo_color = Color(0.32, 0.34, 0.30, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="Contrahuella"]
+material = SubResource("MaterialContrahuella")
+size = Vector3(0.02, 0.25, 9.78)
+
+[sub_resource type="BoxMesh" id="Poste"]
+material = SubResource("Metal")
+size = Vector3(0.085, 0.72, 0.085)
+
+[sub_resource type="BoxMesh" id="Descanso"]
+material = SubResource("Hormigon")
+size = Vector3(2, 0.4, 9.8)
+
+[sub_resource type="BoxShape3D" id="DescansoForma"]
+size = Vector3(2, 0.4, 9.8)
+
+[sub_resource type="BoxShape3D" id="ParapetoForma"]
+size = Vector3(12.52836781, 0.76, 0.24)
+
+[sub_resource type="BoxMesh" id="Pasamanos"]
+material = SubResource("Metal")
+size = Vector3(12.52836781, 0.085, 0.12)
+
+[sub_resource type="BoxMesh" id="Lateral"]
+material = SubResource("Hormigon")
+size = Vector3(2, 0.9, 0.24)
+
+[sub_resource type="BoxShape3D" id="LateralForma"]
+size = Vector3(2, 0.9, 0.24)
+
+[sub_resource type="BoxShape3D" id="Meta"]
+size = Vector3(1, 2.25, 10.1)
+
+[sub_resource type="Gradient" id="GradienteDestello"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.35, 0.68, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.08, 1, 1, 1, 0.38, 1, 1, 1, 0.86)
+
+[sub_resource type="GradientTexture2D" id="TexturaDestello"]
+gradient = SubResource("GradienteDestello")
+width = 256
+height = 256
+fill_to = Vector2(1, 0)
+
+[node name="EscalerasSalida" type="Node3D"]
+
+[node name="MuroBajoEscalera" type="CSGPolygon3D" parent="."]
+position = Vector3(0, 0, 4.93)
+polygon = PackedVector2Array(0, -1.12, 14, -1.12, 14, 3.38, 12, 3.38, 0, -0.16)
+depth = 0.26
+material = SubResource("MuroLateral")
+
+[node name="Rampa" type="StaticBody3D" parent="."]
+position = Vector3(6.028735, 1.704217, 0)
+rotation = Vector3(0, 0, 0.29145679)
+
+[node name="Colision" type="CollisionShape3D" parent="Rampa"]
+shape = SubResource("Rampa")
+
+[node name="Escalon1" type="MeshInstance3D" parent="."]
+position = Vector3(0.5, 0.00, 0)
+mesh = SubResource("Peldano")
+
+[node name="Franja1" type="MeshInstance3D" parent="."]
+position = Vector3(0.09, 0.15, 0)
+mesh = SubResource("Franja")
+
+[node name="Escalon2" type="MeshInstance3D" parent="."]
+position = Vector3(1.5, 0.30, 0)
+mesh = SubResource("Peldano")
+
+[node name="Franja2" type="MeshInstance3D" parent="."]
+position = Vector3(1.09, 0.45, 0)
+mesh = SubResource("Franja")
+
+[node name="Escalon3" type="MeshInstance3D" parent="."]
+position = Vector3(2.5, 0.60, 0)
+mesh = SubResource("Peldano")
+
+[node name="Franja3" type="MeshInstance3D" parent="."]
+position = Vector3(2.09, 0.75, 0)
+mesh = SubResource("Franja")
+
+[node name="Escalon4" type="MeshInstance3D" parent="."]
+position = Vector3(3.5, 0.90, 0)
+mesh = SubResource("Peldano")
+
+[node name="Franja4" type="MeshInstance3D" parent="."]
+position = Vector3(3.09, 1.05, 0)
+mesh = SubResource("Franja")
+
+[node name="Escalon5" type="MeshInstance3D" parent="."]
+position = Vector3(4.5, 1.20, 0)
+mesh = SubResource("Peldano")
+
+[node name="Franja5" type="MeshInstance3D" parent="."]
+position = Vector3(4.09, 1.35, 0)
+mesh = SubResource("Franja")
+
+[node name="Escalon6" type="MeshInstance3D" parent="."]
+position = Vector3(5.5, 1.50, 0)
+mesh = SubResource("Peldano")
+
+[node name="Franja6" type="MeshInstance3D" parent="."]
+position = Vector3(5.09, 1.65, 0)
+mesh = SubResource("Franja")
+
+[node name="Escalon7" type="MeshInstance3D" parent="."]
+position = Vector3(6.5, 1.80, 0)
+mesh = SubResource("Peldano")
+
+[node name="Franja7" type="MeshInstance3D" parent="."]
+position = Vector3(6.09, 1.95, 0)
+mesh = SubResource("Franja")
+
+[node name="Escalon8" type="MeshInstance3D" parent="."]
+position = Vector3(7.5, 2.10, 0)
+mesh = SubResource("Peldano")
+
+[node name="Franja8" type="MeshInstance3D" parent="."]
+position = Vector3(7.09, 2.25, 0)
+mesh = SubResource("Franja")
+
+[node name="Contrahuella2" type="MeshInstance3D" parent="."]
+position = Vector3(0.992, 0.308, 0)
+mesh = SubResource("Contrahuella")
+
+[node name="Contrahuella3" type="MeshInstance3D" parent="."]
+position = Vector3(1.992, 0.608, 0)
+mesh = SubResource("Contrahuella")
+
+[node name="Contrahuella4" type="MeshInstance3D" parent="."]
+position = Vector3(2.992, 0.908, 0)
+mesh = SubResource("Contrahuella")
+
+[node name="Contrahuella5" type="MeshInstance3D" parent="."]
+position = Vector3(3.992, 1.208, 0)
+mesh = SubResource("Contrahuella")
+
+[node name="Contrahuella6" type="MeshInstance3D" parent="."]
+position = Vector3(4.992, 1.508, 0)
+mesh = SubResource("Contrahuella")
+
+[node name="Contrahuella7" type="MeshInstance3D" parent="."]
+position = Vector3(5.992, 1.808, 0)
+mesh = SubResource("Contrahuella")
+
+[node name="Contrahuella8" type="MeshInstance3D" parent="."]
+position = Vector3(6.992, 2.108, 0)
+mesh = SubResource("Contrahuella")
+
+[node name="Poste1Fondo" type="MeshInstance3D" parent="."]
+position = Vector3(0.35, 0.465, -5.08)
+mesh = SubResource("Poste")
+
+[node name="Poste1Frente" type="MeshInstance3D" parent="."]
+position = Vector3(0.35, 0.465, 5.08)
+mesh = SubResource("Poste")
+
+[node name="Poste2Fondo" type="MeshInstance3D" parent="."]
+position = Vector3(2.75, 1.185, -5.08)
+mesh = SubResource("Poste")
+
+[node name="Poste2Frente" type="MeshInstance3D" parent="."]
+position = Vector3(2.75, 1.185, 5.08)
+mesh = SubResource("Poste")
+
+[node name="Poste3Fondo" type="MeshInstance3D" parent="."]
+position = Vector3(5.15, 1.905, -5.08)
+mesh = SubResource("Poste")
+
+[node name="Poste3Frente" type="MeshInstance3D" parent="."]
+position = Vector3(5.15, 1.905, 5.08)
+mesh = SubResource("Poste")
+
+[node name="Poste4Fondo" type="MeshInstance3D" parent="."]
+position = Vector3(7.55, 2.625, -5.08)
+mesh = SubResource("Poste")
+
+[node name="Poste4Frente" type="MeshInstance3D" parent="."]
+position = Vector3(7.55, 2.625, 5.08)
+mesh = SubResource("Poste")
+
+[node name="Escalon9" type="MeshInstance3D" parent="."]
+position = Vector3(8.5, 2.40, 0)
+mesh = SubResource("Peldano")
+
+[node name="Franja9" type="MeshInstance3D" parent="."]
+position = Vector3(8.09, 2.55, 0)
+mesh = SubResource("Franja")
+
+[node name="Contrahuella9" type="MeshInstance3D" parent="."]
+position = Vector3(7.992, 2.408, 0)
+mesh = SubResource("Contrahuella")
+
+[node name="Escalon10" type="MeshInstance3D" parent="."]
+position = Vector3(9.5, 2.70, 0)
+mesh = SubResource("Peldano")
+
+[node name="Franja10" type="MeshInstance3D" parent="."]
+position = Vector3(9.09, 2.85, 0)
+mesh = SubResource("Franja")
+
+[node name="Contrahuella10" type="MeshInstance3D" parent="."]
+position = Vector3(8.992, 2.708, 0)
+mesh = SubResource("Contrahuella")
+
+[node name="Escalon11" type="MeshInstance3D" parent="."]
+position = Vector3(10.5, 3.00, 0)
+mesh = SubResource("Peldano")
+
+[node name="Franja11" type="MeshInstance3D" parent="."]
+position = Vector3(10.09, 3.15, 0)
+mesh = SubResource("Franja")
+
+[node name="Contrahuella11" type="MeshInstance3D" parent="."]
+position = Vector3(9.992, 3.008, 0)
+mesh = SubResource("Contrahuella")
+
+[node name="Escalon12" type="MeshInstance3D" parent="."]
+position = Vector3(11.5, 3.30, 0)
+mesh = SubResource("Peldano")
+
+[node name="Franja12" type="MeshInstance3D" parent="."]
+position = Vector3(11.09, 3.45, 0)
+mesh = SubResource("Franja")
+
+[node name="Contrahuella12" type="MeshInstance3D" parent="."]
+position = Vector3(10.992, 3.308, 0)
+mesh = SubResource("Contrahuella")
+
+[node name="Poste5Fondo" type="MeshInstance3D" parent="."]
+position = Vector3(9.75, 3.285, -5.08)
+mesh = SubResource("Poste")
+
+[node name="Poste5Frente" type="MeshInstance3D" parent="."]
+position = Vector3(9.75, 3.285, 5.08)
+mesh = SubResource("Poste")
+
+[node name="Poste6Fondo" type="MeshInstance3D" parent="."]
+position = Vector3(11.65, 3.855, -5.08)
+mesh = SubResource("Poste")
+
+[node name="Poste6Frente" type="MeshInstance3D" parent="."]
+position = Vector3(11.65, 3.855, 5.08)
+mesh = SubResource("Poste")
+
+[node name="Descanso" type="StaticBody3D" parent="."]
+position = Vector3(13, 3.4, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Descanso"]
+position = Vector3(0, 0, 0)
+mesh = SubResource("Descanso")
+
+[node name="Colision" type="CollisionShape3D" parent="Descanso"]
+shape = SubResource("DescansoForma")
+
+[node name="ParapetoIzquierdo" type="StaticBody3D" parent="."]
+position = Vector3(6, 2.02, -5.02)
+rotation = Vector3(0, 0, 0.29145679)
+
+[node name="Colision" type="CollisionShape3D" parent="ParapetoIzquierdo"]
+shape = SubResource("ParapetoForma")
+
+[node name="PasamanosIzquierdo" type="MeshInstance3D" parent="."]
+position = Vector3(6, 2.5, -5.02)
+mesh = SubResource("Pasamanos")
+rotation = Vector3(0, 0, 0.29145679)
+
+[node name="LateralIzquierdo" type="StaticBody3D" parent="."]
+position = Vector3(13, 3.9, -5.02)
+
+[node name="Malla" type="MeshInstance3D" parent="LateralIzquierdo"]
+position = Vector3(0, 0, 0)
+mesh = SubResource("Lateral")
+
+[node name="Colision" type="CollisionShape3D" parent="LateralIzquierdo"]
+shape = SubResource("LateralForma")
+
+[node name="ParapetoDerecho" type="StaticBody3D" parent="."]
+position = Vector3(6, 2.02, 5.02)
+rotation = Vector3(0, 0, 0.29145679)
+
+[node name="Colision" type="CollisionShape3D" parent="ParapetoDerecho"]
+shape = SubResource("ParapetoForma")
+
+[node name="PasamanosDerecho" type="MeshInstance3D" parent="."]
+position = Vector3(6, 2.5, 5.02)
+mesh = SubResource("Pasamanos")
+rotation = Vector3(0, 0, 0.29145679)
+
+[node name="LateralDerecho" type="StaticBody3D" parent="."]
+position = Vector3(13, 3.9, 5.02)
+
+[node name="Malla" type="MeshInstance3D" parent="LateralDerecho"]
+position = Vector3(0, 0, 0)
+mesh = SubResource("Lateral")
+
+[node name="Colision" type="CollisionShape3D" parent="LateralDerecho"]
+shape = SubResource("LateralForma")
+
+[node name="LuzExterior" type="OmniLight3D" parent="."]
+position = Vector3(14.2, 6.2, -3)
+light_energy = 1.8
+omni_range = 10.0
+
+[node name="LuzExteriorLateral" type="OmniLight3D" parent="."]
+position = Vector3(14.2, 6.2, 3)
+light_energy = 1.8
+omni_range = 10.0
+
+[node name="Destello" type="Sprite3D" parent="."]
+position = Vector3(12.6, 3.65, 0)
+rotation = Vector3(-1.5707963, 0, 0)
+scale = Vector3(1.3, 2.5520833, 1)
+texture = SubResource("TexturaDestello")
+pixel_size = 0.015
+modulate = Color(1, 1, 1, 0.7)
+shaded = false
+double_sided = true
+cast_shadow = 0
+
+[node name="Meta" type="Area3D" parent="."]
+position = Vector3(12.9, 4.62, 0)
+collision_layer = 0
+monitorable = false
+
+[node name="Colision" type="CollisionShape3D" parent="Meta"]
+shape = SubResource("Meta")

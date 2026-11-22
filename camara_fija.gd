@@ -5,6 +5,7 @@ extends Camera3D
 @export var limite_x := 10.2
 @export var limite_z := Vector2(-1.2, 3.7)
 @export var suavizado := 4.0
+@export var fijar_encuadre_en_limite := false
 
 
 func _ready() -> void:
@@ -24,4 +25,7 @@ func _process(delta: float) -> void:
 
 func _meta() -> Vector3:
 	var p := objetivo.global_position
-	return Vector3(clampf(p.x, -limite_x, limite_x), 0.0, clampf(p.z, limite_z.x, limite_z.y)) + desfase
+	var z := clampf(p.z, limite_z.x, limite_z.y)
+	if fijar_encuadre_en_limite:
+		z = lerpf(z, (limite_z.x + limite_z.y) * 0.5, smoothstep(limite_x - 2.0, limite_x, p.x))
+	return Vector3(clampf(p.x, -limite_x, limite_x), 0.0, z) + desfase

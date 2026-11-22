@@ -34,6 +34,7 @@ var _malla: MeshInstance3D = null
 var _material: ShaderMaterial = null
 var _cuerpo: Node3D = null
 var _desvanecer: float = 1.0
+var altura_visual_piso: float = NAN
 
 
 func _ready() -> void:
@@ -85,14 +86,16 @@ func _physics_process(_delta: float) -> void:
 		return
 	var piso_y: float = origen.y
 	var espacio: PhysicsDirectSpaceState3D = get_world_3d().direct_space_state
-	if espacio != null and not Engine.is_editor_hint():
+	if not is_nan(altura_visual_piso):
+		piso_y = altura_visual_piso
+	elif espacio != null and not Engine.is_editor_hint():
 		var consulta: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.create(origen + Vector3.UP * 0.3, origen + Vector3.DOWN * (distancia_desvanecer + 0.5), 1)
 		if _cuerpo is CollisionObject3D:
 			consulta.exclude = [(_cuerpo as CollisionObject3D).get_rid()]
 		var golpe: Dictionary = espacio.intersect_ray(consulta)
 		if not golpe.is_empty():
 			piso_y = (golpe["position"] as Vector3).y
-	var altura: float = maxf(origen.y - piso_y, 0.0)
+	var altura: float = maxf(origen.y - piso_y, 0.0) if is_nan(altura_visual_piso) else 0.0
 	var nuevo: float = clampf(1.0 - altura / maxf(distancia_desvanecer, 0.01), 0.0, 1.0)
 	if not is_equal_approx(nuevo, _desvanecer):
 		_desvanecer = nuevo
