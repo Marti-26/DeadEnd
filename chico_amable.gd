@@ -137,7 +137,7 @@ func interactuar():
 		print("Chico Amable -> AVISO cuadro ", Engine.get_physics_frames())
 		reloj = tiempo_aviso
 		return
-	_dialogo().mostrar(nombre_dialogo, frases[mini(n - 1, frases.size() - 1)], 4.0)
+	_dialogo().mostrar(nombre_dialogo, frases[mini(n - 1, frases.size() - 1)], 4.0, false, sprite.sprite_frames if sprite != null else null, &"idle")
 	estado = Estado.HABLAR
 	reloj = 4.0
 	if n == 1 and senalar:

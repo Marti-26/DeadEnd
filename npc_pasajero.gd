@@ -28,7 +28,13 @@ func _physics_process(_delta: float) -> void:
 
 
 func hablar() -> void:
-	Dialogo.obtener(get_tree()).mostrar(nombre_dialogo, frases[_indice], duracion)
+	var marcos: SpriteFrames = null
+	var animacion: StringName = &"default"
+	var sprite: AnimatedSprite3D = (self as Node3D) as AnimatedSprite3D
+	if sprite != null:
+		marcos = sprite.sprite_frames
+		animacion = sprite.animation
+	Dialogo.obtener(get_tree()).mostrar(nombre_dialogo, frases[_indice], duracion, false, marcos, animacion)
 	_indice = (_indice + 1) % frases.size()
 	_hablando = true
 

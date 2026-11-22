@@ -19,7 +19,7 @@ enum Estado { EN_PUESTO, INVESTIGAR, MIRAR, VOLVER }
 	"Sé que estás ahí.",
 	"Tus pasos suenan bonito.",
 	"Quédate quieta. Solo un momento.",
-	"Ya casi.",
+	"Ya casi te tengo.",
 	"Respiras muy fuerte.",
 	"No te voy a hacer nada.",
 	"Escucho tu corazón.",
@@ -27,8 +27,7 @@ enum Estado { EN_PUESTO, INVESTIGAR, MIRAR, VOLVER }
 	"Otra vez tú.",
 	"Shhh. Ya te oí.",
 	"Puedo esperar.",
-	"No eres la primera.",
-	"Aquí todo se escucha.",
+	"Corre... corre.. gatita...",
 ]
 
 var estado: Estado = Estado.EN_PUESTO
