@@ -24,6 +24,7 @@
 [ext_resource type="PackedScene" uid="uid://nhfwj0jc7mm4" path="res://metro.tscn" id="ZC_metro_llegada"]
 [ext_resource type="PackedScene" uid="uid://df2osby5n6wnv" path="res://salida.tscn" id="ZC_salida"]
 [ext_resource type="PackedScene" path="res://zona_c/escaleras_salida.tscn" id="ZC_escaleras"]
+[ext_resource type="Script" path="res://zona_c/pasajeros_anden.gd" id="ZC_peatones"]
 
 [sub_resource type="BoxShape3D" id="ZC_SueloContinuo"]
 size = Vector3(80, 0.4, 9.8)
@@ -1857,5 +1858,11 @@ mesh = SubResource("ZC_TorniqueteSuperior")
 
 [node name="EscalerasSalida" parent="." instance=ExtResource("ZC_escaleras")]
 position = Vector3(34, 0, 1.2)
+
+[node name="PasajerosAnden" type="Node3D" parent="." node_paths=PackedStringArray("jugador", "camara", "letrero_exit")]
+script = ExtResource("ZC_peatones")
+jugador = NodePath("../Personaje")
+camara = NodePath("../Camara")
+letrero_exit = NodePath("../Estacion/LetreroExitUnico/CartelExitPixel")
 
 [connection signal="body_entered" from="EscalerasSalida/Meta" to="." method="_on_salida_superficie_body_entered"]
