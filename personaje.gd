@@ -457,9 +457,10 @@ func _actualizar_vibracion_camara() -> void:
 		return
 	if estres > UMBRAL_ESTRES_VIBRACION:
 		var factor: float = clampf((estres - UMBRAL_ESTRES_VIBRACION) / (ESTRES_MAX - UMBRAL_ESTRES_VIBRACION), 0.15, 1.0)
-		var amplitud: float = lerpf(0.03, 0.10, factor)
-		cam.h_offset = _rng_vibracion.randf_range(-amplitud, amplitud)
-		cam.v_offset = _rng_vibracion.randf_range(-amplitud, amplitud)
+		var amplitud: float = lerpf(0.006, 0.025, factor)
+		var s: float = Time.get_ticks_msec() * 0.001
+		cam.h_offset = amplitud * (sin(s * 6.1) + 0.5 * sin(s * 13.7)) / 1.5
+		cam.v_offset = amplitud * (sin(s * 7.3 + 1.7) + 0.5 * sin(s * 11.9)) / 1.5
 		_camara_vibrando = true
 	elif _camara_vibrando:
 		_detener_vibracion_camara()
