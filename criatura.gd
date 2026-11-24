@@ -155,7 +155,7 @@ func cambiar_a(nuevo: Estado) -> void:
 		Estado.BUSCAR,
 		Estado.VOLVER
 	]:
-		evento.emit(global_position)
+		emitir_evento()
 
 		if sonido_criatura != null:
 			sonido_criatura.play()

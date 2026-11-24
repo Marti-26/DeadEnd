@@ -55,7 +55,7 @@ func _ready() -> void:
 	_crear_capa_pantalla()
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	var actual: Node = get_tree().current_scene
 	if actual != _escena:
 		_escena = actual
@@ -63,7 +63,7 @@ func _process(delta: float) -> void:
 		if _escena != null:
 			_preparar.call_deferred(_escena)
 	_actualizar_luces_criaturas()
-	_actualizar_aura(delta)
+	_actualizar_aura()
 	_actualizar_pantalla()
 
 
@@ -236,7 +236,7 @@ func _actualizar_luces_criaturas() -> void:
 			luz.light_energy = base_energia * temblor
 
 
-func _actualizar_aura(delta: float) -> void:
+func _actualizar_aura() -> void:
 	if not aura_estres:
 		return
 	if _aura == null or not is_instance_valid(_aura):

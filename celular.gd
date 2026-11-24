@@ -2,7 +2,8 @@ class_name Celular
 extends Area3D
 
 var _jugador_cerca: Node = null
-
+#Funcion para que flote y gire el celu
+var _tiempo: float = 0.0
 
 func _ready() -> void:
 	add_to_group(Grupos.INTERACTIVOS)
@@ -13,6 +14,11 @@ func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 
+func _process(delta: float) -> void:
+	_tiempo += delta
+	# Flotación suave arriba y abajo
+	$MeshInstance3D.position.y = sin(_tiempo * 3.0) * 0.03
+	$Pantalla.position.y = $MeshInstance3D.position.y + 0.008
 
 func _unhandled_input(event: InputEvent) -> void:
 	if _jugador_cerca == null:
@@ -54,6 +60,7 @@ func usar() -> void:
 	if Partida != null:
 		Partida.guardar_estado_personaje(jugador)
 
+	
 
 	remove_from_group(Grupos.INTERACTIVOS)
 	queue_free()

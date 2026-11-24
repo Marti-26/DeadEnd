@@ -94,12 +94,12 @@ func _physics_process(delta):
 			if reloj <= 0.001:
 				if distancia() <= rango_ataque:
 					print("Jugador detectado: ", jugador.get_path())
-					var salud = jugador.get_node_or_null("Salud")
-					if salud == null:
+					var salud_jugador = jugador.get_node_or_null("Salud")
+					if salud_jugador == null:
 						print("ERROR: No se encontró el nodo Salud en Gatita")
 					else:
-						salud.recibir_dano(20.0)
-						print("Vida ", salud.vida_actual, "en el golpe del cuadro ", Engine.get_physics_frames())
+						salud_jugador.recibir_dano(20.0)
+						print("Vida ", salud_jugador.vida_actual, "en el golpe del cuadro ", Engine.get_physics_frames())
 				else:
 					print("Golpe fallido: jugador fuera del alcance")
 				estado = Estado.RECARGA

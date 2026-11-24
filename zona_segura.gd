@@ -474,7 +474,7 @@ func _al_salir_poster(borde: Node3D) -> void:
 	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 
 
-func _al_clic_poster(_camara: Node, evento: InputEvent, _punto: Vector3, _normal: Vector3, _forma: int, textura: Texture2D, borde: Node3D) -> void:
+func _al_clic_poster(_camara: Node, evento: InputEvent, _punto: Vector3, _normal: Vector3, _indice_forma: int, textura: Texture2D, borde: Node3D) -> void:
 	if evento is InputEventMouseButton:
 		var boton: InputEventMouseButton = evento as InputEventMouseButton
 		if boton.pressed and boton.button_index == MOUSE_BUTTON_LEFT:

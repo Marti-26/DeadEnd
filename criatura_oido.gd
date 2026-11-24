@@ -126,7 +126,7 @@ func oir(punto):
 	if estado != Estado.INVESTIGAR:
 		cambiar_a(Estado.INVESTIGAR)
 	if estaba_en_puesto:
-		evento.emit(global_position)
+		emitir_evento()
 		avisar_a_vecinos(punto)
 
 
