@@ -14,6 +14,7 @@ const ESCENA: String = "res://dialogo.tscn"
 @export var altura_retrato: float = 0.55
 @export var retrato_tapado: float = 0.3
 @export var salto_retrato: float = 22.0
+@export var tecla_cerrar: StringName = &"hablar"
 
 @onready var cuadro: Control = $Cuadro
 @onready var nombre: Label = $Cuadro/Columnas/Nombre
@@ -33,6 +34,10 @@ var _cuadro_retrato: int = 0
 var _tiempo_retrato: float = 0.0
 var _base_retrato: float = 0.0
 var _tween_salto: Tween = null
+var _persistente: bool = false
+var _desde_mostrado: float = 0.0
+var _aviso: Label = null
+var _parpadeo: float = 0.0
 
 
 static func obtener(arbol: SceneTree) -> Dialogo:
@@ -62,6 +67,13 @@ func _ready() -> void:
 	_retrato.visible = false
 	add_child(_retrato)
 	move_child(_retrato, 0)
+	_aviso = Label.new()
+	_aviso.name = "AvisoCerrar"
+	_aviso.text = "[R]"
+	_aviso.add_theme_font_size_override("font_size", 16)
+	_aviso.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_aviso.visible = false
+	add_child(_aviso)
 	_estilo_normal = cuadro.get_theme_stylebox("panel")
 	_color_nombre = nombre.get_theme_color("font_color")
 	if _estilo_normal is StyleBoxFlat:
@@ -91,10 +103,24 @@ func _process(delta: float) -> void:
 			texto.get_total_character_count()
 		)
 
+	var escribiendo: bool = texto.visible_characters >= 0 and texto.visible_characters < texto.get_total_character_count()
+
 	# Mantener el sonido mientras esté el diálogo
-	if sonido_texto.stream != null and _restante > 0.0:
+	if sonido_texto.stream != null and escribiendo:
 		if not sonido_texto.playing:
 			sonido_texto.play()
+	elif sonido_texto.playing:
+		sonido_texto.stop()
+
+	_actualizar_aviso(delta, escribiendo)
+	_desde_mostrado += delta
+	if _persistente and _desde_mostrado > 0.12 and Input.is_action_just_pressed(tecla_cerrar):
+		if escribiendo:
+			_letras = float(texto.get_total_character_count())
+			texto.visible_characters = texto.get_total_character_count()
+		else:
+			ocultar()
+		return
 
 	# Tiempo de duración del diálogo
 	if _restante > 0.0:
@@ -112,7 +138,9 @@ func mostrar(quien: String, frase: String, duracion: float = 4.0, enemigo: bool 
 	texto.visible_characters = 0
 
 	_letras = 0.0
-	_restante = maxf(
+	_persistente = not enemigo
+	_desde_mostrado = 0.0
+	_restante = 0.0 if _persistente else maxf(
 		duracion,
 		frase.length() / letras_por_segundo + 1.5
 	)
@@ -138,6 +166,9 @@ func mostrar(quien: String, frase: String, duracion: float = 4.0, enemigo: bool 
 
 func ocultar() -> void:
 	_restante = 0.0
+	_persistente = false
+	if _aviso != null:
+		_aviso.visible = false
 
 	# Detener inmediatamente el sonido
 	if sonido_texto != null:
@@ -240,7 +271,21 @@ func _animar_retrato(delta: float) -> void:
 
 
 func esta_visible() -> bool:
-	return cuadro.visible and _restante > 0.0
+	return cuadro.visible and (_persistente or _restante > 0.0)
+
+
+func _actualizar_aviso(delta: float, escribiendo: bool) -> void:
+	if _aviso == null:
+		return
+	if not _persistente or escribiendo:
+		_aviso.visible = false
+		_parpadeo = 0.0
+		return
+	_parpadeo += delta
+	_aviso.visible = true
+	_aviso.modulate.a = (0.55 + 0.45 * sin(_parpadeo * 4.0)) * cuadro.modulate.a
+	var caja: Rect2 = cuadro.get_global_rect()
+	_aviso.position = caja.end - _aviso.size - Vector2(18.0, 10.0)
 
 
 func iniciar_sonido_dialogo() -> void:
