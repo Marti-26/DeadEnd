@@ -1364,7 +1364,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("BoxShape3D_wqwhx")
 
 [node name="Puntoactivación1" parent="Estacion" unique_id=1331929070 node_paths=PackedStringArray("pared_soporte") instance=ExtResource("2_qnp7s")]
-position = Vector3(-9, 1.28, -3.68)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 1.28, -3.68)
 pared_soporte = NodePath("../MuroFondo")
 
 [node name="Tubos" type="Node3D" parent="." unique_id=1074896370]
@@ -1657,7 +1657,7 @@ script = ExtResource("17_camara")
 objetivo = NodePath("../Personaje")
 
 [node name="Criatura2" parent="." unique_id=383791410 instance=ExtResource("8_n70iv")]
-transform = Transform3D(-0.99733615, 0, 0.07294283, 0, 1, 0, -0.07294283, 0, -0.99733615, -4.9488373, 0.01345098, -3.0988078)
+transform = Transform3D(-0.99733615, 0, 0.07294283, 0, 1, 0, -0.07294283, 0, -0.99733615, -14.28163, 0.01345098, -3.0988078)
 
 [node name="Bombillo" type="Node3D" parent="Criatura2" unique_id=1192142113]
 script = ExtResource("bombillo_luz")
