@@ -106,6 +106,32 @@ albedo_color = Color(0.48, 0.66, 0.44, 1)
 shading_mode = 0
 albedo_color = Color(0.8, 0.82, 0.83, 1)
 
+[sub_resource type="StandardMaterial3D" id="Mat_NeonTecho"]
+albedo_color = Color(0.5, 0.42, 1, 1)
+emission_enabled = true
+emission = Color(0.5, 0.42, 1, 1)
+emission_energy_multiplier = 0.0
+
+[sub_resource type="StandardMaterial3D" id="Mat_TunelFondo"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.015, 0.02, 0.04, 0)
+
+[sub_resource type="StandardMaterial3D" id="Mat_LuzTunelAzul"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.35, 0.5, 1, 0)
+
+[sub_resource type="StandardMaterial3D" id="Mat_LuzTunelRoja"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.95, 0.25, 0.25, 0)
+
+[sub_resource type="StandardMaterial3D" id="Mat_LuzTunelAmbar"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.55, 0.2, 0)
+
 [sub_resource type="StyleBoxFlat" id="StyleBox_Subtitulos"]
 bg_color = Color(0.08, 0.06, 0.1, 0.88)
 border_width_left = 1
@@ -159,6 +185,11 @@ material = SubResource("Mat_Piso")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 2.8, 1)
 size = Vector3(7.5, 0.1, 2.8)
 material = SubResource("Mat_Techo")
+
+[node name="TuboLedTecho" type="CSGBox3D" parent="Vagon" unique_id=2081938172]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 2.76, 0.5)
+size = Vector3(7.4, 0.03, 0.03)
+material = SubResource("Mat_NeonTecho")
 
 [node name="Paredes" type="Node3D" parent="Vagon" unique_id=906331197]
 
@@ -605,6 +636,29 @@ material = SubResource("Mat_Arboles1")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1.34, -0.7)
 size = Vector3(7.5, 0.08, 0.08)
 material = SubResource("Mat_Baranda")
+
+[node name="TunelOscuro" type="Node3D" parent="Vagon/PaisajeExterior" unique_id=1948201948]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="FondoTunel" type="CSGBox3D" parent="Vagon/PaisajeExterior/TunelOscuro" unique_id=1849102837]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1.7, -0.35)
+size = Vector3(8.5, 4, 0.02)
+material = SubResource("Mat_TunelFondo")
+
+[node name="LuzTunelAzul" type="CSGBox3D" parent="Vagon/PaisajeExterior/TunelOscuro" unique_id=1029384756]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 2.05, -0.34)
+size = Vector3(1.2, 0.25, 0.01)
+material = SubResource("Mat_LuzTunelAzul")
+
+[node name="LuzTunelRoja" type="CSGBox3D" parent="Vagon/PaisajeExterior/TunelOscuro" unique_id=1928374650]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 2.15, -0.34)
+size = Vector3(0.9, 0.22, 0.01)
+material = SubResource("Mat_LuzTunelRoja")
+
+[node name="LuzTunelAmbar" type="CSGBox3D" parent="Vagon/PaisajeExterior/TunelOscuro" unique_id=1384759201]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 1.85, -0.34)
+size = Vector3(0.7, 0.18, 0.01)
+material = SubResource("Mat_LuzTunelAmbar")
 
 [node name="Gatita" parent="." unique_id=647537382 instance=ExtResource("2_gatita")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.14, 0.88, 0.7018939)
