@@ -38,17 +38,17 @@ uniform bool usar_textura = false;
 uniform vec4 color : source_color = vec4(1.0, 0.72, 0.25, 1.0);
 uniform float intensidad = 0.55;
 uniform float ancho = 0.09;
-uniform float periodo = 3.5;
-uniform float duracion = 0.9;
-uniform float desfase = 0.0;
+uniform float progreso = 2.0;
 void fragment() {
 	float forma = usar_textura ? texture(textura, UV).a : 1.0;
-	float p = mod(TIME + desfase, periodo) / duracion;
+	float p = clamp(progreso, -1.0, 2.0);
 	float pos = mix(-0.25, 1.25, p);
 	float diagonal = (UV.x + UV.y * 0.5) / 1.5;
-	float banda = (1.0 - smoothstep(0.0, ancho, abs(diagonal - pos))) * step(p, 1.0);
+	float distancia = abs(diagonal - pos);
+	float banda = clamp(1.0 - distancia / max(ancho, 0.005), 0.0, 1.0);
+	banda = banda * banda * (3.0 - 2.0 * banda) * step(0.0, p) * step(p, 1.0);
 	ALBEDO = color.rgb;
-	ALPHA = banda * intensidad * forma;
+	ALPHA = clamp(banda * intensidad * forma, 0.0, 1.0);
 }
 """
 
@@ -56,6 +56,7 @@ static var _sombreado: Shader = null
 
 var _material: ShaderMaterial = null
 var _desfase: float = -1.0
+var _reloj: float = 0.0
 
 
 func _ready() -> void:
@@ -81,6 +82,17 @@ func _configurar() -> void:
 	_material.set_shader_parameter("color", color_brillo)
 	_material.set_shader_parameter("intensidad", intensidad)
 	_material.set_shader_parameter("ancho", ancho_brillo)
-	_material.set_shader_parameter("periodo", maxf(cada, duracion_cruce + 0.1))
-	_material.set_shader_parameter("duracion", maxf(duracion_cruce, 0.05))
-	_material.set_shader_parameter("desfase", _desfase)
+	_actualizar_progreso()
+
+
+func _process(delta: float) -> void:
+	_reloj = fmod(_reloj + delta, 3600.0)
+	_actualizar_progreso()
+
+
+func _actualizar_progreso() -> void:
+	if _material == null:
+		return
+	var periodo: float = maxf(cada, duracion_cruce + 0.1)
+	var fase: float = fposmod(_reloj + _desfase, periodo)
+	_material.set_shader_parameter("progreso", fase / maxf(duracion_cruce, 0.05))
