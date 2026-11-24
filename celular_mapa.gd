@@ -3,10 +3,11 @@ extends Control
 
 signal abierto_cambiado(esta_abierto: bool)
 
-@export var ancho: float = 270.0
-@export var alto: float = 530.0
+@export var ancho: float = 290.0
+@export var alto: float = 600.0
+@export var escala_pantalla: float = 0.78
 @export var margen_derecho: float = 80.0
-@export var metros_visibles: float = 24.0
+@export var metros_visibles: float = 16.0
 @export var altura_camara: float = 2.9
 @export var inclinacion: float = -3.0
 @export var color_crema: Color = Color(0.984, 0.945, 0.902)
@@ -19,7 +20,20 @@ signal abierto_cambiado(esta_abierto: bool)
 const NOMBRES_ZONA: Dictionary = {
 	"zona_b": "ANDÉN",
 	"segundo_piso": "ZONA SEGURA",
+	"zona_c_final": "ZONA C",
 }
+
+const NIVELES: Dictionary = {
+	"segundo_piso": "NIVEL 0",
+	"zona_b": "NIVEL -1",
+	"zona_c_final": "FIN DE LÍNEA",
+}
+
+const PISOS: Array[Array] = [
+	["segundo_piso", "N0", "ZONA SEGURA"],
+	["zona_b", "N-1", "ANDÉN"],
+	["zona_c_final", ">", "ZONA C"],
+]
 
 const CODIGO_SHADER: String = """
 shader_type canvas_item;
@@ -63,9 +77,14 @@ var _siguiente_glitch: float = 0.0
 var _congelado: float = 0.0
 var _bateria: Label = null
 var _zona: Label = null
+var _nivel: Label = null
 var _tween: Tween = null
 var _tiempo: float = 0.0
 var _impulso_charm: float = 0.0
+var _pisos_texto: Array[Label] = []
+var _pisos_fondo: Array[Panel] = []
+var _escena_vagon: Node = null
+var _interior_vagon: Node3D = null
 
 
 func _ready() -> void:
@@ -125,7 +144,7 @@ func abrir() -> void:
 	_impulso_charm = 0.35
 	# Animación de apertura del celular
 	var destino: Vector2 = _posicion_abierta()
-	_telefono.position = destino + Vector2(ancho + margen_derecho + 60.0, 0.0)
+	_telefono.position = destino + Vector2(ancho * _escala() + margen_derecho + 60.0, 0.0)
 	_telefono.rotation_degrees = inclinacion + 8.0
 	_fondo.modulate.a = 0.0
 
@@ -145,7 +164,7 @@ func cerrar() -> void:
 		return
 	abierto = false
 	_impulso_charm = 0.3
-	var fuera: Vector2 = _posicion_abierta() + Vector2(ancho + margen_derecho + 60.0, 0.0)
+	var fuera: Vector2 = _posicion_abierta() + Vector2(ancho * _escala() + margen_derecho + 60.0, 0.0)
 	if _tween != null:
 		_tween.kill()
 	_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
@@ -163,9 +182,17 @@ func _terminar_cierre() -> void:
 	_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 
 
+func _escala() -> float:
+	var pantalla: Vector2 = get_viewport_rect().size
+	return clampf(pantalla.y * escala_pantalla / alto, 0.6, 2.0)
+
+
 func _posicion_abierta() -> Vector2:
 	var pantalla: Vector2 = get_viewport_rect().size
-	return Vector2(pantalla.x - ancho - margen_derecho, (pantalla.y - alto) * 0.5)
+	var s: float = _escala()
+	_telefono.scale = Vector2(s, s)
+	var centro: Vector2 = Vector2(pantalla.x - margen_derecho - ancho * s * 0.5, pantalla.y * 0.5)
+	return centro - Vector2(ancho, alto) * 0.5
 
 
 func _reubicar() -> void:
@@ -194,7 +221,62 @@ func _actualizar_textos(delta: float) -> void:
 	_bateria.text = "%d%%" % int(round(clampf(carga, 0.0, 100.0)))
 	var escena: Node = get_tree().current_scene
 	var clave: String = escena.scene_file_path.get_file().get_basename() if escena != null else ""
-	_zona.text = str(NOMBRES_ZONA.get(clave, clave.to_upper()))
+	var lugar: String = _lugar_actual(clave)
+	_nivel.text = str(NIVELES.get(clave, ""))
+	_zona.text = lugar
+	_actualizar_pisos(clave)
+
+
+func _construir_pisos(pantalla: Control, pos: Vector2, ancho_caja: float) -> void:
+	var alto_fila: float = 24.0
+	var caja: Panel = _panel(pantalla, _estilo(color_crema, color_rosa_medio, 2, 8), pos, Vector2(ancho_caja, 8.0 + float(PISOS.size()) * alto_fila))
+	for i: int in PISOS.size():
+		var resalte: Panel = _panel(caja, _estilo(color_rosa_fuerte, Color.TRANSPARENT, 0, 6), Vector2(4.0, 4.0 + float(i) * alto_fila), Vector2(ancho_caja - 8.0, alto_fila - 2.0))
+		resalte.visible = false
+		_pisos_fondo.append(resalte)
+		var fila: Label = _etiqueta(caja, "", 14, color_vino, Vector2(12.0, 4.0 + float(i) * alto_fila), Vector2(ancho_caja - 24.0, alto_fila - 2.0), HORIZONTAL_ALIGNMENT_LEFT)
+		_pisos_texto.append(fila)
+
+
+func _actualizar_pisos(clave: String) -> void:
+	var zona_c_conocida: bool = clave == "zona_c_final" or (Partida != null and Partida.terminales_completadas())
+	for i: int in PISOS.size():
+		var piso: Array = PISOS[i]
+		var actual: bool = piso[0] == clave
+		var nombre: String = str(piso[2])
+		if piso[0] == "zona_c_final" and not zona_c_conocida:
+			nombre = _corromper("??????", 0.5)
+		_pisos_texto[i].text = "%s  %s%s" % [piso[1], nombre, "   < TÚ" if actual else ""]
+		_pisos_fondo[i].visible = actual
+		_pisos_texto[i].add_theme_color_override("font_color", color_crema if actual else color_vino)
+
+
+func _lugar_actual(clave: String) -> String:
+	var base: String = str(NOMBRES_ZONA.get(clave, clave.to_upper()))
+	var jugador: Node3D = get_tree().get_first_node_in_group(Grupos.JUGADOR) as Node3D
+	if jugador == null or clave != "zona_b":
+		return base
+	if _en_vagon(jugador):
+		return "VAGÓN"
+	if jugador.is_in_group(Grupos.FUERA_DE_ALCANCE) and not jugador.is_in_group(Grupos.ZONA_SEGURA):
+		return "ESCALERAS"
+	return base
+
+
+func _en_vagon(jugador: Node3D) -> bool:
+	var escena: Node = get_tree().current_scene
+	if escena != _escena_vagon:
+		_escena_vagon = escena
+		_interior_vagon = null
+		if escena != null:
+			for n: Node in escena.find_children("Interior", "Node3D", true, false):
+				if n.get_parent() != null and n.get_parent().name == "Tren":
+					_interior_vagon = n as Node3D
+					break
+	if _interior_vagon == null or not is_instance_valid(_interior_vagon):
+		return false
+	var local: Vector3 = _interior_vagon.to_local(jugador.global_position)
+	return absf(local.x) < 12.0 and absf(local.z) < 1.5 and local.y > -1.0 and local.y < 3.0
 
 
 func _glitch_reloj(delta: float) -> void:
@@ -311,11 +393,12 @@ func _construir() -> void:
 	_bateria = _etiqueta(pantalla, "100%", 13, color_vino, Vector2(ancho_p - 78.0, 6.0), Vector2(60.0, 22.0), HORIZONTAL_ALIGNMENT_RIGHT)
 	_etiqueta(pantalla, "MAPA", 24, color_rosa_fuerte, Vector2(0.0, 30.0), Vector2(ancho_p, 28.0), HORIZONTAL_ALIGNMENT_CENTER)
 	_fecha = _etiqueta(pantalla, "00/00/0000", 12, color_rosa_medio, Vector2(0.0, 56.0), Vector2(ancho_p, 16.0), HORIZONTAL_ALIGNMENT_CENTER)
-	_zona = _etiqueta(pantalla, "", 13, color_rosa_fuerte, Vector2(0.0, 72.0), Vector2(ancho_p, 16.0), HORIZONTAL_ALIGNMENT_CENTER)
+	_nivel = _etiqueta(pantalla, "", 14, color_rosa_medio, Vector2(0.0, 74.0), Vector2(ancho_p, 18.0), HORIZONTAL_ALIGNMENT_CENTER)
+	_zona = _etiqueta(pantalla, "", 26, color_rosa_fuerte, Vector2(0.0, 90.0), Vector2(ancho_p, 30.0), HORIZONTAL_ALIGNMENT_CENTER)
 	_hora_x = _hora.position.x
 	_fecha_x = _fecha.position.x
 
-	var tam_mapa: Vector2 = Vector2(ancho_p - 28.0, alto_p - 150.0)
+	var tam_mapa: Vector2 = Vector2(ancho_p - 28.0, alto_p - 128.0 - 150.0)
 	_viewport = SubViewport.new()
 	_viewport.size = Vector2i(int(tam_mapa.x * 1.5), int(tam_mapa.y * 1.5))
 	_viewport.debug_draw = Viewport.DEBUG_DRAW_UNSHADED
@@ -343,7 +426,7 @@ func _construir() -> void:
 	_mapa.texture = _viewport.get_texture()
 	_mapa.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_mapa.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	_mapa.position = Vector2(14.0, 92.0)
+	_mapa.position = Vector2(14.0, 128.0)
 	_mapa.size = tam_mapa
 	_mapa.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var sombra: Shader = Shader.new()
@@ -363,6 +446,8 @@ func _construir() -> void:
 	_marcador.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_marcador.draw.connect(_dibujar_marcador)
 	pantalla.add_child(_marcador)
+
+	_construir_pisos(pantalla, Vector2(14.0, _mapa.position.y + tam_mapa.y + 10.0), tam_mapa.x)
 
 	_etiqueta(pantalla, "· TÚ ESTÁS AQUÍ ·", 12, color_rosa_fuerte, Vector2(0.0, alto_p - 52.0), Vector2(ancho_p, 18.0), HORIZONTAL_ALIGNMENT_CENTER)
 	_panel(pantalla, _estilo(color_rosa_fuerte, Color.TRANSPARENT, 0, 3), Vector2(ancho_p * 0.5 - 45.0, alto_p - 20.0), Vector2(90.0, 5.0))
