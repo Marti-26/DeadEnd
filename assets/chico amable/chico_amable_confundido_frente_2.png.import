@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dxl4sxrixnglc"
-path="res://.godot/imported/chico_amable_idle_frente_3.png-c267cc0044fd6bc8b1fac1f1f8b26db3.ctex"
+uid="uid://dod061kp0qs5t"
+path="res://.godot/imported/chico_amable_confundido_frente_2.png-96a5765cd4fb15c1de32ad8a1e814616.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/chico amable/chico_amable_idle_frente_3.png"
-dest_files=["res://.godot/imported/chico_amable_idle_frente_3.png-c267cc0044fd6bc8b1fac1f1f8b26db3.ctex"]
+source_file="res://assets/chico amable/chico_amable_confundido_frente_2.png"
+dest_files=["res://.godot/imported/chico_amable_confundido_frente_2.png-96a5765cd4fb15c1de32ad8a1e814616.ctex"]
 
 [params]
 

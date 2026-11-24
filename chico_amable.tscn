@@ -3,10 +3,10 @@
 [ext_resource type="Script" uid="uid://841mhttusjtm" path="res://chico_amable.gd" id="1_amable"]
 [ext_resource type="Texture2D" path="res://assets/chico amable/chico_amable_idle_frente_1.png" id="chico_idle_1"]
 [ext_resource type="Texture2D" path="res://assets/chico amable/chico_amable_idle_frente_2.png" id="chico_idle_2"]
-[ext_resource type="Texture2D" path="res://assets/chico amable/chico_amable_idle_frente_3.png" id="chico_idle_3"]
-[ext_resource type="Texture2D" path="res://assets/chico amable/chico_amable_idle_frente_4.png" id="chico_idle_4"]
-[ext_resource type="Texture2D" path="res://assets/chico amable/chico_amable_idle_frente_5.png" id="chico_idle_5"]
-[ext_resource type="Texture2D" path="res://assets/chico amable/chico_amable_idle_frente_6.png" id="chico_idle_6"]
+[ext_resource type="Texture2D" path="res://assets/chico amable/chico_amable_confundido_frente_1.png" id="chico_confundido_1"]
+[ext_resource type="Texture2D" path="res://assets/chico amable/chico_amable_confundido_frente_2.png" id="chico_confundido_2"]
+[ext_resource type="Texture2D" path="res://assets/chico amable/chico_amable_entusiasmado_frente_1.png" id="chico_entusiasmado_1"]
+[ext_resource type="Texture2D" path="res://assets/chico amable/chico_amable_entusiasmado_frente_2.png" id="chico_entusiasmado_2"]
 [ext_resource type="Script" uid="uid://cjb6fbriprfvw" path="res://salud.gd" id="3_3near"]
 [ext_resource type="Script" path="res://sombra_pies.gd" id="sombra_pies"]
 
@@ -22,34 +22,32 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("chico_idle_2")
-}, {
-"duration": 1.0,
-"texture": ExtResource("chico_idle_3")
-}, {
-"duration": 1.0,
-"texture": ExtResource("chico_idle_4")
-}, {
-"duration": 1.0,
-"texture": ExtResource("chico_idle_5")
-}, {
-"duration": 1.0,
-"texture": ExtResource("chico_idle_6")
-}, {
-"duration": 1.0,
-"texture": ExtResource("chico_idle_5")
-}, {
-"duration": 1.0,
-"texture": ExtResource("chico_idle_4")
-}, {
-"duration": 1.0,
-"texture": ExtResource("chico_idle_3")
-}, {
-"duration": 1.0,
-"texture": ExtResource("chico_idle_2")
 }],
 "loop": true,
 "name": &"idle",
-"speed": 6.0
+"speed": 2.5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("chico_confundido_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("chico_confundido_2")
+}],
+"loop": true,
+"name": &"confundido",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("chico_entusiasmado_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("chico_entusiasmado_2")
+}],
+"loop": true,
+"name": &"entusiasmado",
+"speed": 4.0
 }]
 
 [node name="ChicoAmable" type="CharacterBody3D" unique_id=1461023450]

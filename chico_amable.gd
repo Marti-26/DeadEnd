@@ -21,6 +21,7 @@ enum Estado { QUIETO, ACERCARSE, HABLAR, AVISO, GOLPE, RECARGA, HUIR }
 @export var nombre_dialogo = "CHICO"
 @export var rebote_caminar: float = 0.05
 @export var vaiven_caminar: float = 0.035
+@export var tiempo_confundido: float = 1.8
 
 var estado = Estado.QUIETO
 var jugador = null
@@ -31,6 +32,7 @@ var _siguiendo = false
 var _tiempo_paso = 0.0
 var agresivo = false
 var huyendo = false
+var _confundido: float = 0.0
 
 @onready var sprite: AnimatedSprite3D = $Sprite
 @onready var _sprite_y: float = $Sprite.position.y
@@ -54,6 +56,8 @@ func _physics_process(delta):
 				estado = Estado.ACERCARSE
 				return
 			if distancia() < radio_notar:
+				if not _siguiendo:
+					_confundido = tiempo_confundido
 				_siguiendo = true
 			if _siguiendo and distancia() > distancia_charla + 0.4:
 				estado = Estado.ACERCARSE
@@ -136,7 +140,7 @@ func interactuar():
 		print("Chico Amable -> AVISO cuadro ", Engine.get_physics_frames())
 		reloj = tiempo_aviso
 		return
-	_dialogo().mostrar(nombre_dialogo, frases[mini(n - 1, frases.size() - 1)], 4.0, false, sprite.sprite_frames if sprite != null else null, &"idle")
+	_dialogo().mostrar(nombre_dialogo, frases[mini(n - 1, frases.size() - 1)], 4.0, false, sprite.sprite_frames if sprite != null else null, animacion_charla())
 	estado = Estado.HABLAR
 	reloj = 4.0
 	if n == 1 and senalar:
@@ -174,6 +178,15 @@ func frenar(_animacion):
 func _process(delta):
 	if sprite == null:
 		return
+	_confundido = maxf(_confundido - delta, 0.0)
+	var animacion: StringName = &"idle"
+	if not agresivo and not huyendo:
+		if estado == Estado.HABLAR:
+			animacion = animacion_charla()
+		elif _confundido > 0.0 and sprite.sprite_frames.has_animation(&"confundido"):
+			animacion = &"confundido"
+	if sprite.animation != animacion:
+		sprite.play(animacion)
 	if _caminando:
 		_tiempo_paso += delta * maxf(Vector2(velocity.x, velocity.z).length(), rapidez) * 5.5
 		sprite.position.y = _sprite_y + absf(sin(_tiempo_paso)) * rebote_caminar
@@ -182,6 +195,12 @@ func _process(delta):
 		_tiempo_paso = 0.0
 		sprite.position.y = lerpf(sprite.position.y, _sprite_y, minf(delta * 10.0, 1.0))
 		sprite.rotation.z = lerpf(sprite.rotation.z, 0.0, minf(delta * 10.0, 1.0))
+
+
+func animacion_charla() -> StringName:
+	if sprite != null and sprite.sprite_frames.has_animation(&"entusiasmado"):
+		return &"entusiasmado"
+	return &"idle"
 
 
 func mirar(p):
