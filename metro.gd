@@ -573,7 +573,8 @@ func _lado(p: Node3D, s: int, reales: bool) -> void:
 			_caja(p, Vector3(pilar, 1.1, 0.1), Vector3(px, 1.5, z), _m.rojo_oscuro if reales else _m.rojo_ext)
 		for i: int in n:
 			var vx: float = t.x + pilar + vw / 2.0 + i * (vw + pilar)
-			_caja(p, Vector3(vw, 1.1, 0.02), Vector3(vx, 1.5, z), _m.vidrio if reales else _m.vidrio_ext)
+			var material_vidrio := _m.vidrio as Material if reales else _m.vidrio_ext as Material
+			_caja(p, Vector3(vw, 1.1, 0.02), Vector3(vx, 1.5, z), material_vidrio)
 		_forma(Vector3(lx, ALTO, 0.12), Vector3(cx, ALTO / 2.0, z))
 	var lados_puerta: Array[int] = [-1, 1]
 	for px: float in puertas_x:

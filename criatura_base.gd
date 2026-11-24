@@ -24,6 +24,10 @@ func aplicar_gravedad(delta: float) -> void:
 	velocity += get_gravity() * delta
 
 
+func emitir_evento() -> void:
+	evento.emit(global_position)
+
+
 func distancia_a(p: Vector3) -> float:
 	var o: Vector3 = global_position
 	return Vector2(p.x - o.x, p.z - o.z).length()

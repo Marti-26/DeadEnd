@@ -1,0 +1,74 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://terminal.gd" id="1_terminal"]
+[ext_resource type="FontFile" path="res://assets/font/ShareTechMono-Regular.ttf" id="2_fuente"]
+
+[sub_resource type="StandardMaterial3D" id="Metal"]
+albedo_color = Color(0.10, 0.12, 0.13, 1)
+metallic = 0.35
+roughness = 0.72
+
+[sub_resource type="BoxMesh" id="Carcasa"]
+material = SubResource("Metal")
+size = Vector3(1.46, 0.87, 0.055)
+
+[sub_resource type="BoxShape3D" id="ColisionCarcasa"]
+size = Vector3(1.46, 0.87, 0.055)
+
+[sub_resource type="QuadMesh" id="Cristal"]
+size = Vector2(1.31, 0.74)
+
+[sub_resource type="Shader" id="Interfaz"]
+code = "shader_type spatial;
+render_mode unshaded;
+
+uniform bool mostrar_circulo = false;
+uniform float progreso = -1.0;
+
+void fragment() {
+	vec2 punto = (UV - vec2(0.5)) * vec2(1.31 / 0.74, 1.0);
+	float dist = abs(length(punto) - 0.25);
+	float borde = 1.0 - smoothstep(0.016, 0.016 + max(fwidth(dist), 0.003), dist);
+	float angulo = fract(atan(punto.x, -punto.y) / TAU + 1.0);
+	float arco = 0.0;
+	if (progreso < 0.0) {
+		float giro = fract(angulo - TIME * 0.8);
+		arco = 1.0 - smoothstep(0.0, 0.30, giro);
+	} else {
+		arco = (1.0 - smoothstep(progreso - 0.005, progreso + 0.005, angulo)) * step(0.001, progreso);
+	}
+	vec3 fondo = vec3(0.004, 0.006, 0.007);
+	vec3 circulo = mix(vec3(0.10, 0.19, 0.17), vec3(0.42, 1.0, 0.78), arco);
+	ALBEDO = mostrar_circulo ? mix(fondo, circulo, borde) : fondo;
+}"
+
+[sub_resource type="ShaderMaterial" id="Pantalla"]
+resource_local_to_scene = true
+shader = SubResource("Interfaz")
+shader_parameter/mostrar_circulo = false
+shader_parameter/progreso = -1.0
+
+[node name="PuntoActivacion" type="StaticBody3D" groups=["interactivos"]]
+script = ExtResource("1_terminal")
+
+[node name="Carcasa" type="MeshInstance3D" parent="."]
+mesh = SubResource("Carcasa")
+
+[node name="ColisionCarcasa" type="CollisionShape3D" parent="."]
+shape = SubResource("ColisionCarcasa")
+
+[node name="Pantalla" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0, 0.031)
+cast_shadow = 0
+material_override = SubResource("Pantalla")
+mesh = SubResource("Cristal")
+
+[node name="Activado" type="Label3D" parent="."]
+position = Vector3(0, 0, 0.036)
+visible = false
+pixel_size = 0.0024
+modulate = Color(0.57, 1, 0.83, 1)
+text = "Activado"
+font = ExtResource("2_fuente")
+font_size = 88
+outline_size = 0

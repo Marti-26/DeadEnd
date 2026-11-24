@@ -31,7 +31,7 @@ func activar_terminal(numero: int) -> void:
 			if terminal_1_activada:
 				return
 			terminal_1_activada = true
-			print("Terminal 1 ACTIVADA")
+			print("Punto activación 1 activado")
 
 		2:
 			if terminal_2_activada:
