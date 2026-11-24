@@ -2,6 +2,7 @@
 extends Node
 
 const ESCENA_INICIO: String = "res://zona_b.tscn"
+const ESCENA_TUTORIAL: String = "res://tutorial.tscn"
 const LIMITE_ESTRES: float = 70.0
 const ESTRES_AL_VOLVER: float = 50.0
 
@@ -134,6 +135,17 @@ func perder() -> void:
 			_apagon = preload("res://apagon.gd").new()
 			add_child(_apagon)
 		await _apagon.apagar()
+
+	var escena_actual: Node = get_tree().current_scene
+	if escena_actual != null and escena_actual.scene_file_path == ESCENA_TUTORIAL:
+		estres = 0.0
+		cambiar_escena(ESCENA_TUTORIAL)
+		if con_apagon:
+			await _apagon.encender()
+		else:
+			await get_tree().create_timer(0.5).timeout
+		_perdiendo = false
+		return
 
 	if guardado.is_empty():
 		print("Perdió: vuelve al inicio")
