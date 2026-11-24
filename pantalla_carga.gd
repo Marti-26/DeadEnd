@@ -1,6 +1,6 @@
 extends Control
 
-@export_file("*.tscn") var destino: String = "res://zona_b.tscn"
+@export_file("*.tscn") var destino: String = "res://tutorial.tscn"
 @export var duracion_minima: float = 5.0
 @export var ancho: float = 300.0
 @export var alto: float = 580.0
