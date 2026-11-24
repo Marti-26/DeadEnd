@@ -1905,6 +1905,7 @@ shape = SubResource("MuroEnemigosEscalera")
 [node name="ZonaSegura" parent="." unique_id=1075724460 instance=ExtResource("20_zona_segura")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.7, 4, -12.3)
 bloquear_frente_hueco = false
+frases_gato = Array[String](["Se tragó mi plata.", "Ni el paquete ni el cambio. Nada.", "No le metas monedas. En serio."])
 
 [node name="HUD" parent="." unique_id=1307096171 instance=ExtResource("21_hud")]
 

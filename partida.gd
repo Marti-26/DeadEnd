@@ -15,6 +15,7 @@ var llegada: String = ""
 var guardado: Dictionary = {}
 var estacion_usada: bool = false
 var _perdiendo: bool = false
+var _apagon = null
 
 # Terminales necesarias para viajar a Zona C
 var terminal_1_activada: bool = false
@@ -127,6 +128,13 @@ func perder() -> void:
 	_perdiendo = true
 	recuperando = false
 
+	var con_apagon: bool = estres >= 99.9
+	if con_apagon:
+		if _apagon == null:
+			_apagon = preload("res://apagon.gd").new()
+			add_child(_apagon)
+		await _apagon.apagar()
+
 	if guardado.is_empty():
 		print("Perdió: vuelve al inicio")
 
@@ -166,7 +174,10 @@ func perder() -> void:
 
 		cambiar_escena(escena_guardada, punto_guardado)
 
-	await get_tree().create_timer(0.5).timeout
+	if con_apagon:
+		await _apagon.encender()
+	else:
+		await get_tree().create_timer(0.5).timeout
 	_perdiendo = false
 
 

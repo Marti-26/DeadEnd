@@ -27,7 +27,7 @@ signal jugador_salio(cuerpo: Node3D)
 @export var color_luz_gato: Color = Color(0.55, 0.65, 1.0)
 @export var frases_gato: Array[String] = [
 	"Se tragó mi plata.",
-	"Ni el paquete ni el cambio. Nada.",
+	"Ni el paquete ni las vueltas. Nada.",
 	"No le metas monedas. En serio.",
 ]
 @export var frases_caniche: Array[String] = [

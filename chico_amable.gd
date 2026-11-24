@@ -79,8 +79,7 @@ func _physics_process(delta):
 					ir_a(jugador.global_position)
 		Estado.HABLAR:
 			frenar("interact-right" if reloj > 2.5 else "idle")
-			if reloj <= 0.001 or distancia() > radio_notar + 1.0:
-				_dialogo().ocultar()
+			if not _dialogo().esta_visible():
 				estado = Estado.QUIETO
 		Estado.AVISO:
 			frenar("idle")
@@ -118,7 +117,7 @@ func _physics_process(delta):
 					frenar("idle")
 			else:
 				frenar("idle")
-	if Input.is_action_just_pressed(tecla) and not agresivo and distancia() <= alcance_hablar:
+	if Input.is_action_just_pressed(tecla) and not agresivo and distancia() <= alcance_hablar and not _dialogo().esta_visible():
 		interactuar()
 	move_and_slide()
 

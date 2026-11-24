@@ -10,7 +10,6 @@ extends Node3D
 @export var solo_dentro_vagon: bool = true
 
 var _indice: int = 0
-var _hablando: bool = false
 
 
 func _physics_process(_delta: float) -> void:
@@ -19,11 +18,7 @@ func _physics_process(_delta: float) -> void:
 	var jugador: Node3D = get_tree().get_first_node_in_group(Grupos.JUGADOR) as Node3D
 	if jugador == null:
 		return
-	var cerca: bool = _al_alcance(jugador)
-	if _hablando and not cerca:
-		_hablando = false
-		Dialogo.obtener(get_tree()).ocultar()
-	if cerca and Input.is_action_just_pressed(tecla):
+	if _al_alcance(jugador) and Input.is_action_just_pressed(tecla) and not Dialogo.obtener(get_tree()).esta_visible():
 		hablar()
 
 
@@ -36,7 +31,6 @@ func hablar() -> void:
 		animacion = sprite.animation
 	Dialogo.obtener(get_tree()).mostrar(nombre_dialogo, frases[_indice], duracion, false, marcos, animacion)
 	_indice = (_indice + 1) % frases.size()
-	_hablando = true
 
 
 func _al_alcance(jugador: Node3D) -> bool:
