@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bi6fkcvjljwkt"
-path="res://.godot/imported/chico_amable_idle_frente_5.png-f43878d913ff0bb3054e3ef884789c9e.ctex"
+uid="uid://p7kj2wxp4462"
+path="res://.godot/imported/chico_amable_entusiasmado_frente_2.png-d84d4cc5bfcf208bef05dcfc9df807c6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/chico amable/chico_amable_idle_frente_5.png"
-dest_files=["res://.godot/imported/chico_amable_idle_frente_5.png-f43878d913ff0bb3054e3ef884789c9e.ctex"]
+source_file="res://assets/chico amable/chico_amable_entusiasmado_frente_2.png"
+dest_files=["res://.godot/imported/chico_amable_entusiasmado_frente_2.png-d84d4cc5bfcf208bef05dcfc9df807c6.ctex"]
 
 [params]
 
