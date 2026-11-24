@@ -35,6 +35,12 @@ func _process(_delta: float) -> void:
 	_actualizar_boton_celular()
 
 
+func _unhandled_input(evento: InputEvent) -> void:
+	if evento.is_action_pressed(&"alternar_mapa") and visible and _tiene_celular():
+		_celular.alternar()
+		get_viewport().set_input_as_handled()
+
+
 func _crear_celular() -> void:
 	_celular = CelularMapa.new()
 	add_child(_celular)
@@ -43,7 +49,7 @@ func _crear_celular() -> void:
 	_boton_celular.focus_mode = Control.FOCUS_NONE
 	_boton_celular.custom_minimum_size = Vector2(46.0, 52.0)
 	_boton_celular.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	_boton_celular.tooltip_text = "Mapa"
+	_boton_celular.tooltip_text = "Mapa (M)"
 	_boton_celular.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	_boton_celular.pressed.connect(_celular.alternar)
 	$Contenedor.add_child(_boton_celular)
@@ -60,14 +66,16 @@ func _crear_celular() -> void:
 func _actualizar_boton_celular() -> void:
 	if _boton_celular == null:
 		return
-	var tiene: bool = false
-	if is_instance_valid(_nodo_jugador) and "tiene_celular" in _nodo_jugador:
-		tiene = bool(_nodo_jugador.get("tiene_celular"))
-	elif Partida != null:
-		tiene = Partida.celular_recogido
+	var tiene: bool = _tiene_celular()
 	_boton_celular.visible = tiene
 	if not tiene and _celular.abierto:
 		_celular.cerrar()
+
+
+func _tiene_celular() -> bool:
+	if is_instance_valid(_nodo_jugador) and "tiene_celular" in _nodo_jugador:
+		return bool(_nodo_jugador.get("tiene_celular"))
+	return Partida != null and Partida.celular_recogido
 
 
 func _dibujar_icono_celular() -> void:
