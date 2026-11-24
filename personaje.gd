@@ -106,6 +106,7 @@ var estres: float = 0.0:
 			_jadeo_disparado = false
 		elif not _jadeo_disparado and previo < ESTRES_MAX:
 			_disparar_jadeo()
+			Partida.perder.call_deferred()
 
 var estado = Estado.QUIETO
 var ruido = 0.0
@@ -332,12 +333,15 @@ func _consumir_bateria(delta: float) -> void:
 		tasa = TASA_BATERIA_AUDIFONOS
 	if _celular_abierto():
 		tasa += TASA_BATERIA_CELULAR
-	bateria = maxf(0.0, bateria - tasa * delta)
+	var nueva: float = maxf(0.0, bateria - tasa * delta)
+	if nueva <= 0.0 and audifonos_activos:
+		alternar_audifonos()
+	bateria = nueva
 
 	if bateria <= 0.0:
 		bateria = 0.0
 		linterna_encendida = false
-		Partida.perder()
+		_actualizar_linterna()
 
 
 func _celular_abierto() -> bool:
