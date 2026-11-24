@@ -818,7 +818,10 @@ func _atender_chico(delta: float) -> void:
 
 func _decir_chico(frase: String) -> void:
 	var sprite: AnimatedSprite3D = _chico.get_node_or_null("Sprite") as AnimatedSprite3D
-	var animacion: StringName = _chico.call("animacion_charla") if _chico.has_method("animacion_charla") else &"idle"
+	var animacion: StringName = &"idle"
+	if _chico.has_method("animacion_charla") and _charla >= 0 and (_charla == 0 or _charla == FRASES_CHICO.size() - 1):
+		animacion = _chico.call("animacion_charla")
+	_chico.set("animacion_hablando", animacion)
 	Dialogo.obtener(get_tree()).mostrar(str(_chico.get("nombre_dialogo")), frase, 4.0, false, sprite.sprite_frames if sprite != null else null, animacion)
 	_chico.set("estado", 2)
 	if _chico.has_method("mirar"):

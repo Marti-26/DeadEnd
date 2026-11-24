@@ -33,6 +33,7 @@ var _tiempo_paso = 0.0
 var agresivo = false
 var huyendo = false
 var _confundido: float = 0.0
+var animacion_hablando: StringName = &"idle"
 
 @onready var sprite: AnimatedSprite3D = $Sprite
 @onready var _sprite_y: float = $Sprite.position.y
@@ -140,7 +141,8 @@ func interactuar():
 		print("Chico Amable -> AVISO cuadro ", Engine.get_physics_frames())
 		reloj = tiempo_aviso
 		return
-	_dialogo().mostrar(nombre_dialogo, frases[mini(n - 1, frases.size() - 1)], 4.0, false, sprite.sprite_frames if sprite != null else null, animacion_charla())
+	animacion_hablando = animacion_charla() if n == 1 else &"idle"
+	_dialogo().mostrar(nombre_dialogo, frases[mini(n - 1, frases.size() - 1)], 4.0, false, sprite.sprite_frames if sprite != null else null, animacion_hablando)
 	estado = Estado.HABLAR
 	reloj = 4.0
 	if n == 1 and senalar:
@@ -182,7 +184,7 @@ func _process(delta):
 	var animacion: StringName = &"idle"
 	if not agresivo and not huyendo:
 		if estado == Estado.HABLAR:
-			animacion = animacion_charla()
+			animacion = animacion_hablando if sprite.sprite_frames.has_animation(animacion_hablando) else &"idle"
 		elif _confundido > 0.0 and sprite.sprite_frames.has_animation(&"confundido"):
 			animacion = &"confundido"
 	if sprite.animation != animacion:
