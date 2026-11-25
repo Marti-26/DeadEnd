@@ -12,22 +12,26 @@ extends Node
 @export var tiempo_saltar: float = 1.0
 @export var pausa_entre_pasos: float = 2.5
 @export var ancho_notificacion: float = 620.0
+@export_range(0.0, 1.0) var factor_estres: float = 0.35
+@export var tiempo_interaccion: float = 1.5
+@export var posicion_cartel: Vector3 = Vector3(-18.6, 2.0, -3.68)
 
 const FUENTE: FontFile = preload("res://assets/font/ShareTechMono-Regular.ttf")
 
 const PASOS: Array[Dictionary] = [
-	{"id": "mover", "pista": true, "texto": "Muévete con W A S D."},
+	{"id": "mover", "pista": true, "texto": "Muévete con W A S D o con las flechas del teclado."},
 	{"id": "celular", "pista": true, "texto": "Eso que brilla en amarillo es un celular.\nAcércate y presiona E para recogerlo."},
 	{"id": "linterna", "texto": "Aquí abajo casi no se ve.\nPresiona F para prender la linterna."},
-	{"id": "mapa", "desde_x": -31.5, "texto": "Haz clic en el ícono del celular, arriba a la izquierda, para abrir el mapa.\nAhí ves en qué piso y en qué zona estás. Haz clic sobre este mismo icono para cerrarlo."},
-	{"id": "carga", "desde_x": -30.0, "texto": "Te queda poca batería.\nVe a la estación de carga y mantén E hasta llenarla."},
+	{"id": "mapa", "desde_x": -31.5, "texto": "Haz clic en el ícono del celular, arriba a la izquierda (o presiona M), para abrir el mapa.\nAhí ves en qué piso y en qué zona estás. Vuelve a hacer clic en el ícono para cerrarlo."},
+	{"id": "carga", "desde_x": -30.0, "texto": "Te queda poca batería.\nVe a la estación de carga que señala la flecha y mantén E. La barra te muestra cuánto falta."},
 	{"id": "audifonos", "desde_x": -26.0, "texto": "Presiona Q para ponerte los audífonos. Te calman, pero dejas de oír lo que pasa alrededor.\nPóntelos y vuelve a presionar Q para quitártelos."},
-	{"id": "estres", "importante": true, "texto": "Nunca dejes que tu estrés llegue a 100 o perderas y reapareceras en el ultimo punto de guardado.\nPara bajarlo, ponte los audífonos o busca una zona segura."},
-	{"id": "sigilo", "desde_x": -24.5, "texto": "Mantén SHIFT mientras caminas.\nVas más lento, pero no haces ruido."},
-	{"id": "dash", "desde_x": -23.5, "texto": "Presiona ESPACIO para hacer un dash.\nEs rápido, pero se te pueden escuchar."},
+	{"id": "estres", "importante": true, "texto": "La barra roja de arriba es tu estrés: sube en la oscuridad y cerca de las criaturas.\nSi llega a 100 perderás y reaparecerás en el último punto de guardado. Para bajarlo: audífonos, esconderte o una zona segura."},
+	{"id": "sigilo", "desde_x": -24.5, "texto": "Mantén SHIFT mientras caminas para ir en sigilo: vas más lento, pero no haces ruido.\nÚsalo cerca de las criaturas que oyen. Si te escuchan, te persiguen."},
+	{"id": "dash", "desde_x": -23.5, "texto": "Presiona ESPACIO para hacer un dash: es rápido, pero hace mucho ruido.\nEvítalo cerca de las criaturas."},
+	{"id": "cartel", "desde_x": -21.5, "texto": "¿Ves el cartel que señala la flecha? Puedes hacer clic sobre los carteles para leerlos.\nÁbrelo con un clic y ciérralo haciendo clic afuera."},
 	{"id": "terminal", "desde_x": -14.0, "texto": "La pantalla de la pared es un punto de activación. Mantén E para activarla.\nSi no las activas todas, el metro solo te llevara en circulos y no podrás seguir."},
 	{"id": "chico", "desde_x": -6.0, "texto": "Hay alguien más adelante.\nAcércate y presiona R para hablar con él."},
-	{"id": "esconderse", "desde_x": -2.0, "texto": "Haz lo que te dijo: métete bajo la banca.\nSolo acercate para esconderte."},
+	{"id": "esconderse", "desde_x": -2.0, "texto": "Haz lo que te dijo: escóndete bajo la banca que señala la flecha.\nSolo camina hacia ella y entrarás sola. Para salir, muévete o presiona E."},
 	{"id": "salida", "desde_x": 1.5, "texto": "Eso es todo.\nSube por la escalera del fondo, desde aqui estas por tú cuenta."},
 ]
 
@@ -47,6 +51,8 @@ const FRASES_CHICO_REPETIDAS: Array[String] = [
 const ESCENA_CHICO: PackedScene = preload("res://chico_amable.tscn")
 const DESFASE_COPIA: float = 40.0
 const AMARILLO: Color = Color(1.0, 0.84, 0.2)
+const POSTER_PARED: Script = preload("res://poster_pared.gd")
+const TEXTURA_CARTEL: String = "res://assets/npcs y posters/poster_atrapada.png"
 
 var _jugador: Personaje = null
 var _paso: int = 0
@@ -84,6 +90,17 @@ var _raiz: Control = null
 var _estilo: StyleBoxFlat = null
 var _esperando: bool = false
 var _espera: float = 0.0
+var _marcadores: Array[Dictionary] = []
+var _cartel: Node3D = null
+var _interactuar: Interactuar = null
+var _estres_previo: float = -1.0
+var _teclas: Control = null
+var _teclas_estilos: Dictionary = {}
+var _carga_caja: PanelContainer = null
+var _carga_barra: ProgressBar = null
+var _carga_texto: Label = null
+var _hud: Node = null
+var _aviso_bloqueo: float = 0.0
 
 
 func _ready() -> void:
@@ -110,6 +127,7 @@ func _ready() -> void:
 	_ampliar_pasillo(escena)
 	_acortar_pasillo(escena)
 	_tenir_luces(escena)
+	_atenuar_maquinas(escena)
 	_tomar_camara(escena)
 	_jugador = get_tree().get_first_node_in_group(Grupos.JUGADOR) as Personaje
 	if _jugador != null:
@@ -123,6 +141,11 @@ func _ready() -> void:
 			_jugador.velocity = Vector3.ZERO
 		_inicio = _jugador.global_position
 		_mover_camara(0.0, true)
+		for hijo: Node in _jugador.get_children():
+			if hijo is Interactuar:
+				_interactuar = hijo as Interactuar
+				_interactuar.tiempo_necesario = tiempo_interaccion
+	_estres_previo = Partida.estres
 	_terminal = escena.get_node_or_null("Estacion/Puntoactivación1")
 	var subida: Area3D = escena.get_node_or_null("Escalera/SubidaSegundoPiso") as Area3D
 	if subida != null:
@@ -131,6 +154,8 @@ func _ready() -> void:
 	_crear_estacion_carga(escena)
 	_crear_chico(escena)
 	_banca = escena.get_node_or_null("Estacion/Banca2") as Node3D
+	_crear_cartel(escena)
+	_crear_marcadores(escena)
 	var celular: Node3D = escena.get_node_or_null("Celular") as Node3D
 	if celular != null:
 		_poner_destellos(celular, Vector3(0.0, 0.05, 0.0), 0.18)
@@ -148,15 +173,6 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if _terminado:
 		return
-	if Input.is_physical_key_pressed(KEY_TAB):
-		_saltando += delta
-		_aviso_saltar.modulate.a = 1.0
-		if _saltando >= tiempo_saltar:
-			_terminar()
-			return
-	else:
-		_saltando = 0.0
-		_aviso_saltar.modulate.a = 0.55
 	if _jugador == null or not is_instance_valid(_jugador):
 		_jugador = get_tree().get_first_node_in_group(Grupos.JUGADOR) as Personaje
 		return
@@ -165,6 +181,16 @@ func _process(delta: float) -> void:
 	var tapada: bool = _charla >= 0 or Dialogo.obtener(get_tree()).esta_visible()
 	_raiz.modulate.a = move_toward(_raiz.modulate.a, 0.0 if tapada else 1.0, delta * 5.0)
 	_animar_resaltado(delta)
+	_animar_marcadores(delta)
+	_regular_estres()
+	_mostrar_carga()
+	_animar_teclas()
+	_resaltar_barras()
+	if _aviso_bloqueo > 0.0:
+		_aviso_bloqueo -= delta
+		if _aviso_bloqueo <= 0.0 and _paso < PASOS.size() and not bool(PASOS[_paso].get("pista", false)):
+			var t_pista: Tween = create_tween()
+			t_pista.tween_property(_pista, "modulate:a", 0.0, 0.3)
 	if _destello_terminal != null and _terminal != null and bool(_terminal.get("activada")):
 		_destello_terminal.visible = false
 		_destello_terminal = null
@@ -217,6 +243,12 @@ func _cumplido(delta: float) -> bool:
 			return _contador >= 1.5
 		"chico":
 			return _charla_hecha
+		"cartel":
+			if _cartel == null:
+				return true
+			if _cartel.get("_capa") != null:
+				_bandera = true
+			return _bandera and _cartel.get("_capa") == null
 	return false
 
 
@@ -231,8 +263,17 @@ func _avanzar() -> void:
 
 
 func _al_llegar_salida(cuerpo: Node3D) -> void:
-	if cuerpo.is_in_group(Grupos.JUGADOR):
+	if not cuerpo.is_in_group(Grupos.JUGADOR):
+		return
+	if _paso >= PASOS.size() - 1:
 		_terminar()
+		return
+	if _jugador != null:
+		_jugador.global_position.x -= 1.6
+		_jugador.velocity = Vector3.ZERO
+	_pista.text = "Todavía no puedes subir.\nTermina primero lo que te falta del tutorial."
+	_pista.modulate.a = 1.0
+	_aviso_bloqueo = 3.0
 
 
 func _terminar() -> void:
@@ -271,8 +312,8 @@ func _construir_interfaz() -> void:
 	_pista.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
 	_pista.offset_left = -420.0
 	_pista.offset_right = 420.0
-	_pista.offset_top = -150.0
-	_pista.offset_bottom = -110.0
+	_pista.offset_top = -240.0
+	_pista.offset_bottom = -200.0
 	_pista.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_pista.modulate.a = 0.0
 	_raiz.add_child(_pista)
@@ -311,18 +352,8 @@ func _construir_interfaz() -> void:
 	_texto.custom_minimum_size = Vector2(ancho_notificacion - 40.0, 0.0)
 	columna.add_child(_texto)
 
-	_aviso_saltar = _etiqueta(14, Color(0.78, 0.96, 0.92))
-	_aviso_saltar.text = "Mantén TAB para saltar el tutorial"
-	_aviso_saltar.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	_aviso_saltar.offset_left = -330.0
-	_aviso_saltar.offset_top = -40.0
-	_aviso_saltar.offset_right = -20.0
-	_aviso_saltar.offset_bottom = -14.0
-	_aviso_saltar.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	_aviso_saltar.add_theme_color_override("font_outline_color", Color(0.08, 0.03, 0.0, 0.9))
-	_aviso_saltar.add_theme_constant_override("outline_size", 6)
-	_aviso_saltar.modulate.a = 0.55
-	_capa.add_child(_aviso_saltar)
+	_crear_teclas()
+	_crear_barra_carga()
 
 
 func _etiqueta(tamano: int, color: Color) -> Label:
@@ -365,10 +396,10 @@ func _mostrar_paso() -> void:
 	var ancho: float = minf(ancho_notificacion, pantalla.x - 40.0)
 	_tarjeta.size.x = ancho
 	var x: float = (pantalla.x - ancho) * 0.5
-	_tarjeta.position = Vector2(x, -_tarjeta.size.y - 20.0)
+	_tarjeta.position = Vector2(x, pantalla.y + 20.0)
 	_tarjeta.modulate.a = 1.0
 	_tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	_tween.tween_property(_tarjeta, "position", Vector2(x, 18.0), 0.45)
+	_tween.tween_property(_tarjeta, "position", Vector2(x, pantalla.y - _tarjeta.size.y - 28.0), 0.45)
 	var sonido: AudioStreamPlayer = _jugador.get_node_or_null("Celular") as AudioStreamPlayer if _jugador != null else null
 	if sonido != null and sonido.stream != null:
 		sonido.play()
@@ -380,11 +411,14 @@ func _marcar_listo() -> void:
 		_tween.kill()
 	_esperando = true
 	_espera = pausa_entre_pasos
+	if _paso < PASOS.size() and str(PASOS[_paso]["id"]) == "celular":
+		_espera = 0.1
 	if _tarjeta.visible:
 		_titulo.text = "LISTO"
+		var abajo: float = _capa.get_viewport().get_visible_rect().size.y + 20.0
 		_tween = create_tween()
 		_tween.tween_interval(0.7)
-		_tween.tween_property(_tarjeta, "position:y", -_tarjeta.size.y - 20.0, 0.3).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+		_tween.tween_property(_tarjeta, "position:y", abajo, 0.3).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 		_tween.tween_callback(func() -> void: _tarjeta.visible = false)
 	else:
 		_tween = create_tween()
@@ -839,6 +873,8 @@ func _resaltar_paso(id: String) -> void:
 			_resaltar(_chico, 3.8)
 		"esconderse":
 			_resaltar(_banca, 1.6)
+		"cartel":
+			_resaltar(_cartel, 1.1)
 		"terminal":
 			_resaltar(_terminal as Node3D, 1.2)
 		"mapa":
@@ -865,7 +901,7 @@ func _resaltar(objetivo: Node3D, alto: float) -> void:
 		var flecha: MeshInstance3D = MeshInstance3D.new()
 		flecha.name = "Flecha"
 		var prisma: PrismMesh = PrismMesh.new()
-		prisma.size = Vector3(0.34, 0.34, 0.08)
+		prisma.size = Vector3(0.62, 0.62, 0.14)
 		flecha.mesh = prisma
 		flecha.rotation.z = PI
 		var mat: StandardMaterial3D = StandardMaterial3D.new()
@@ -877,8 +913,8 @@ func _resaltar(objetivo: Node3D, alto: float) -> void:
 		var luz: OmniLight3D = OmniLight3D.new()
 		luz.name = "LuzAura_Resaltado"
 		luz.light_color = AMARILLO
-		luz.light_energy = 1.4
-		luz.omni_range = 2.4
+		luz.light_energy = 1.8
+		luz.omni_range = 2.8
 		luz.shadow_enabled = false
 		_resaltado.add_child(luz)
 	_resaltado.visible = true
@@ -900,17 +936,265 @@ func _animar_resaltado(delta: float) -> void:
 	var base: Vector3 = _resaltado_objetivo.global_position
 	_resaltado.global_position = Vector3(base.x, base.y, maxf(base.z, -3.2))
 	var flecha: Node3D = _resaltado.get_node("Flecha") as Node3D
-	flecha.position = Vector3(0.0, _resaltado_alto + 0.12 * sin(_resaltado_tiempo * 4.0), 0.3)
+	flecha.position = Vector3(0.0, _resaltado_alto + 0.25 + 0.16 * sin(_resaltado_tiempo * 4.0), 0.3)
 	var luz: OmniLight3D = _resaltado.get_node("LuzAura_Resaltado") as OmniLight3D
 	luz.position = Vector3(0.0, minf(_resaltado_alto * 0.5, 1.2), 0.6)
 	luz.light_energy = 1.2 + 0.4 * sin(_resaltado_tiempo * 3.0)
 
 
 func _buscar_boton_mapa(n: Node) -> Control:
-	if n is Button and (n as Button).tooltip_text == "Mapa":
+	if n is Button and (n as Button).tooltip_text.begins_with("Mapa"):
 		return n as Control
 	for h: Node in n.get_children():
 		var b: Control = _buscar_boton_mapa(h)
 		if b != null:
 			return b
 	return null
+
+
+func _crear_cartel(escena: Node) -> void:
+	var textura: Texture2D = load(TEXTURA_CARTEL) as Texture2D
+	if textura == null:
+		return
+	_cartel = POSTER_PARED.new() as Node3D
+	_cartel.name = "CartelTutorial"
+	_cartel.set("alto", 1.35)
+	_cartel.set("textura", textura)
+	escena.add_child(_cartel)
+	_cartel.global_position = posicion_cartel
+
+
+func _crear_marcadores(escena: Node) -> void:
+	var lista: Array[Array] = [
+		[escena.get_node_or_null("Celular"), 0.9],
+		[escena.get_node_or_null("EstacionCargaPractica"), 2.6],
+		[_terminal, 1.2],
+		[_chico, 3.8],
+		[_cartel, 1.1],
+	]
+	for banca: Node in get_tree().get_nodes_in_group(Grupos.ESCONDITES):
+		if banca is Node3D and escena.is_ancestor_of(banca):
+			lista.append([banca, 1.6])
+	var mat: StandardMaterial3D = StandardMaterial3D.new()
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.albedo_color = Color(AMARILLO.r, AMARILLO.g, AMARILLO.b, 0.75)
+	var prisma: PrismMesh = PrismMesh.new()
+	prisma.size = Vector3(0.36, 0.36, 0.08)
+	var raiz: Node3D = Node3D.new()
+	raiz.name = "Marcadores"
+	escena.add_child(raiz)
+	for par: Array in lista:
+		var objetivo: Node3D = par[0] as Node3D
+		if objetivo == null:
+			continue
+		var flecha: MeshInstance3D = MeshInstance3D.new()
+		flecha.mesh = prisma
+		flecha.material_override = mat
+		flecha.rotation.z = PI
+		flecha.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		raiz.add_child(flecha)
+		_marcadores.append({"flecha": flecha, "objetivo": objetivo, "alto": float(par[1]), "fase": randf() * TAU})
+
+
+func _animar_marcadores(_delta: float) -> void:
+	var t: float = Time.get_ticks_msec() * 0.001
+	for m: Dictionary in _marcadores:
+		var flecha: MeshInstance3D = m["flecha"] as MeshInstance3D
+		var objetivo = m["objetivo"]
+		if not is_instance_valid(objetivo):
+			flecha.visible = false
+			continue
+		var nodo: Node3D = objetivo as Node3D
+		var oculto: bool = nodo == _resaltado_objetivo and _resaltado != null and _resaltado.visible
+		if nodo == _terminal and bool(nodo.get("activada")):
+			oculto = true
+		flecha.visible = not oculto
+		var base: Vector3 = nodo.global_position
+		flecha.global_position = Vector3(base.x, base.y + float(m["alto"]) + 0.1 * sin(t * 3.0 + float(m["fase"])), maxf(base.z, -3.2) + 0.3)
+
+
+func _atenuar_maquinas(escena: Node) -> void:
+	for maquina: Node in escena.find_children("Expendedora*", "Node3D", true, false):
+		for n: Node in maquina.find_children("*", "GeometryInstance3D", true, false):
+			var geo: GeometryInstance3D = n as GeometryInstance3D
+			var original: Material = geo.material_override
+			if original == null and geo is MeshInstance3D and (geo as MeshInstance3D).mesh != null and (geo as MeshInstance3D).mesh.get_surface_count() > 0:
+				original = (geo as MeshInstance3D).get_active_material(0)
+			if not original is BaseMaterial3D:
+				continue
+			var mat: BaseMaterial3D = original.duplicate() as BaseMaterial3D
+			var c: Color = mat.albedo_color
+			var gris: float = c.r * 0.3 + c.g * 0.59 + c.b * 0.11
+			mat.albedo_color = Color(gris, gris, gris, c.a).lerp(c, 0.4).darkened(0.25)
+			if mat.emission_enabled:
+				mat.emission_energy_multiplier *= 0.3
+				var e: Color = mat.emission
+				var ge: float = e.r * 0.3 + e.g * 0.59 + e.b * 0.11
+				mat.emission = Color(ge, ge, ge).lerp(e, 0.4)
+			geo.material_override = mat
+		for n: Node in maquina.find_children("*", "Light3D", true, false):
+			(n as Light3D).light_energy *= 0.4
+
+
+func _regular_estres() -> void:
+	var actual: float = Partida.estres
+	if _estres_previo >= 0.0 and actual > _estres_previo and actual < 99.9:
+		actual = _estres_previo + (actual - _estres_previo) * factor_estres
+		Partida.estres = actual
+	_estres_previo = actual
+
+
+func _crear_teclas() -> void:
+	_teclas = Control.new()
+	_teclas.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_teclas.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	_teclas.offset_left = -230.0
+	_teclas.offset_right = 230.0
+	_teclas.offset_top = -370.0
+	_teclas.offset_bottom = -250.0
+	_teclas.modulate.a = 0.0
+	_raiz.add_child(_teclas)
+	var tam: float = 52.0
+	var hueco: float = 6.0
+	var grupos: Array[Array] = [
+		[0.0, [["W", KEY_W, 1, 0], ["A", KEY_A, 0, 1], ["S", KEY_S, 1, 1], ["D", KEY_D, 2, 1]]],
+		[270.0, [["^", KEY_UP, 1, 0], ["<", KEY_LEFT, 0, 1], ["v", KEY_DOWN, 1, 1], [">", KEY_RIGHT, 2, 1]]],
+	]
+	for grupo: Array in grupos:
+		var x0: float = float(grupo[0])
+		for tecla: Array in grupo[1]:
+			var caja: Panel = Panel.new()
+			caja.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			var estilo: StyleBoxFlat = StyleBoxFlat.new()
+			estilo.bg_color = Color(0.984, 0.945, 0.902, 0.92)
+			estilo.border_color = Color(0.847, 0.263, 0.435)
+			estilo.set_border_width_all(2)
+			estilo.border_width_bottom = 5
+			estilo.set_corner_radius_all(8)
+			caja.add_theme_stylebox_override("panel", estilo)
+			caja.size = Vector2(tam, tam)
+			caja.position = Vector2(x0 + float(tecla[2]) * (tam + hueco), float(tecla[3]) * (tam + hueco))
+			_teclas.add_child(caja)
+			_teclas_estilos[int(tecla[1])] = estilo
+			var simbolo: String = str(tecla[0])
+			if simbolo in ["^", "<", "v", ">"]:
+				var dibujo: Control = Control.new()
+				dibujo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				dibujo.set_anchors_preset(Control.PRESET_FULL_RECT)
+				dibujo.draw.connect(_dibujar_flecha_tecla.bind(dibujo, simbolo))
+				caja.add_child(dibujo)
+			else:
+				var letra: Label = _etiqueta(26, Color(0.42, 0.08, 0.2))
+				letra.text = simbolo
+				letra.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+				letra.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+				letra.set_anchors_preset(Control.PRESET_FULL_RECT)
+				caja.add_child(letra)
+	var o: Label = _etiqueta(22, Color(0.78, 0.96, 0.92))
+	o.text = "o"
+	o.add_theme_color_override("font_outline_color", Color(0.08, 0.03, 0.0, 0.9))
+	o.add_theme_constant_override("outline_size", 6)
+	o.position = Vector2(222.0, 66.0)
+	_teclas.add_child(o)
+
+
+func _dibujar_flecha_tecla(lienzo: Control, simbolo: String) -> void:
+	var c: Vector2 = lienzo.size * 0.5
+	var r: float = minf(lienzo.size.x, lienzo.size.y) * 0.26
+	var puntos: PackedVector2Array
+	match simbolo:
+		"^":
+			puntos = PackedVector2Array([c + Vector2(0, -r), c + Vector2(r, r * 0.7), c + Vector2(-r, r * 0.7)])
+		"v":
+			puntos = PackedVector2Array([c + Vector2(0, r), c + Vector2(-r, -r * 0.7), c + Vector2(r, -r * 0.7)])
+		"<":
+			puntos = PackedVector2Array([c + Vector2(-r, 0), c + Vector2(r * 0.7, -r), c + Vector2(r * 0.7, r)])
+		_:
+			puntos = PackedVector2Array([c + Vector2(r, 0), c + Vector2(-r * 0.7, r), c + Vector2(-r * 0.7, -r)])
+	lienzo.draw_colored_polygon(puntos, Color(0.42, 0.08, 0.2))
+
+
+func _animar_teclas() -> void:
+	if _teclas == null:
+		return
+	var mostrar: bool = _paso == 0 and not _esperando
+	_teclas.modulate.a = move_toward(_teclas.modulate.a, 1.0 if mostrar else 0.0, get_process_delta_time() * 3.0)
+	for codigo: int in _teclas_estilos:
+		var estilo: StyleBoxFlat = _teclas_estilos[codigo]
+		estilo.bg_color = AMARILLO if Input.is_physical_key_pressed(codigo) else Color(0.984, 0.945, 0.902, 0.92)
+
+
+func _crear_barra_carga() -> void:
+	_carga_caja = PanelContainer.new()
+	var estilo: StyleBoxFlat = StyleBoxFlat.new()
+	estilo.bg_color = Color(0.03, 0.05, 0.06, 0.85)
+	estilo.border_color = AMARILLO
+	estilo.set_border_width_all(2)
+	estilo.set_corner_radius_all(10)
+	estilo.content_margin_left = 14.0
+	estilo.content_margin_right = 14.0
+	estilo.content_margin_top = 8.0
+	estilo.content_margin_bottom = 10.0
+	_carga_caja.add_theme_stylebox_override("panel", estilo)
+	_carga_caja.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_carga_caja.set_anchors_preset(Control.PRESET_CENTER)
+	_carga_caja.offset_left = -170.0
+	_carga_caja.offset_right = 170.0
+	_carga_caja.offset_top = 90.0
+	_carga_caja.offset_bottom = 160.0
+	_carga_caja.visible = false
+	_capa.add_child(_carga_caja)
+	var columna: VBoxContainer = VBoxContainer.new()
+	columna.add_theme_constant_override("separation", 6)
+	_carga_caja.add_child(columna)
+	_carga_texto = _etiqueta(18, AMARILLO)
+	_carga_texto.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	columna.add_child(_carga_texto)
+	_carga_barra = ProgressBar.new()
+	_carga_barra.min_value = 0.0
+	_carga_barra.max_value = 100.0
+	_carga_barra.show_percentage = false
+	_carga_barra.custom_minimum_size = Vector2(300.0, 14.0)
+	var fondo: StyleBoxFlat = StyleBoxFlat.new()
+	fondo.bg_color = Color(0.15, 0.17, 0.18)
+	fondo.set_corner_radius_all(6)
+	var relleno: StyleBoxFlat = StyleBoxFlat.new()
+	relleno.bg_color = AMARILLO
+	relleno.set_corner_radius_all(6)
+	_carga_barra.add_theme_stylebox_override("background", fondo)
+	_carga_barra.add_theme_stylebox_override("fill", relleno)
+	_carga_barra.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	columna.add_child(_carga_barra)
+
+
+func _mostrar_carga() -> void:
+	if _carga_caja == null:
+		return
+	if _interactuar == null or not is_instance_valid(_interactuar) or _interactuar.progreso <= 0.01 or _interactuar.actual == null:
+		_carga_caja.visible = false
+		return
+	var accion: String = "Usando"
+	if _interactuar.actual is EstacionCarga:
+		accion = "Cargando batería"
+	elif _interactuar.actual == _terminal:
+		accion = "Activando punto"
+	var porcentaje: float = clampf(_interactuar.progreso, 0.0, 1.0) * 100.0
+	_carga_texto.text = "%s  %d%%" % [accion, int(porcentaje)]
+	_carga_barra.value = porcentaje
+	_carga_caja.visible = true
+
+
+func _resaltar_barras() -> void:
+	if _hud == null or not is_instance_valid(_hud):
+		_hud = get_tree().get_first_node_in_group(Grupos.GRUPO_HUD)
+		if _hud == null:
+			return
+	var id: String = str(PASOS[_paso]["id"]) if _paso < PASOS.size() and not _esperando else ""
+	var pulso: float = 0.5 + 0.5 * sin(Time.get_ticks_msec() * 0.008)
+	var barra_estres: Control = _hud.get("barra_estres") as Control
+	var barra_bateria: Control = _hud.get("barra_bateria") as Control
+	if barra_estres != null:
+		barra_estres.modulate = Color.WHITE.lerp(Color(1.6, 1.3, 0.4), pulso) if id == "estres" else Color.WHITE
+	if barra_bateria != null:
+		barra_bateria.modulate = Color.WHITE.lerp(Color(1.6, 1.3, 0.4), pulso) if id == "carga" else Color.WHITE
