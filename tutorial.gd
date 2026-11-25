@@ -52,6 +52,21 @@ const ESCENA_CHICO: PackedScene = preload("res://chico_amable.tscn")
 const DESFASE_COPIA: float = 40.0
 const AMARILLO: Color = Color(1.0, 0.84, 0.2)
 const POSTER_PARED: Script = preload("res://poster_pared.gd")
+const SEPARACION_GUIA: float = 1.1
+const SHADER_GUIA: String = """
+shader_type spatial;
+render_mode unshaded, cull_disabled, depth_draw_never, shadows_disabled;
+uniform vec4 color : source_color = vec4(1.0, 0.84, 0.2, 1.0);
+uniform float alfa = 0.0;
+void fragment() {
+	vec2 p = UV - 0.5;
+	float v = p.x + abs(p.y) - 0.12;
+	float banda = 1.0 - smoothstep(0.06, 0.09, abs(v));
+	float caja = step(abs(p.y), 0.36) * step(abs(p.x), 0.46);
+	ALBEDO = color.rgb;
+	ALPHA = banda * caja * alfa;
+}
+"""
 const TEXTURA_CARTEL: String = "res://assets/npcs y posters/poster_atrapada.png"
 
 var _jugador: Personaje = null
@@ -60,7 +75,6 @@ var _inicio: Vector3 = Vector3.ZERO
 var _contador: float = 0.0
 var _bandera: bool = false
 var _terminado: bool = false
-var _saltando: float = 0.0
 var _terminal: Node = null
 var _mapa: CelularMapa = null
 
@@ -70,7 +84,6 @@ var _tarjeta: PanelContainer = null
 var _titulo: Label = null
 var _texto: Label = null
 var _progreso: Label = null
-var _aviso_saltar: Label = null
 var _tween: Tween = null
 var _camara: Camera3D = null
 var _destellos: Array = []
@@ -101,6 +114,8 @@ var _carga_barra: ProgressBar = null
 var _carga_texto: Label = null
 var _hud: Node = null
 var _aviso_bloqueo: float = 0.0
+var _guias: Array[Dictionary] = []
+var _guia_tiempo: float = 0.0
 
 
 func _ready() -> void:
@@ -156,6 +171,7 @@ func _ready() -> void:
 	_banca = escena.get_node_or_null("Estacion/Banca2") as Node3D
 	_crear_cartel(escena)
 	_crear_marcadores(escena)
+	_crear_guias(escena)
 	var celular: Node3D = escena.get_node_or_null("Celular") as Node3D
 	if celular != null:
 		_poner_destellos(celular, Vector3(0.0, 0.05, 0.0), 0.18)
@@ -182,6 +198,7 @@ func _process(delta: float) -> void:
 	_raiz.modulate.a = move_toward(_raiz.modulate.a, 0.0 if tapada else 1.0, delta * 5.0)
 	_animar_resaltado(delta)
 	_animar_marcadores(delta)
+	_guiar(delta)
 	_regular_estres()
 	_mostrar_carga()
 	_animar_teclas()
@@ -1198,3 +1215,80 @@ func _resaltar_barras() -> void:
 		barra_estres.modulate = Color.WHITE.lerp(Color(1.6, 1.3, 0.4), pulso) if id == "estres" else Color.WHITE
 	if barra_bateria != null:
 		barra_bateria.modulate = Color.WHITE.lerp(Color(1.6, 1.3, 0.4), pulso) if id == "carga" else Color.WHITE
+
+
+func _crear_guias(escena: Node) -> void:
+	var sombreador: Shader = Shader.new()
+	sombreador.code = SHADER_GUIA
+	var quad: QuadMesh = QuadMesh.new()
+	quad.size = Vector2(0.75, 0.75)
+	var raiz: Node3D = Node3D.new()
+	raiz.name = "FlechasGuia"
+	escena.add_child(raiz)
+	for i: int in 14:
+		var mat: ShaderMaterial = ShaderMaterial.new()
+		mat.shader = sombreador
+		mat.set_shader_parameter("color", AMARILLO)
+		mat.set_shader_parameter("alfa", 0.0)
+		var flecha: MeshInstance3D = MeshInstance3D.new()
+		flecha.mesh = quad
+		flecha.material_override = mat
+		flecha.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		flecha.visible = false
+		raiz.add_child(flecha)
+		_guias.append({"flecha": flecha, "material": mat, "alfa": 0.0})
+
+
+func _destino_guia() -> Variant:
+	if _jugador == null or _paso >= PASOS.size() or _charla >= 0:
+		return null
+	var paso: Dictionary = PASOS[_paso]
+	if _esperando:
+		if not paso.has("desde_x"):
+			return null
+		var meta_x: float = float(paso["desde_x"]) + 1.0
+		if _jugador.global_position.x >= meta_x - 0.5:
+			return null
+		return Vector3(meta_x, 0.0, clampf(_jugador.global_position.z, -1.5, 2.0))
+	if str(paso["id"]) == "salida":
+		var subida: Node3D = get_parent().get_node_or_null("Escalera/SubidaSegundoPiso") as Node3D
+		if subida != null:
+			return Vector3(subida.global_position.x, 0.0, -2.4)
+	if _resaltado == null or not _resaltado.visible or not is_instance_valid(_resaltado_objetivo):
+		return null
+	var base: Vector3 = _resaltado_objetivo.global_position
+	return Vector3(base.x, 0.0, clampf(base.z, -2.5, 2.6))
+
+
+func _guiar(delta: float) -> void:
+	if _guias.is_empty():
+		return
+	_guia_tiempo += delta
+	var destino = _destino_guia()
+	var origen: Vector3 = Vector3.ZERO
+	var direccion: Vector3 = Vector3.ZERO
+	var distancia: float = 0.0
+	if destino != null:
+		origen = Vector3(_jugador.global_position.x, 0.0, _jugador.global_position.z)
+		var hacia: Vector3 = (destino as Vector3) - origen
+		distancia = hacia.length()
+		if distancia > 0.01:
+			direccion = hacia / distancia
+	var activo: bool = destino != null and distancia > 2.2
+	var desplazamiento: float = fmod(_guia_tiempo * 1.4, SEPARACION_GUIA)
+	var giro: Basis = Basis(Vector3.UP, atan2(-direccion.z, direccion.x)) * Basis(Vector3.RIGHT, -PI * 0.5)
+	for i: int in _guias.size():
+		var g: Dictionary = _guias[i]
+		var flecha: MeshInstance3D = g["flecha"] as MeshInstance3D
+		var mat: ShaderMaterial = g["material"] as ShaderMaterial
+		var s: float = 1.1 + desplazamiento + float(i) * SEPARACION_GUIA
+		var visible_aqui: bool = activo and s < distancia - 0.9
+		var alfa_actual: float = float(g["alfa"])
+		var alfa_meta: float = 0.0
+		if visible_aqui:
+			alfa_meta = 0.85 * clampf((s - 1.1) / 0.6, 0.0, 1.0) * clampf((distancia - 0.9 - s) / 0.8, 0.0, 1.0)
+			flecha.global_transform = Transform3D(giro, origen + direccion * s + Vector3(0.0, 0.03, 0.0))
+		var alfa: float = move_toward(alfa_actual, alfa_meta, delta * 4.0) if visible_aqui or not activo else alfa_meta
+		g["alfa"] = alfa
+		mat.set_shader_parameter("alfa", alfa)
+		flecha.visible = alfa > 0.01
