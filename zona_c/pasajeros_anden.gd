@@ -14,6 +14,7 @@ const MAXIMO_FINAL := 20
 const MAXIMO_POR_GRUPO := 3
 const MARGEN_ENTRADA := 2.2
 const SEPARACION_ENTRADA := 0.9
+const DISTANCIA_ALINEAR_TORNIQUETES := 3.0
 const CARRILES := [-1.65, 2.8, 0.15, 4.2]
 const VELOCIDADES := [2.65, 2.95, 2.8, 3.1]
 const ATLAS_ANIMALES := preload("res://assets/animales_aventureros.png")
@@ -31,10 +32,10 @@ class Peaton extends Node3D:
 	var sombra: SombraPies
 	var desde_escaleras := false
 
-	func caminar(delta: float, jugador: Vector3) -> void:
+	func caminar(delta: float, jugador: Vector3, puede_esquivar: bool) -> void:
 		position.x += direccion * rapidez * delta
 		var carril_objetivo := carril
-		if absf(jugador.x - position.x) < 2.0 and absf(jugador.z - carril) < 0.9:
+		if puede_esquivar and absf(jugador.x - position.x) < 2.0 and absf(jugador.z - carril) < 0.9:
 			carril_objetivo += -1.0 if carril > 1.2 else 1.0
 		position.z = move_toward(position.z, carril_objetivo, 2.5 * delta)
 
@@ -46,6 +47,7 @@ class Peaton extends Node3D:
 @export var camara: Camera3D
 @export var letrero_exit: Node3D
 @export var escaleras: Node3D
+@export var torniquetes: Node3D
 
 @onready var descanso: MeshInstance3D = escaleras.get_node("Descanso/Malla")
 
@@ -91,10 +93,12 @@ func _process(delta: float) -> void:
 	var posicion_jugador := to_local(jugador.global_position)
 	var posicion_camara_x := to_local(camara.global_position).x
 	var inicio := to_local(letrero_exit.global_position).x + DISTANCIA_DESPUES_DEL_EXIT
+	var x_torniquetes := to_local(torniquetes.global_position).x
 
 	for i in range(peatones.size() - 1, -1, -1):
 		var peaton := peatones[i]
-		peaton.caminar(delta, posicion_jugador)
+		var puede_esquivar := absf(peaton.position.x - x_torniquetes) > DISTANCIA_ALINEAR_TORNIQUETES
+		peaton.caminar(delta, posicion_jugador, puede_esquivar)
 		var hacia_salida := peaton.direccion > 0.0
 		var limite := fin_escaleras if hacia_salida else inicio
 		var distancia := (limite - peaton.position.x) * peaton.direccion

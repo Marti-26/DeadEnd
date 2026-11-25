@@ -5,6 +5,7 @@ extends Node3D
 @onready var ambiente: WorldEnvironment = $WorldEnvironment
 @onready var estacion: Node3D = $Estacion
 @onready var destello: Sprite3D = $EscalerasSalida/Destello
+@onready var luz_salida: OmniLight3D = $EscalerasSalida/LuzExteriorLateral
 
 const INICIO_LUZ: float = -32.0
 const FIN_LUZ: float = 34.0
@@ -33,7 +34,7 @@ func _ready() -> void:
 	ambiente.environment.ambient_light_color = Color(1.0, 0.85, 0.63)
 	ambiente.environment.ambient_light_energy = 0.045
 	Partida.estres = 0.0
-	_ocultar_barra_estres.call_deferred()
+	_ocultar_indicadores_hud.call_deferred()
 
 	for luz in luces.get_children():
 		if luz is OmniLight3D:
@@ -78,7 +79,6 @@ func _process(delta: float) -> void:
 		return
 
 	Partida.estres = 0.0
-	_ocultar_barra_estres()
 	avance_maximo = maxf(avance_maximo, personaje.global_position.x)
 	var progreso: float = smoothstep(INICIO_LUZ, FIN_LUZ, avance_maximo)
 
@@ -126,18 +126,19 @@ func _process(delta: float) -> void:
 		var material: StandardMaterial3D = parteluz["material"]
 		material.albedo_color = parteluz["inicial"].lerp(PARTELUZ_DORADO, parteluz["mezcla"])
 
-func _ocultar_barra_estres() -> void:
-	var hud: Node = get_node_or_null("HUD")
-	if hud == null:
-		hud = get_tree().get_first_node_in_group("hud")
+func _ocultar_indicadores_hud() -> void:
+	var hud := get_tree().get_first_node_in_group(Grupos.GRUPO_HUD)
 	if hud == null:
 		return
-	var etiqueta: Control = hud.get_node_or_null("Contenedor/EtiquetaEstres")
-	var barra: Control = hud.get_node_or_null("Contenedor/BarraEstres")
-	if etiqueta != null:
-		etiqueta.hide()
-	if barra != null:
-		barra.hide()
+	for ruta: NodePath in [
+		^"Contenedor/EtiquetaBateria",
+		^"Contenedor/BarraBateria",
+		^"Contenedor/EtiquetaEstres",
+		^"Contenedor/BarraEstres",
+	]:
+		var indicador := hud.get_node_or_null(ruta) as Control
+		if indicador != null:
+			indicador.hide()
 
 func _on_salida_superficie_body_entered(cuerpo: Node3D) -> void:
 	if terminado or not cuerpo.is_in_group("jugador"):
@@ -151,7 +152,7 @@ func _on_salida_superficie_body_entered(cuerpo: Node3D) -> void:
 	capa.layer = 20
 	add_child(capa)
 	var fondo := ColorRect.new()
-	fondo.color = Color(1.0, 1.0, 1.0, 0.0)
+	fondo.color = Color(1.0, 0.91, 0.74, 0.0)
 	capa.add_child(fondo)
 	fondo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var mensaje := Label.new()
@@ -162,8 +163,10 @@ func _on_salida_superficie_body_entered(cuerpo: Node3D) -> void:
 	mensaje.modulate.a = 0.0
 	fondo.add_child(mensaje)
 	mensaje.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	var cierre := create_tween()
-	cierre.tween_property(destello, "modulate:a", 1.0, 0.22)
+	var cierre := create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	cierre.tween_property(destello, "modulate:a", 1.0, 0.55)
+	cierre.parallel().tween_property(luz_salida, "light_energy", 3.5, 0.55)
+	cierre.parallel().tween_property(fondo, "color:a", 0.78, 0.55)
 	cierre.tween_interval(0.16)
-	cierre.tween_property(fondo, "color", Color(0.02, 0.03, 0.05), 0.65)
-	cierre.parallel().tween_property(mensaje, "modulate:a", 1.0, 0.65)
+	cierre.tween_property(fondo, "color", Color(0.02, 0.03, 0.05), 0.75)
+	cierre.parallel().tween_property(mensaje, "modulate:a", 1.0, 0.75)
