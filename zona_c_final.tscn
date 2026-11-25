@@ -26,6 +26,12 @@
 [ext_resource type="PackedScene" path="res://zona_c/escaleras_salida.tscn" id="ZC_escaleras"]
 [ext_resource type="Script" path="res://zona_c/pasajeros_anden.gd" id="ZC_peatones"]
 [ext_resource type="PackedScene" path="res://zona_c/torniquete_anden.tscn" id="ZC_torniquete"]
+[ext_resource type="Script" uid="uid://d1yo46kjs76th" path="res://poster_pared.gd" id="ZC_poster"]
+[ext_resource type="Texture2D" uid="uid://btagd5l53p4er" path="res://assets/npcs y posters/poster_atrapada.png" id="ZC_poster_atrapada"]
+[ext_resource type="Texture2D" uid="uid://d0ulr0nxhjyye" path="res://assets/npcs y posters/poster_se_vende.png" id="ZC_poster_se_vende"]
+[ext_resource type="Texture2D" path="res://assets/npcs y posters/RATINI1.jpg.jpeg" id="ZC_poster_ratini"]
+[ext_resource type="Texture2D" path="res://assets/npcs y posters/felidae1.png" id="ZC_poster_felidae"]
+[ext_resource type="Texture2D" path="res://assets/npcs y posters/poster_kitsuny.png" id="ZC_poster_kitsuny"]
 
 [sub_resource type="BoxShape3D" id="ZC_SueloContinuo"]
 size = Vector3(80, 0.4, 9.8)
@@ -1475,6 +1481,53 @@ pixel_size = 0.014
 shaded = true
 texture_filter = 0
 texture = ExtResource("ZC_ExitPixelTexture")
+
+[node name="Carteles" type="Node3D" parent="Estacion"]
+
+[node name="PosterAtrapada" type="Node3D" parent="Estacion/Carteles"]
+position = Vector3(-20.5, 2, -3.66)
+script = ExtResource("ZC_poster")
+textura = ExtResource("ZC_poster_atrapada")
+alto = 1.35
+
+[node name="PosterSeVende" type="Node3D" parent="Estacion/Carteles"]
+position = Vector3(-8.3, 1.95, -3.66)
+script = ExtResource("ZC_poster")
+textura = ExtResource("ZC_poster_se_vende")
+alto = 1.05
+
+[node name="PosterRatini" type="Node3D" parent="Estacion/Carteles"]
+position = Vector3(4, 1.86, -3.66)
+script = ExtResource("ZC_poster")
+textura = ExtResource("ZC_poster_ratini")
+alto = 1.85
+brillo = 0.18
+luz = 0.9
+color_luz = Color(1, 0.86, 0.95, 1)
+tinte = Color(1, 1, 1, 1)
+saturacion = 1.0
+
+[node name="PosterFelidae" type="Node3D" parent="Estacion/Carteles"]
+position = Vector3(15.5, 1.86, -3.66)
+script = ExtResource("ZC_poster")
+textura = ExtResource("ZC_poster_felidae")
+alto = 1.85
+brillo = 0.18
+luz = 0.9
+color_luz = Color(1, 0.86, 0.95, 1)
+tinte = Color(1, 1, 1, 1)
+saturacion = 1.0
+
+[node name="PosterKitsuny" type="Node3D" parent="Estacion/Carteles"]
+position = Vector3(26.2, 1.86, -3.66)
+script = ExtResource("ZC_poster")
+textura = ExtResource("ZC_poster_kitsuny")
+alto = 1.7
+brillo = 0.18
+luz = 0.9
+color_luz = Color(1, 0.86, 0.95, 1)
+tinte = Color(1, 1, 1, 1)
+saturacion = 1.0
 
 [node name="Ventana23" type="MeshInstance3D" parent="Estacion" unique_id=796396944]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 3.95, -3.68)
