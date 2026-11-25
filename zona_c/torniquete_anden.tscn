@@ -1,0 +1,84 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="Esmalte"]
+albedo_color = Color(0.15, 0.31, 0.32, 1)
+metallic = 0.32
+roughness = 0.46
+
+[sub_resource type="StandardMaterial3D" id="Acero"]
+albedo_color = Color(0.61, 0.68, 0.66, 1)
+metallic = 0.55
+roughness = 0.37
+
+[sub_resource type="StandardMaterial3D" id="Goma"]
+albedo_color = Color(0.075, 0.10, 0.11, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="LuzVerde"]
+shading_mode = 0
+albedo_color = Color(0.43, 0.91, 0.69, 1)
+
+[sub_resource type="BoxMesh" id="Zocalo"]
+material = SubResource("Goma")
+size = Vector3(1.24, 0.12, 0.48)
+
+[sub_resource type="BoxMesh" id="Carcasa"]
+material = SubResource("Esmalte")
+size = Vector3(1.19, 0.78, 0.43)
+
+[sub_resource type="BoxMesh" id="Tapa"]
+material = SubResource("Acero")
+size = Vector3(1.23, 0.13, 0.46)
+
+[sub_resource type="BoxMesh" id="Lector"]
+material = SubResource("Goma")
+size = Vector3(0.24, 0.042, 0.29)
+
+[sub_resource type="BoxMesh" id="Indicador"]
+material = SubResource("LuzVerde")
+size = Vector3(0.048, 0.008, 0.16)
+
+[sub_resource type="BoxMesh" id="Franja"]
+material = SubResource("LuzVerde")
+size = Vector3(0.70, 0.038, 0.012)
+
+[sub_resource type="BoxMesh" id="AletaAbierta"]
+material = SubResource("Acero")
+size = Vector3(0.44, 0.33, 0.024)
+
+[sub_resource type="BoxShape3D" id="Forma"]
+size = Vector3(1.24, 1.02, 0.48)
+
+[node name="Torniquete" type="StaticBody3D"]
+
+[node name="Colision" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.52, 0)
+shape = SubResource("Forma")
+
+[node name="Zocalo" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.07, 0)
+mesh = SubResource("Zocalo")
+
+[node name="Carcasa" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.50, 0)
+mesh = SubResource("Carcasa")
+
+[node name="Tapa" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.955, 0)
+mesh = SubResource("Tapa")
+
+[node name="Lector" type="MeshInstance3D" parent="."]
+position = Vector3(-0.38, 1.04, 0)
+mesh = SubResource("Lector")
+
+[node name="Indicador" type="MeshInstance3D" parent="."]
+position = Vector3(-0.43, 1.064, 0)
+mesh = SubResource("Indicador")
+
+[node name="Franja" type="MeshInstance3D" parent="."]
+position = Vector3(0.04, 0.77, 0.222)
+mesh = SubResource("Franja")
+
+[node name="AletaAbierta" type="MeshInstance3D" parent="."]
+position = Vector3(0.37, 0.51, 0.232)
+mesh = SubResource("AletaAbierta")

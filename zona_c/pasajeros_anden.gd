@@ -14,62 +14,46 @@ const MAXIMO_FINAL := 20
 const MAXIMO_POR_GRUPO := 3
 const MARGEN_ENTRADA := 2.2
 const SEPARACION_ENTRADA := 0.9
+const DISTANCIA_ALINEAR_TORNIQUETES := 3.0
 const CARRILES := [-1.65, 2.8, 0.15, 4.2]
 const VELOCIDADES := [2.65, 2.95, 2.8, 3.1]
-const MODELOS := [
-	preload("res://personaje/character-female-b.glb"),
-	preload("res://personaje/character-male-a.glb"),
-	preload("res://personaje/character-female-e.glb"),
-	preload("res://personaje/character-male-d.glb"),
-]
+const ATLAS_ANIMALES := preload("res://assets/animales_aventureros.png")
+const ANIMALES: Array[StringName] = [&"Zorro", &"Gato", &"Rana", &"Nutria", &"Conejo", &"Cuervo", &"Lobo"]
+const TAMANO_FOTOGRAMA := Vector2i(224, 152)
+const FOTOGRAMAS_CAMINATA := 5
+const TAMANO_PIXEL := 0.014
+const ALTURA_CENTRO_SPRITE := 72.5 * TAMANO_PIXEL
 
 class Peaton extends Node3D:
-	var modelo: Node3D
+	var sprite: AnimatedSprite3D
 	var carril: float
 	var direccion: float
 	var rapidez: float
 	var sombra: SombraPies
 	var desde_escaleras := false
-	var materiales_salida: Array[StandardMaterial3D] = []
 
-	func caminar(delta: float, jugador: Vector3) -> void:
+	func caminar(delta: float, jugador: Vector3, puede_esquivar: bool) -> void:
 		position.x += direccion * rapidez * delta
 		var carril_objetivo := carril
-		if absf(jugador.x - position.x) < 2.0 and absf(jugador.z - carril) < 0.9:
+		if puede_esquivar and absf(jugador.x - position.x) < 2.0 and absf(jugador.z - carril) < 0.9:
 			carril_objetivo += -1.0 if carril > 1.2 else 1.0
 		position.z = move_toward(position.z, carril_objetivo, 2.5 * delta)
-		var giro := atan2(direccion * rapidez, (carril_objetivo - position.z) * 2.0)
-		rotation.y = lerp_angle(rotation.y, giro, 1.0 - exp(-12.0 * delta))
 
 	func desvanecer(opacidad: float) -> void:
-		if materiales_salida.is_empty():
-			for nodo in modelo.find_children("*", "MeshInstance3D", true, false):
-				var malla := nodo as MeshInstance3D
-				if malla.mesh == null:
-					continue
-				for i in range(malla.mesh.get_surface_count()):
-					var original := malla.get_active_material(i) as StandardMaterial3D
-					if original == null:
-						continue
-					var material := original.duplicate() as StandardMaterial3D
-					material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-					malla.set_surface_override_material(i, material)
-					materiales_salida.append(material)
-		for material in materiales_salida:
-			var color := material.albedo_color
-			color.a = opacidad
-			material.albedo_color = color
+		sprite.modulate.a = opacidad
 		sombra.opacidad = 0.45 * opacidad
 
 @export var jugador: Node3D
 @export var camara: Camera3D
 @export var letrero_exit: Node3D
 @export var escaleras: Node3D
+@export var torniquetes: Node3D
 
 @onready var descanso: MeshInstance3D = escaleras.get_node("Descanso/Malla")
 
 var peatones: Array[Peaton] = []
 var peldanos: Array[MeshInstance3D] = []
+var marcos_animales: SpriteFrames
 var inicio_escaleras: float
 var fin_escaleras: float
 var altura_descanso: float
@@ -77,6 +61,7 @@ var espera := 0.0
 var entradas := 0
 
 func _ready() -> void:
+	marcos_animales = _crear_marcos_animales()
 	inicio_escaleras = to_local(escaleras.global_position).x
 	for nodo in escaleras.get_children():
 		if nodo is MeshInstance3D and nodo.name.begins_with("Escalon") and nodo.mesh is BoxMesh:
@@ -87,16 +72,33 @@ func _ready() -> void:
 	fin_escaleras = borde_descanso.x
 	altura_descanso = borde_descanso.y
 
+func _crear_marcos_animales() -> SpriteFrames:
+	var marcos := SpriteFrames.new()
+	marcos.remove_animation(&"default")
+	for fila in range(ANIMALES.size()):
+		var animal := ANIMALES[fila]
+		marcos.add_animation(animal)
+		marcos.set_animation_speed(animal, 7.0)
+		for columna in range(1, FOTOGRAMAS_CAMINATA + 1):
+			var fotograma := AtlasTexture.new()
+			fotograma.atlas = ATLAS_ANIMALES
+			fotograma.region = Rect2(Vector2i(columna, fila) * TAMANO_FOTOGRAMA, TAMANO_FOTOGRAMA)
+			fotograma.filter_clip = true
+			marcos.add_frame(animal, fotograma)
+	return marcos
+
 func _process(delta: float) -> void:
 	if jugador == null or camara == null or letrero_exit == null or get_viewport().get_camera_3d() != camara:
 		return
 	var posicion_jugador := to_local(jugador.global_position)
 	var posicion_camara_x := to_local(camara.global_position).x
 	var inicio := to_local(letrero_exit.global_position).x + DISTANCIA_DESPUES_DEL_EXIT
+	var x_torniquetes := to_local(torniquetes.global_position).x
 
 	for i in range(peatones.size() - 1, -1, -1):
 		var peaton := peatones[i]
-		peaton.caminar(delta, posicion_jugador)
+		var puede_esquivar := absf(peaton.position.x - x_torniquetes) > DISTANCIA_ALINEAR_TORNIQUETES
+		peaton.caminar(delta, posicion_jugador, puede_esquivar)
 		var hacia_salida := peaton.direccion > 0.0
 		var limite := fin_escaleras if hacia_salida else inicio
 		var distancia := (limite - peaton.position.x) * peaton.direccion
@@ -166,24 +168,26 @@ func _entrar(lado: float, inicio: float, separacion: float) -> bool:
 
 func _crear_peaton(x: float, altura: float, direccion: float) -> Peaton:
 	var peaton := Peaton.new()
-	peaton.modelo = MODELOS[entradas % MODELOS.size()].instantiate() as Node3D
-	peaton.modelo.scale = Vector3.ONE * 2.8
-	peaton.name = "%s_%d" % [peaton.modelo.name, entradas + 1]
+	var animal := ANIMALES[entradas % ANIMALES.size()]
+	peaton.name = "%s_%d" % [animal, entradas + 1]
 	peaton.carril = CARRILES[entradas % CARRILES.size()]
 	peaton.position = Vector3(x, altura, peaton.carril)
 	peaton.direccion = direccion
 	peaton.rapidez = VELOCIDADES[entradas % VELOCIDADES.size()]
-	peaton.rotation.y = peaton.direccion * PI * 0.5
-	peaton.add_child(peaton.modelo)
+	peaton.sprite = AnimatedSprite3D.new()
+	peaton.sprite.sprite_frames = marcos_animales
+	peaton.sprite.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+	peaton.sprite.shaded = true
+	peaton.sprite.flip_h = direccion < 0.0
+	peaton.sprite.pixel_size = TAMANO_PIXEL
+	peaton.sprite.position.y = ALTURA_CENTRO_SPRITE
+	peaton.add_child(peaton.sprite)
 	peaton.sombra = SombraPies.new()
 	peaton.sombra.tamano = Vector2(0.7, 0.4)
 	peaton.add_child(peaton.sombra)
 	add_child(peaton)
-	var animador := peaton.modelo.get_node("AnimationPlayer") as AnimationPlayer
-	var caminata := animador.get_animation(&"walk")
-	caminata.loop_mode = Animation.LOOP_LINEAR
-	animador.play(&"walk", -1.0, peaton.rapidez / 2.35)
-	animador.seek(caminata.length * fmod(entradas * 0.37, 1.0), true)
+	peaton.sprite.play(animal, peaton.rapidez / 2.35)
+	peaton.sprite.set_frame_and_progress(entradas % FOTOGRAMAS_CAMINATA, 0.0)
 	peatones.append(peaton)
 	return peaton
 

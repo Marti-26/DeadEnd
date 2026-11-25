@@ -22,9 +22,16 @@
 [ext_resource type="Script" uid="uid://cusc3wuj0ko33" path="res://zona_c_final.gd" id="ZC_final"]
 [ext_resource type="Script" uid="uid://cnvq1n54jkdfm" path="res://zona_c_llegada.gd" id="ZC_llegada_script"]
 [ext_resource type="PackedScene" uid="uid://nhfwj0jc7mm4" path="res://metro.tscn" id="ZC_metro_llegada"]
-[ext_resource type="PackedScene" uid="uid://df2osby5n6wnv" path="res://salida.tscn" id="ZC_salida"]
+[ext_resource type="Script" uid="uid://b56ntbuf7spsx" path="res://salida.gd" id="ZC_salida"]
 [ext_resource type="PackedScene" path="res://zona_c/escaleras_salida.tscn" id="ZC_escaleras"]
 [ext_resource type="Script" path="res://zona_c/pasajeros_anden.gd" id="ZC_peatones"]
+[ext_resource type="PackedScene" path="res://zona_c/torniquete_anden.tscn" id="ZC_torniquete"]
+[ext_resource type="Script" uid="uid://d1yo46kjs76th" path="res://poster_pared.gd" id="ZC_poster"]
+[ext_resource type="Texture2D" uid="uid://btagd5l53p4er" path="res://assets/npcs y posters/poster_atrapada.png" id="ZC_poster_atrapada"]
+[ext_resource type="Texture2D" uid="uid://d0ulr0nxhjyye" path="res://assets/npcs y posters/poster_se_vende.png" id="ZC_poster_se_vende"]
+[ext_resource type="Texture2D" path="res://assets/npcs y posters/RATINI1.jpg.jpeg" id="ZC_poster_ratini"]
+[ext_resource type="Texture2D" path="res://assets/npcs y posters/felidae1.png" id="ZC_poster_felidae"]
+[ext_resource type="Texture2D" path="res://assets/npcs y posters/poster_kitsuny.png" id="ZC_poster_kitsuny"]
 
 [sub_resource type="BoxShape3D" id="ZC_SueloContinuo"]
 size = Vector3(80, 0.4, 9.8)
@@ -469,16 +476,8 @@ ssao_enabled = true
 radius = 0.35
 height = 1.75
 
-[sub_resource type="StandardMaterial3D" id="ZC_TorniqueteMetal"]
-albedo_color = Color(0.67, 0.72, 0.75, 1)
-metallic = 0.7
-roughness = 0.3
-
-[sub_resource type="BoxMesh" id="ZC_TorniquetePoste"]
-size = Vector3(0.18, 1.45, 0.18)
-
-[sub_resource type="BoxMesh" id="ZC_TorniqueteSuperior"]
-size = Vector3(0.25, 0.14, 1.8)
+[sub_resource type="BoxShape3D" id="ZC_CruceTorniquetes"]
+size = Vector3(1, 2, 9.8)
 
 [node name="ZonaCFinal" type="Node3D" unique_id=990845547]
 script = ExtResource("ZC_final")
@@ -1483,6 +1482,53 @@ shaded = true
 texture_filter = 0
 texture = ExtResource("ZC_ExitPixelTexture")
 
+[node name="Carteles" type="Node3D" parent="Estacion"]
+
+[node name="PosterAtrapada" type="Node3D" parent="Estacion/Carteles"]
+position = Vector3(-20.5, 2, -3.66)
+script = ExtResource("ZC_poster")
+textura = ExtResource("ZC_poster_atrapada")
+alto = 1.35
+
+[node name="PosterSeVende" type="Node3D" parent="Estacion/Carteles"]
+position = Vector3(-8.3, 1.95, -3.66)
+script = ExtResource("ZC_poster")
+textura = ExtResource("ZC_poster_se_vende")
+alto = 1.05
+
+[node name="PosterRatini" type="Node3D" parent="Estacion/Carteles"]
+position = Vector3(4, 1.86, -3.66)
+script = ExtResource("ZC_poster")
+textura = ExtResource("ZC_poster_ratini")
+alto = 1.85
+brillo = 0.18
+luz = 0.9
+color_luz = Color(1, 0.86, 0.95, 1)
+tinte = Color(1, 1, 1, 1)
+saturacion = 1.0
+
+[node name="PosterFelidae" type="Node3D" parent="Estacion/Carteles"]
+position = Vector3(15.5, 1.86, -3.66)
+script = ExtResource("ZC_poster")
+textura = ExtResource("ZC_poster_felidae")
+alto = 1.85
+brillo = 0.18
+luz = 0.9
+color_luz = Color(1, 0.86, 0.95, 1)
+tinte = Color(1, 1, 1, 1)
+saturacion = 1.0
+
+[node name="PosterKitsuny" type="Node3D" parent="Estacion/Carteles"]
+position = Vector3(26.2, 1.86, -3.66)
+script = ExtResource("ZC_poster")
+textura = ExtResource("ZC_poster_kitsuny")
+alto = 1.7
+brillo = 0.18
+luz = 0.9
+color_luz = Color(1, 0.86, 0.95, 1)
+tinte = Color(1, 1, 1, 1)
+saturacion = 1.0
+
 [node name="Ventana23" type="MeshInstance3D" parent="Estacion" unique_id=796396944]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 3.95, -3.68)
 material_override = SubResource("StandardMaterial3D_s13g8")
@@ -1838,32 +1884,40 @@ x_parada = -23.0
 [node name="ControlLlegada" type="Node" parent="." unique_id=281579106]
 script = ExtResource("ZC_llegada_script")
 
-[node name="TorniqueteFinal" parent="." unique_id=237516017 instance=ExtResource("ZC_salida")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 32, 0, 1.2)
+[node name="Torniquetes" type="Area3D" parent="." unique_id=237516017]
+position = Vector3(32, 0, 0)
+collision_layer = 0
+monitorable = false
+script = ExtResource("ZC_salida")
 
-[node name="PosteIzquierdo" type="MeshInstance3D" parent="TorniqueteFinal" unique_id=2110538307]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.725, -0.85)
-material_override = SubResource("ZC_TorniqueteMetal")
-mesh = SubResource("ZC_TorniquetePoste")
+[node name="Cruce" type="CollisionShape3D" parent="Torniquetes"]
+position = Vector3(0, 1, 1.2)
+shape = SubResource("ZC_CruceTorniquetes")
 
-[node name="PosteDerecho" type="MeshInstance3D" parent="TorniqueteFinal" unique_id=1896394146]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.725, 0.85)
-material_override = SubResource("ZC_TorniqueteMetal")
-mesh = SubResource("ZC_TorniquetePoste")
+[node name="Torniquete1" parent="Torniquetes" instance=ExtResource("ZC_torniquete")]
+position = Vector3(0, 0, -3.38)
 
-[node name="Travesano" type="MeshInstance3D" parent="TorniqueteFinal" unique_id=1810796663]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
-material_override = SubResource("ZC_TorniqueteMetal")
-mesh = SubResource("ZC_TorniqueteSuperior")
+[node name="Torniquete2" parent="Torniquetes" instance=ExtResource("ZC_torniquete")]
+position = Vector3(0, 0, -0.83)
+
+[node name="Torniquete3" parent="Torniquetes" instance=ExtResource("ZC_torniquete")]
+position = Vector3(0, 0, 1.45)
+
+[node name="Torniquete4" parent="Torniquetes" instance=ExtResource("ZC_torniquete")]
+position = Vector3(0, 0, 3.5)
+
+[node name="Torniquete5" parent="Torniquetes" instance=ExtResource("ZC_torniquete")]
+position = Vector3(0, 0, 5.68)
 
 [node name="EscalerasSalida" parent="." instance=ExtResource("ZC_escaleras")]
 position = Vector3(34, 0, 1.2)
 
-[node name="PasajerosAnden" type="Node3D" parent="." node_paths=PackedStringArray("jugador", "camara", "letrero_exit", "escaleras")]
+[node name="PasajerosAnden" type="Node3D" parent="." node_paths=PackedStringArray("jugador", "camara", "letrero_exit", "escaleras", "torniquetes")]
 script = ExtResource("ZC_peatones")
 jugador = NodePath("../Personaje")
 camara = NodePath("../Camara")
 letrero_exit = NodePath("../Estacion/LetreroExitUnico/CartelExitPixel")
 escaleras = NodePath("../EscalerasSalida")
+torniquetes = NodePath("../Torniquetes")
 
 [connection signal="body_entered" from="EscalerasSalida/Meta" to="." method="_on_salida_superficie_body_entered"]
