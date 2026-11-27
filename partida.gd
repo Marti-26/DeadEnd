@@ -8,6 +8,7 @@ const ESCENA_TUTORIAL: String = "res://tutorial.tscn"
 const LIMITE_ESTRES: float = 70.0
 const ESTRES_AL_VOLVER: float = 50.0
 const TOTAL_TERMINALES: int = 2
+const ARCHIVO_GUARDADO: String = "user://partida.save"
 
 # Estado del personaje
 var bateria: float = -1.0
@@ -122,8 +123,10 @@ func guardar(punto: String) -> void:
 		"estres": estres,
 		"celular_recogido": celular_recogido,
 		"terminal_1_activada": terminal_1_activada,
-		"terminal_2_activada": terminal_2_activada
+		"terminal_2_activada": terminal_2_activada,
+		"estacion_usada": estacion_usada
 	}
+	_escribir_guardado()
 
 	print(
 		"Partida guardada · batería ",
@@ -131,6 +134,57 @@ func guardar(punto: String) -> void:
 		" % · estrés ",
 		snappedf(estres, 0.1)
 	)
+
+func _escribir_guardado() -> void:
+	var archivo: FileAccess = FileAccess.open(ARCHIVO_GUARDADO, FileAccess.WRITE)
+	if archivo == null:
+		push_warning("No se pudo escribir el guardado: " + ARCHIVO_GUARDADO)
+		return
+	archivo.store_string(JSON.stringify(guardado))
+
+
+func hay_partida_guardada() -> bool:
+	return not _leer_guardado().is_empty()
+
+
+func _leer_guardado() -> Dictionary:
+	if not FileAccess.file_exists(ARCHIVO_GUARDADO):
+		return {}
+	var datos: Variant = JSON.parse_string(FileAccess.get_file_as_string(ARCHIVO_GUARDADO))
+	if datos is Dictionary and (datos as Dictionary).has("escena"):
+		return datos as Dictionary
+	return {}
+
+
+func nueva_partida() -> void:
+	guardado = {}
+	bateria = -1.0
+	estres = 0.0
+	recuperando = false
+	celular_recogido = false
+	encuentros_chico = 0
+	llegada = ""
+	estacion_usada = false
+	terminal_1_activada = false
+	terminal_2_activada = false
+	aviso_metro_leido = false
+
+
+func cargar_partida() -> bool:
+	var datos: Dictionary = _leer_guardado()
+	if datos.is_empty():
+		return false
+	nueva_partida()
+	guardado = datos
+	bateria = float(datos.get("bateria", -1.0))
+	estres = float(datos.get("estres", 0.0))
+	celular_recogido = bool(datos.get("celular_recogido", false))
+	terminal_1_activada = bool(datos.get("terminal_1_activada", false))
+	terminal_2_activada = bool(datos.get("terminal_2_activada", false))
+	estacion_usada = bool(datos.get("estacion_usada", false))
+	cambiar_escena(str(datos.get("escena", ESCENA_INICIO)), str(datos.get("punto", "")))
+	return true
+
 
 func perder(motivo: String = "estres") -> void:
 	if _perdiendo:
