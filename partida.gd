@@ -132,28 +132,43 @@ func guardar(punto: String) -> void:
 		snappedf(estres, 0.1)
 	)
 
-func perder() -> void:
+func perder(motivo: String = "estres") -> void:
 	if _perdiendo:
 		return
 
 	_perdiendo = true
 	recuperando = false
 
-	var con_apagon: bool = estres >= 99.9
-	if con_apagon:
-		if _apagon == null:
-			_apagon = preload("res://apagon.gd").new()
-			add_child(_apagon)
-		await _apagon.apagar()
+	var con_apagon: bool = true
+	if _apagon == null:
+		_apagon = preload("res://apagon.gd").new()
+		add_child(_apagon)
+	await _apagon.apagar()
+
+	# Mostrar mensaje explícito de causa de muerte con estilo de enemigo (rojo)
+	var dialogo = Dialogo.obtener(get_tree())
+	if dialogo != null:
+		dialogo.layer = 70 # Asegurar que se vea por encima del velo de oscuridad (layer 60)
+		var titulo_muerte: String = "HAS MUERTO"
+		var texto_muerte: String = "No lograste sobrevivir en el metro."
+		
+		if motivo == "estres":
+			titulo_muerte = "COLAPSO NERVIOSO"
+			texto_muerte = "Moriste por llegar al 100% del estrés. El pánico te consumió."
+		elif motivo == "criatura":
+			titulo_muerte = "ATRAPADO"
+			texto_muerte = "Moriste porque la criatura te atrapó en la oscuridad."
+		
+		dialogo.mostrar(titulo_muerte, texto_muerte, 3.5, true, null, &"default", false)
+		await get_tree().create_timer(3.5).timeout
+		dialogo.ocultar()
+		dialogo.layer = 5 # Restaurar la capa original
 
 	var escena_actual: Node = get_tree().current_scene
 	if escena_actual != null and escena_actual.scene_file_path == ESCENA_TUTORIAL:
 		estres = 0.0
 		cambiar_escena(ESCENA_TUTORIAL)
-		if con_apagon:
-			await _apagon.encender()
-		else:
-			await get_tree().create_timer(0.5).timeout
+		await _apagon.encender()
 		_perdiendo = false
 		return
 
@@ -196,10 +211,7 @@ func perder() -> void:
 
 		cambiar_escena(escena_guardada, punto_guardado)
 
-	if con_apagon:
-		await _apagon.encender()
-	else:
-		await get_tree().create_timer(0.5).timeout
+	await _apagon.encender()
 	_perdiendo = false
 
 
