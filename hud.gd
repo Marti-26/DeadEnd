@@ -46,6 +46,9 @@ func _ready() -> void:
 	_crear_panel_interaccion()
 	$Contenedor/AvisoMetro/Mensaje.text = "Terminales activadas\n" + CelularMapa.AVISO_METRO
 	_estilo_aviso_metro()
+	var guia: Node = (load("res://guia_zona_segura.gd") as Script).new() as Node
+	guia.name = "GuiaZonaSegura"
+	add_child(guia)
 	Partida.viaje_zona_c_habilitado.connect(_mostrar_aviso_metro)
 
 
