@@ -30,9 +30,7 @@
 [ext_resource type="PackedScene" uid="uid://nhfwj0jc7mm4" path="res://metro.tscn" id="ZC_metro_llegada"]
 [ext_resource type="AudioStream" uid="uid://cq14q0xmps1i3" path="res://Sonidos/Final/murmullo_anden.wav" id="ZC_murmullo_anden"]
 [ext_resource type="Script" uid="uid://d1yo46kjs76th" path="res://poster_pared.gd" id="ZC_poster"]
-[ext_resource type="Texture2D" uid="uid://btagd5l53p4er" path="res://assets/npcs y posters/poster_atrapada.png" id="ZC_poster_atrapada"]
 [ext_resource type="Texture2D" uid="uid://c54y6ya4w8n3p" path="res://assets/npcs y posters/felidae1.png" id="ZC_poster_felidae"]
-[ext_resource type="Texture2D" uid="uid://sl408r1mkru6" path="res://assets/npcs y posters/poster_kitsuny.png" id="ZC_poster_kitsuny"]
 [ext_resource type="Texture2D" uid="uid://smlynt3yjliy" path="res://assets/npcs y posters/RATINI1.jpg.jpeg" id="ZC_poster_ratini"]
 [ext_resource type="Texture2D" uid="uid://d0ulr0nxhjyye" path="res://assets/npcs y posters/poster_se_vende.png" id="ZC_poster_se_vende"]
 [ext_resource type="Script" uid="uid://b56ntbuf7spsx" path="res://salida.gd" id="ZC_salida"]
@@ -54,6 +52,11 @@ const PASAJEROS := [
 ]
 
 
+const BANCAS_OCUPADAS := [
+	^\"../Banca2/Asiento\",
+	^\"../Banca4/Asiento\",
+	^\"../Banca5/Asiento\",
+]
 const CANTIDAD_ANDEN := 24
 const CANTIDAD_ESCALERAS := 6
 
@@ -67,7 +70,7 @@ func _ready() -> void:
 			var z := float(fondo) + randf_range(-0.45, 0.45)
 			lugares_anden.append(Vector3(x, 0.0, z))
 	lugares_anden.shuffle()
-	lugares_anden.resize(CANTIDAD_ANDEN)
+	lugares_anden.resize(CANTIDAD_ANDEN - BANCAS_OCUPADAS.size())
 
 	var escaleras := get_node(^\"../../EscalerasSalida\") as Node3D
 	var lugares_escaleras: Array[Vector3] = []
@@ -82,20 +85,28 @@ func _ready() -> void:
 	lugares_anden.append_array(lugares_escaleras)
 
 	for i in range(lugares_anden.size()):
-		var datos: Array = PASAJEROS[i % PASAJEROS.size()]
-		var lugar := lugares_anden[i]
-		var sprite := Sprite3D.new()
-		sprite.name = \"%s%d\" % [datos[0], i + 1]
-		sprite.texture = datos[1]
-		sprite.pixel_size = datos[2]
-		sprite.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
-		sprite.shaded = true
-		sprite.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
-		sprite.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		sprite.flip_h = randf() < 0.5
-		var altura := (sprite.texture.get_height() * 0.5 - float(datos[3])) * sprite.pixel_size
-		sprite.position = lugar + Vector3.UP * (altura + 0.02)
-		add_child(sprite)
+		_colocar_pasajero(self, lugares_anden[i], i)
+
+	for i in range(BANCAS_OCUPADAS.size()):
+		var asiento := get_node(BANCAS_OCUPADAS[i]) as MeshInstance3D
+		var superficie := asiento.get_aabb().end.y
+		_colocar_pasajero(asiento, Vector3(0, superficie, 0.10), lugares_anden.size() + i)
+
+
+func _colocar_pasajero(soporte: Node3D, lugar: Vector3, indice: int) -> void:
+	var datos: Array = PASAJEROS[indice % PASAJEROS.size()]
+	var sprite := Sprite3D.new()
+	sprite.name = \"%s%d\" % [datos[0], indice + 1]
+	sprite.texture = datos[1]
+	sprite.pixel_size = datos[2]
+	sprite.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+	sprite.shaded = true
+	sprite.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
+	sprite.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	sprite.flip_h = randf() < 0.5
+	var altura := (sprite.texture.get_height() * 0.5 - float(datos[3])) * sprite.pixel_size
+	sprite.position = lugar + Vector3.UP * (altura + 0.02)
+	soporte.add_child(sprite)
 "
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gdjdl"]
@@ -1095,7 +1106,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.5, 0.42, 5.85)
 mesh = SubResource("BoxMesh_kxeo3")
 
 [node name="LimiteIzq" type="StaticBody3D" parent="Estacion" unique_id=253949037]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39.5, 2, 1.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -37.5, 2, 1.2)
 
 [node name="Forma" type="CollisionShape3D" parent="Estacion/LimiteIzq" unique_id=1124200609]
 shape = SubResource("BoxShape3D_meirr")
@@ -1429,12 +1440,6 @@ texture = ExtResource("ZC_ExitPixelTexture")
 
 [node name="Carteles" type="Node3D" parent="Estacion" unique_id=1008733500]
 
-[node name="PosterAtrapada" type="Node3D" parent="Estacion/Carteles" unique_id=1692822649]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 2, -3.66)
-script = ExtResource("ZC_poster")
-textura = ExtResource("ZC_poster_atrapada")
-alto = 1.35
-
 [node name="PosterSeVende" type="Node3D" parent="Estacion/Carteles" unique_id=2087550588]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.4, 1.95, -3.66)
 script = ExtResource("ZC_poster")
@@ -1457,17 +1462,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 1.86, -3.66)
 script = ExtResource("ZC_poster")
 textura = ExtResource("ZC_poster_felidae")
 alto = 1.85
-brillo = 0.18
-luz = 0.9
-color_luz = Color(1, 0.86, 0.95, 1)
-tinte = Color(1, 1, 1, 1)
-saturacion = 1.0
-
-[node name="PosterKitsuny" type="Node3D" parent="Estacion/Carteles" unique_id=918530982]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.2, 1.86, -3.66)
-script = ExtResource("ZC_poster")
-textura = ExtResource("ZC_poster_kitsuny")
-alto = 1.7
 brillo = 0.18
 luz = 0.9
 color_luz = Color(1, 0.86, 0.95, 1)

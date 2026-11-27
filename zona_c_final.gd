@@ -44,14 +44,12 @@ const POSICIONES_X: Dictionary = {
 	"Expendedora2": 7.5,
 	"CanecaCaida": 8.9,
 	"Banca5": 21.0,
-	"Carteles/PosterKitsuny": -34.5,
-	"Carteles/PosterAtrapada": -30.5,
 	"Carteles/PosterRatini": -6.5,
 	"Carteles/PosterFelidae": 16.5,
 	"Carteles/PosterSeVende": 25.0,
 	"DetallesAnden/Intercomunicador": 2.5,
 }
-const RANGO_CAMARA: Vector2 = Vector2(-31.6, 38.2)
+const RANGO_CAMARA: Vector2 = Vector2(-29.6, 38.2)
 const X_FINAL_ANDEN: float = -39.05
 const TINTE_POSTER: Color = Color(1.0, 0.96, 0.9)
 const LUZ_POSTER: Color = Color(1.0, 0.88, 0.7)
