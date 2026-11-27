@@ -33,6 +33,12 @@ var parteluces: Array[Dictionary] = []
 var avance_maximo: float = INICIO_LUZ
 var anuncio_reproducido := false
 var terminado: bool = false
+var _tiempo_luz: float = 0.0
+
+const Z_BORDE: float = 5.85
+const BORDE_INICIO: float = -39.5
+const BORDE_FIN: float = -10.0
+const ANCHO_HUECO_PUERTA: float = 1.6
 
 func _ready() -> void:
 	ambiente.environment = ambiente.environment.duplicate(true)
@@ -41,6 +47,8 @@ func _ready() -> void:
 	ambiente.environment.ambient_light_energy = 0.045
 	Partida.estres = 0.0
 	_ocultar_indicadores_hud.call_deferred()
+	_cerrar_borde_anden()
+	_preparar_atmosfera()
 
 	for luz in luces.get_children():
 		if luz is OmniLight3D:
@@ -91,11 +99,14 @@ func _process(delta: float) -> void:
 
 	ambiente.environment.ambient_light_energy = lerpf(0.045, 0.70, progreso)
 	ambiente.environment.ambient_light_color = Color(1.0, 0.85, 0.63).lerp(Color(1.0, 0.96, 0.87), progreso)
+	_tiempo_luz += delta
+	_actualizar_atmosfera(progreso)
 
 	for luz in energias:
 		var cercania: float = smoothstep(-9.0, 7.0, avance_maximo - luz.global_position.x)
 		var intensidad: float = lerpf(0.65, 1.3, progreso)
-		var objetivo: float = energias[luz] * cercania * intensidad
+		var respiro: float = 1.0 - 0.035 * (1.0 - progreso) * (0.5 + 0.5 * sin(_tiempo_luz * 1.3 + luz.global_position.x))
+		var objetivo: float = energias[luz] * cercania * intensidad * respiro
 		luz.light_energy = move_toward(luz.light_energy, objetivo, delta * 2.5)
 
 	for baldosa in baldosas:
@@ -194,3 +205,76 @@ func _on_salida_superficie_body_entered(cuerpo: Node3D) -> void:
 	cierre.tween_interval(0.16)
 	cierre.tween_property(fondo, "color", Color(0.02, 0.03, 0.05), 0.75)
 	cierre.parallel().tween_property(mensaje, "modulate:a", 1.0, 0.75)
+
+
+func _cerrar_borde_anden() -> void:
+	var puertas: Array[float] = []
+	if metro != null:
+		for px: float in metro.puertas_x:
+			puertas.append(metro.global_position.x + metro.x_parada + px)
+	puertas.sort()
+	var tramos: Array[Vector2] = []
+	var desde: float = BORDE_INICIO
+	for px: float in puertas:
+		if px - ANCHO_HUECO_PUERTA * 0.5 > desde and px < BORDE_FIN:
+			tramos.append(Vector2(desde, px - ANCHO_HUECO_PUERTA * 0.5))
+			desde = px + ANCHO_HUECO_PUERTA * 0.5
+	if desde < BORDE_FIN:
+		tramos.append(Vector2(desde, BORDE_FIN))
+	var barra: MeshInstance3D = estacion.get_node_or_null("Barrera3") as MeshInstance3D
+	var barra_arriba: MeshInstance3D = estacion.get_node_or_null("BarreraArriba3") as MeshInstance3D
+	var postes: MultiMeshInstance3D = estacion.get_node_or_null("PostesBarrera") as MultiMeshInstance3D
+	var raiz: Node3D = Node3D.new()
+	raiz.name = "BordeAndenSeguro"
+	estacion.add_child(raiz)
+	var choque: StaticBody3D = StaticBody3D.new()
+	choque.name = "Choque"
+	raiz.add_child(choque)
+	for tramo: Vector2 in tramos:
+		var largo: float = tramo.y - tramo.x
+		var centro: float = (tramo.x + tramo.y) * 0.5
+		var forma: CollisionShape3D = CollisionShape3D.new()
+		var caja: BoxShape3D = BoxShape3D.new()
+		caja.size = Vector3(largo, 2.0, 0.3)
+		forma.shape = caja
+		choque.add_child(forma)
+		forma.global_position = Vector3(centro, 1.0, Z_BORDE)
+		if barra != null:
+			_barra_borde(raiz, Vector3(largo, 0.32, 0.05), Vector3(centro, 0.62, Z_BORDE), barra.material_override)
+		if barra_arriba != null:
+			_barra_borde(raiz, Vector3(largo, 0.05, 0.07), Vector3(centro, 0.8, Z_BORDE), barra_arriba.material_override)
+		if postes != null and postes.multimesh != null and postes.multimesh.mesh != null:
+			var x: float = tramo.x
+			while x <= tramo.y + 0.01:
+				var poste: MeshInstance3D = MeshInstance3D.new()
+				poste.mesh = postes.multimesh.mesh
+				raiz.add_child(poste)
+				poste.global_position = Vector3(x, 0.42, Z_BORDE)
+				x += minf(2.5, maxf(largo, 0.1))
+
+
+func _barra_borde(padre: Node3D, tam: Vector3, pos: Vector3, material: Material) -> void:
+	var malla: MeshInstance3D = MeshInstance3D.new()
+	var caja: BoxMesh = BoxMesh.new()
+	caja.size = tam
+	malla.mesh = caja
+	malla.material_override = material
+	padre.add_child(malla)
+	malla.global_position = pos
+
+
+func _preparar_atmosfera() -> void:
+	var entorno: Environment = ambiente.environment
+	entorno.glow_enabled = true
+	entorno.glow_intensity = 0.25
+	entorno.glow_bloom = 0.0
+	entorno.glow_hdr_threshold = 1.2
+	entorno.fog_enabled = false
+
+
+func _actualizar_atmosfera(progreso: float) -> void:
+	var entorno: Environment = ambiente.environment
+	entorno.tonemap_exposure = lerpf(1.05, 1.15, progreso)
+	entorno.glow_intensity = lerpf(0.2, 0.35, progreso)
+	if luz_salida != null and not terminado:
+		luz_salida.light_energy = maxf(luz_salida.light_energy, lerpf(0.0, 0.6, smoothstep(0.55, 1.0, progreso)))
