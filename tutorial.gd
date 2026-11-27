@@ -27,12 +27,12 @@ const PASOS: Array[Dictionary] = [
 	{"id": "carga", "desde_x": -30.0, "texto": "Te queda poca batería.\nVe a la estación de carga que señala la flecha y mantén E. La barra te muestra cuánto falta."},
 	{"id": "audifonos", "desde_x": -26.0, "texto": "Presiona Q para ponerte los audífonos. Te calman, pero dejas de oír lo que pasa alrededor.\nPóntelos y vuelve a presionar Q para quitártelos."},
 	{"id": "estres", "importante": true, "texto": "La barra roja de arriba es tu estrés: sube en la oscuridad y cerca de las criaturas.\nSi llega a 100 perderás y reaparecerás en el último punto de guardado. Para bajarlo: audífonos, esconderte o una zona segura."},
-	{"id": "sigilo", "desde_x": -24.5, "texto": "Mantén SHIFT mientras caminas para ir en sigilo: vas más lento, pero no haces ruido.\nÚsalo cerca de las criaturas que oyen. Si te escuchan, te persiguen."},
-	{"id": "dash", "desde_x": -23.5, "texto": "Presiona ESPACIO para hacer un dash: es rápido, pero hace mucho ruido.\nEvítalo cerca de las criaturas."},
+	{"id": "sigilo", "desde_x": -24.5, "texto": "Mantén SHIFT mientras caminas para ir en sigilo: vas más lento, pero no haces ruido.\n"},
+	{"id": "dash", "desde_x": -23.5, "texto": "Presiona ESPACIO para hacer un dash: es rápido, pero hace mucho ruido.\n"},
 	{"id": "cartel", "desde_x": -21.5, "texto": "¿Ves el cartel que señala la flecha? Puedes hacer clic sobre los carteles para leerlos.\nÁbrelo con un clic y ciérralo haciendo clic afuera."},
 	{"id": "terminal", "desde_x": -12.0, "texto": "Esa pantalla es un punto de activación. Mantén E para activarlo.\nActívalos todos para que el metro te deje avanzar."},
 	{"id": "chico", "desde_x": -6.0, "texto": "Hay alguien más adelante.\nAcércate y presiona R para hablar con él."},
-	{"id": "esconderse", "desde_x": -2.0, "texto": "Haz lo que te dijo: escóndete bajo la banca que señala la flecha.\nSolo camina hacia ella y entrarás sola. Para salir, muévete o presiona E."},
+	{"id": "esconderse", "desde_x": -2.0, "texto": "Haz lo que te dijo: escóndete bajo la banca que señala la flecha.\nSolo camina hacia ella y entrarás sola. Para salir, solo debes caminar"},
 	{"id": "salida", "desde_x": 1.5, "texto": "Eso es todo.\nSube por la escalera del fondo, desde aqui estas por tú cuenta."},
 ]
 
@@ -42,7 +42,7 @@ const FRASES_CHICO: Array[String] = [
 	"Algunas te ven. Si te descubren, te siguen. Métete bajo una banca y quédate quieta hasta que se vayan.",
 	"Otras no ven nada, pero lo oyen todo. Con esas, camina en sigilo y olvídate de correr si quieres que no te escuchen.",
 	"Si se te acelera el corazón, ponte los audífonos un rato. Eso sí, no te descuides.",
-	"Y busca los puntos de activación. Actívalas todas y el metro te llevara a tu siguiente parada. continua, nos volveremos a ver.",
+	"Y busca los puntos de activación. Actívalos todos y el metro te llevara a tu siguiente parada. continua, nos volveremos a ver.",
 ]
 const FRASES_CHICO_REPETIDAS: Array[String] = [
 	"Ya te dije lo importante. Los puntos no se van a activar solos.",
