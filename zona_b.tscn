@@ -29,7 +29,7 @@
 [ext_resource type="Script" uid="uid://chlx4hyqucufu" path="res://llegada.gd" id="19_llegada"]
 [ext_resource type="AudioStream" uid="uid://c6xn87qsspf2s" path="res://Sonidos/Jugador/meow2.mp3" id="20_58kpb"]
 [ext_resource type="PackedScene" path="res://zona_segura.tscn" id="20_zona_segura"]
-[ext_resource type="PackedScene" path="res://hud.tscn" id="21_hud"]
+[ext_resource type="PackedScene" uid="uid://p3wqp7x8uh8" path="res://hud.tscn" id="21_hud"]
 [ext_resource type="PackedScene" uid="uid://dk2w3at8nv2xx" path="res://celular.tscn" id="21_s3cy1"]
 [ext_resource type="AudioStream" uid="uid://dw6nrxsaxx3ph" path="res://Sonidos/Ambiente/Ventilador.wav" id="28_hfju1"]
 [ext_resource type="AudioStream" uid="uid://c666lg5t6mmsq" path="res://Sonidos/Ambiente/Luces.wav" id="29_0slvj"]

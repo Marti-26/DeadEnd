@@ -1,0 +1,201 @@
+[gd_scene format=3]
+
+[ext_resource type="FontFile" path="res://assets/font/ShareTechMono-Regular.ttf" id="Fuente"]
+
+[sub_resource type="StandardMaterial3D" id="EsmalteOscuro"]
+albedo_color = Color(0.08, 0.14, 0.18, 1)
+roughness = 0.84
+
+[sub_resource type="StandardMaterial3D" id="AzulLinea"]
+albedo_color = Color(0.16, 0.44, 0.66, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="Marfil"]
+albedo_color = Color(0.88, 0.86, 0.72, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="PlacaEstacion"]
+material = SubResource("EsmalteOscuro")
+size = Vector3(5.3, 1.18, 0.1)
+
+[sub_resource type="BoxMesh" id="PlacaDeadEnd"]
+material = SubResource("EsmalteOscuro")
+size = Vector3(2.55, 0.72, 0.1)
+
+[sub_resource type="BoxMesh" id="CabeceraEstacion"]
+material = SubResource("AzulLinea")
+size = Vector3(5.3, 0.35, 0.015)
+
+[sub_resource type="BoxMesh" id="MarcoMapa"]
+material = SubResource("EsmalteOscuro")
+size = Vector3(4.45, 1.54, 0.1)
+
+[sub_resource type="BoxMesh" id="CaraMapa"]
+material = SubResource("Marfil")
+size = Vector3(4.31, 1.4, 0.025)
+
+[sub_resource type="BoxMesh" id="TrazoRecorrido"]
+material = SubResource("AzulLinea")
+size = Vector3(2.98, 0.075, 0.02)
+
+[sub_resource type="CylinderMesh" id="Parada"]
+material = SubResource("AzulLinea")
+top_radius = 0.105
+bottom_radius = 0.105
+height = 0.024
+radial_segments = 16
+
+[sub_resource type="CylinderMesh" id="ParadaActual"]
+material = SubResource("EsmalteOscuro")
+top_radius = 0.145
+bottom_radius = 0.145
+height = 0.024
+radial_segments = 16
+
+[sub_resource type="BoxMesh" id="PlacaSalida"]
+material = SubResource("EsmalteOscuro")
+size = Vector3(3.25, 0.72, 0.1)
+
+[sub_resource type="BoxMesh" id="AcentoSalida"]
+material = SubResource("AzulLinea")
+size = Vector3(3.25, 0.07, 0.015)
+
+[node name="SenalizacionAnden" type="Node3D"]
+
+[node name="LetreroDeadEnd" type="MeshInstance3D" parent="."]
+position = Vector3(-23, 2.35, -3.64)
+mesh = SubResource("PlacaDeadEnd")
+
+[node name="Nombre" type="Label3D" parent="LetreroDeadEnd"]
+position = Vector3(0, 0, 0.058)
+pixel_size = 0.01
+modulate = Color(0.81, 0.78, 0.66, 1)
+outline_size = 0
+font = ExtResource("Fuente")
+font_size = 50
+text = "DEAD END"
+
+[node name="TerminalSur" type="MeshInstance3D" parent="."]
+position = Vector3(11.5, 2.03, -3.64)
+mesh = SubResource("PlacaEstacion")
+
+[node name="Cabecera" type="MeshInstance3D" parent="TerminalSur"]
+position = Vector3(0, 0.415, 0.055)
+cast_shadow = 0
+mesh = SubResource("CabeceraEstacion")
+
+[node name="Linea" type="Label3D" parent="TerminalSur"]
+position = Vector3(0, 0.415, 0.068)
+pixel_size = 0.008
+shaded = true
+outline_size = 0
+font = ExtResource("Fuente")
+font_size = 32
+text = "METRO  /  LÍNEA 2"
+
+[node name="Nombre" type="Label3D" parent="TerminalSur"]
+position = Vector3(0, -0.15, 0.058)
+pixel_size = 0.01
+shaded = true
+outline_size = 0
+font = ExtResource("Fuente")
+font_size = 58
+text = "TERMINAL DEL SUR"
+
+[node name="MapaLinea2" type="MeshInstance3D" parent="."]
+position = Vector3(21.15, 1.96, -3.63)
+mesh = SubResource("MarcoMapa")
+
+[node name="Panel" type="MeshInstance3D" parent="MapaLinea2"]
+position = Vector3(0, 0, 0.056)
+cast_shadow = 0
+mesh = SubResource("CaraMapa")
+
+[node name="Titulo" type="Label3D" parent="MapaLinea2"]
+position = Vector3(0, 0.452, 0.082)
+pixel_size = 0.009
+shaded = true
+modulate = Color(0.08, 0.14, 0.18, 1)
+outline_size = 0
+font = ExtResource("Fuente")
+font_size = 35
+text = "MAPA DE LÍNEA 2"
+
+[node name="Recorrido" type="MeshInstance3D" parent="MapaLinea2"]
+position = Vector3(0, 0.06, 0.077)
+cast_shadow = 0
+mesh = SubResource("TrazoRecorrido")
+
+[node name="ParadaNorte" type="MeshInstance3D" parent="MapaLinea2"]
+position = Vector3(-1.45, 0.06, 0.09)
+rotation = Vector3(1.5707964, 0, 0)
+cast_shadow = 0
+mesh = SubResource("Parada")
+
+[node name="ParadaCentral" type="MeshInstance3D" parent="MapaLinea2"]
+position = Vector3(0, 0.06, 0.09)
+rotation = Vector3(1.5707964, 0, 0)
+cast_shadow = 0
+mesh = SubResource("Parada")
+
+[node name="ParadaTerminal" type="MeshInstance3D" parent="MapaLinea2"]
+position = Vector3(1.45, 0.06, 0.09)
+rotation = Vector3(1.5707964, 0, 0)
+cast_shadow = 0
+mesh = SubResource("ParadaActual")
+
+[node name="NombreNorte" type="Label3D" parent="MapaLinea2"]
+position = Vector3(-1.45, -0.27, 0.082)
+pixel_size = 0.008
+shaded = true
+modulate = Color(0.08, 0.14, 0.18, 1)
+outline_size = 0
+font = ExtResource("Fuente")
+font_size = 25
+text = "NORTE"
+
+[node name="NombreCentral" type="Label3D" parent="MapaLinea2"]
+position = Vector3(0, -0.27, 0.082)
+pixel_size = 0.008
+shaded = true
+modulate = Color(0.08, 0.14, 0.18, 1)
+outline_size = 0
+font = ExtResource("Fuente")
+font_size = 25
+text = "CENTRAL"
+
+[node name="NombreTerminal" type="Label3D" parent="MapaLinea2"]
+position = Vector3(1.45, -0.35, 0.082)
+pixel_size = 0.008
+shaded = true
+modulate = Color(0.08, 0.14, 0.18, 1)
+outline_size = 0
+font = ExtResource("Fuente")
+font_size = 25
+text = "TERMINAL\nDEL SUR"
+
+[node name="SalidaTorniquetes" type="MeshInstance3D" parent="."]
+position = Vector3(29.8, 2.06, -3.64)
+mesh = SubResource("PlacaSalida")
+
+[node name="Banda" type="MeshInstance3D" parent="SalidaTorniquetes"]
+position = Vector3(0, -0.325, 0.056)
+cast_shadow = 0
+mesh = SubResource("AcentoSalida")
+
+[node name="Texto" type="Label3D" parent="SalidaTorniquetes"]
+position = Vector3(-0.34, 0.02, 0.058)
+pixel_size = 0.01
+shaded = true
+outline_size = 0
+font = ExtResource("Fuente")
+font_size = 48
+text = "SALIDA"
+
+[node name="Flecha" type="Label3D" parent="SalidaTorniquetes"]
+position = Vector3(0.88, 0.02, 0.058)
+pixel_size = 0.01
+shaded = true
+outline_size = 0
+font_size = 54
+text = "→"

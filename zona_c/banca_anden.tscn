@@ -1,0 +1,44 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="Metal"]
+albedo_color = Color(0.26, 0.33, 0.32, 1)
+roughness = 0.6
+
+[sub_resource type="BoxMesh" id="Asiento"]
+material = SubResource("Metal")
+size = Vector3(2.2, 0.08, 0.5)
+
+[sub_resource type="BoxMesh" id="Respaldo"]
+material = SubResource("Metal")
+size = Vector3(2.2, 0.42, 0.06)
+
+[sub_resource type="BoxMesh" id="Pata"]
+material = SubResource("Metal")
+size = Vector3(0.06, 0.44, 0.45)
+
+[sub_resource type="BoxShape3D" id="Forma"]
+size = Vector3(2.2, 1, 0.6)
+
+[node name="Banca" type="Node3D" groups=["escondites"]]
+
+[node name="Asiento" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.46, 0)
+mesh = SubResource("Asiento")
+
+[node name="Respaldo" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.75, -0.24)
+mesh = SubResource("Respaldo")
+
+[node name="PataIzquierda" type="MeshInstance3D" parent="."]
+position = Vector3(-0.95, 0.22, 0)
+mesh = SubResource("Pata")
+
+[node name="PataDerecha" type="MeshInstance3D" parent="."]
+position = Vector3(0.95, 0.22, 0)
+mesh = SubResource("Pata")
+
+[node name="Choque" type="StaticBody3D" parent="."]
+
+[node name="Forma" type="CollisionShape3D" parent="Choque"]
+position = Vector3(0, 0.5, 0)
+shape = SubResource("Forma")

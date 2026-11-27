@@ -1,6 +1,7 @@
 class_name HUD
 extends CanvasLayer
 
+@onready var etiqueta_bateria: Label = $Contenedor/EtiquetaBateria as Label
 @onready var barra_bateria: ProgressBar = $Contenedor/BarraBateria as ProgressBar
 @onready var barra_estres: ProgressBar = $Contenedor/BarraEstres as ProgressBar
 
@@ -10,7 +11,8 @@ var _nodo_dash: Node = null
 var _boton_celular: Button = null
 var _icono_celular: Control = null
 var _celular: CelularMapa = null
-
+#variable para que no aparezca el hud si no tiene el celular
+var indicadores_bloqueados: bool = false
 
 func _enter_tree() -> void:
 	add_to_group(Grupos.GRUPO_HUD)
@@ -116,7 +118,15 @@ func _buscar_referencias() -> void:
 
 
 func _actualizar_barras() -> void:
-	barra_bateria.value = _leer_bateria()
+	if indicadores_bloqueados:
+		return
+	var tiene: bool = _tiene_celular()
+	if etiqueta_bateria != null:
+		etiqueta_bateria.visible = tiene
+	if barra_bateria != null:
+		barra_bateria.visible = tiene
+	if tiene:
+		barra_bateria.value = _leer_bateria()
 	barra_estres.value = _leer_estres()
 
 
