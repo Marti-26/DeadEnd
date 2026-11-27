@@ -5,7 +5,7 @@ extends Node3D
 signal llego
 signal se_fue
 
-enum Estado { FUERA, LLEGANDO, DETENIDO, SALIENDO }
+enum Estado { FUERA, LLEGANDO, DETENIDO, SALIENDO, PASANDO }
 
 
 class PuertaMovil:
@@ -71,6 +71,7 @@ class MaterialesMetro:
 @export var tiempo_frenado: float = 6.0
 @export var distancia: float = 70.0
 @export var x_parada: float = 0.0
+@export var solo_descenso: bool = false
 @export var puertas_x: Array[float] = [-7.5, 0.0, 7.5]
 @export var filtro_pantalla: bool = false
 @export var energia_ventanas: float = 2.4
@@ -109,6 +110,11 @@ const ALTO: float = 2.7
 const ALTO_PUERTA: float = 2.1
 const ANCHO_PUERTA: float = 1.4
 const Z_COMPUERTA: float = -1.85
+const LIMITE_TREN_DE_PASO: float = 70.0
+const VELOCIDAD_TREN_DE_PASO: float = 24.0
+const Z_ANDEN_SEGURO: float = Z_COMPUERTA - 0.45
+const INICIO_AUDIO_SALIDA_FINAL: float = 1.5
+const VOLUMEN_TREN_DE_PASO_DB: float = 2.0
 
 const ROJO: Color = Color(0.4, 0.06, 0.08)
 const ROJO_OSCURO: Color = Color(0.28, 0.04, 0.06)
@@ -143,6 +149,7 @@ var cambiando_zona_c: bool = false
 var jugador: CharacterBody3D = null
 var _abiertas: bool = false
 var _capas_plataforma: int = 0
+var _salida_programada: bool = false
 
 var tren: Node3D
 var cuerpo: AnimatableBody3D
@@ -205,26 +212,28 @@ func _physics_process(delta: float) -> void:
 	match estado:
 		Estado.FUERA:
 			if reloj >= proxima:
-				_cambiar(Estado.LLEGANDO)
+				_cambiar(Estado.PASANDO if solo_descenso else Estado.LLEGANDO)
 		Estado.LLEGANDO:
 			var s: float = minf(t / tiempo_frenado, 1.0)
 			tren.position.x = x_parada + distancia * pow(1.0 - s, 2.0)
 			if s >= 1.0:
 				_cambiar(Estado.DETENIDO)
 		Estado.DETENIDO:
+			if solo_descenso and not _salida_programada and jugador != null and jugador.global_position.z <= global_position.z + Z_ANDEN_SEGURO:
+				_salida_programada = true
+				tiempo_detenido = t + 3.5
 			if t >= tiempo_detenido:
 				_cambiar(Estado.SALIENDO)
 		Estado.SALIENDO:
 			var s: float = minf(t / tiempo_frenado, 1.0)
-			tren.position.x = x_parada - distancia * s * s
+			var distancia_salida := x_parada + LIMITE_TREN_DE_PASO if solo_descenso else distancia
+			tren.position.x = x_parada - distancia_salida * s * s
 			if s >= 1.0:
-				_cambiar(Estado.FUERA)
-				proxima = reloj + tiempo_fuera
-				var salto: float = (x_parada + distancia) - tren.position.x
-				tren.position.x += salto
-				_x_antes += salto
-				if viajando and jugador:
-					jugador.global_position.x += salto
+				_terminar_recorrido()
+		Estado.PASANDO:
+			tren.position.x = LIMITE_TREN_DE_PASO - VELOCIDAD_TREN_DE_PASO * t
+			if tren.position.x <= -LIMITE_TREN_DE_PASO:
+				_terminar_recorrido()
 					
 					
 	sonido_llegada.global_position = tren.global_position + Vector3(0, 1, 0)
@@ -276,6 +285,16 @@ func _physics_process(delta: float) -> void:
 		camara_vagon.global_position = tren.to_global(Vector3(_cam_x_actual, _offset_camara.y, _offset_camara.z))
 
 
+func _terminar_recorrido() -> void:
+	_cambiar(Estado.FUERA)
+	proxima = reloj + tiempo_fuera
+	var destino := LIMITE_TREN_DE_PASO if solo_descenso else x_parada + distancia
+	var salto := destino - tren.position.x
+	tren.position.x = destino
+	_x_antes += salto
+	if viajando and jugador:
+		jugador.global_position.x += salto
+
 
 
 
@@ -309,7 +328,7 @@ func _cambiar(nuevo: Estado) -> void:
 
 	elif estado == Estado.SALIENDO:
 		sonido_llegada.stop()
-		sonido_llegada.play(0.0)
+		sonido_llegada.play(INICIO_AUDIO_SALIDA_FINAL if solo_descenso else 0.0)
 
 		# Iniciar el sonido del viaje si el jugador está dentro
 		if viajando and not sonido_viaje.playing:
@@ -317,6 +336,13 @@ func _cambiar(nuevo: Estado) -> void:
 
 	elif estado == Estado.FUERA:
 		sonido_llegada.stop()
+		if solo_descenso:
+			sonido_puertas.stop()
+
+	elif estado == Estado.PASANDO:
+		sonido_llegada.stream = sonido_viaje.stream
+		sonido_llegada.volume_db = VOLUMEN_TREN_DE_PASO_DB
+		sonido_llegada.play()
 
 	# Detener el sonido del viaje al llegar a la estación
 	if estado == Estado.DETENIDO:
@@ -341,6 +367,12 @@ func _al_cerrar() -> void:
 	if jugador == null:
 		return
 	var l: Vector3 = tren.to_local(jugador.global_position)
+	if solo_descenso:
+		if absf(l.x) < LARGO / 2.0 and l.z > Z_ANDEN_SEGURO:
+			jugador.global_position.z = global_position.z + Z_ANDEN_SEGURO
+		if dentro:
+			_al_salir(jugador)
+		return
 	if absf(l.x) < LARGO / 2.0 and l.z < -1.25 and l.z > -2.3:
 		if l.z > -1.55:
 			jugador.global_position = tren.to_global(Vector3(l.x, l.y, -0.9))
@@ -362,6 +394,8 @@ func _al_cerrar() -> void:
 
 
 func _al_entrar(cuerpo_entra: Node3D) -> void:
+	if solo_descenso and _salida_programada:
+		return
 	if cuerpo_entra.is_in_group("jugador"):
 		_entrar_vista()
 
@@ -917,7 +951,10 @@ func _luces_ventana(p: Node3D, s: int) -> void:
 
 
 func _actualizar_luces_ventana() -> void:
-	var lejos: float = absf(tren.position.x - x_parada) - LARGO / 2.0
+	var centro_luz := x_parada
+	if estado == Estado.PASANDO and jugador != null:
+		centro_luz = to_local(jugador.global_position).x
+	var lejos: float = absf(tren.position.x - centro_luz) - LARGO / 2.0
 	var presencia: float = clampf(1.0 - lejos / 18.0, 0.0, 1.0)
 	presencia = presencia * presencia * (3.0 - 2.0 * presencia)
 	var parpadeo: float = 1.0 - movimiento * 0.25 * (0.5 + 0.5 * sin(reloj * 23.0))
