@@ -7,6 +7,7 @@ const SIMBOLOS: String = "#%&@$?!*/\\|<>~^=+"
 const TITULO: String = "DEAD END"
 const ALTO_BASE: float = 648.0
 const X_TITULO: float = 96.0
+const Y_TITULO: float = 185.0
 const Y_OPCION: float = 318.0
 const X_ICONO: float = 112.0
 const X_DIVISOR: float = 166.0
@@ -111,7 +112,7 @@ func _construir() -> void:
 
 	_titulo = _etiqueta(TITULO, _fuente_menu, 64, TEXTO)
 	_titulo.add_theme_constant_override("shadow_outline_size", 0)
-	_titulo.position = Vector2(X_TITULO, 78.0)
+	_titulo.position = Vector2(X_TITULO, Y_TITULO)
 	_contenido.add_child(_titulo)
 
 	_icono = Control.new()
