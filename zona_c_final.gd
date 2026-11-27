@@ -35,7 +35,8 @@ var anuncio_reproducido := false
 var terminado: bool = false
 var _tiempo_luz: float = 0.0
 
-const Z_BORDE: float = 5.85
+const Z_BORDE_ORIGINAL: float = 5.85
+const Z_BORDE: float = 5.1
 const BORDE_INICIO: float = -39.5
 const BORDE_FIN: float = -10.0
 const ANCHO_HUECO_PUERTA: float = 1.6
@@ -47,6 +48,7 @@ func _ready() -> void:
 	ambiente.environment.ambient_light_energy = 0.045
 	Partida.estres = 0.0
 	_ocultar_indicadores_hud.call_deferred()
+	_retirar_barandas()
 	_cerrar_borde_anden()
 	_preparar_atmosfera()
 
@@ -278,3 +280,12 @@ func _actualizar_atmosfera(progreso: float) -> void:
 	entorno.glow_intensity = lerpf(0.2, 0.35, progreso)
 	if luz_salida != null and not terminado:
 		luz_salida.light_energy = maxf(luz_salida.light_energy, lerpf(0.0, 0.6, smoothstep(0.55, 1.0, progreso)))
+
+
+func _retirar_barandas() -> void:
+	var desplazo: float = Z_BORDE - Z_BORDE_ORIGINAL
+	for nodo: Node in estacion.get_children():
+		var nombre: String = str(nodo.name)
+		var es_baranda: bool = nombre.begins_with("Barrera") or nombre in ["PostesBarrera", "MuroBarrera", "BarandasExtremos", "BarandaPasilloDespuesMetro"]
+		if es_baranda and nodo is Node3D:
+			(nodo as Node3D).position.z += desplazo
