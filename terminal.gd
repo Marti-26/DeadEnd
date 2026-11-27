@@ -2,7 +2,6 @@ class_name Terminal
 extends StaticBody3D
 
 @export_range(1, 2) var numero_terminal: int = 1
-@export var recarga_hasta: float = 60.0
 @export var pantalla: MeshInstance3D
 @export var pared_soporte: StaticBody3D
 
@@ -56,18 +55,6 @@ func _recibe_linterna() -> bool:
 func usar() -> void:
 	if activada:
 		return
-
-	var pj: Personaje = get_tree().get_first_node_in_group(Grupos.JUGADOR) as Personaje
-	if pj == null:
-		var objetivo_bat: Node = get_tree().get_first_node_in_group(Grupos.BATERIA)
-		if objetivo_bat != null and "bateria" in objetivo_bat:
-			pj = objetivo_bat as Personaje
-
-	if pj != null:
-		if pj.bateria < recarga_hasta:
-			pj.bateria = recarga_hasta
-			print("terminal: batería al ", recarga_hasta, " %")
-		Partida.guardar_estado_personaje(pj)
 
 	Partida.activar_terminal(numero_terminal)
 	_mostrar_activado()
