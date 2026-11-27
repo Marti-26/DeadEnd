@@ -130,7 +130,8 @@ func _process(delta: float) -> void:
 			ocultar()
 
 
-func mostrar(quien: String, frase: String, duracion: float = 4.0, enemigo: bool = false, marcos: SpriteFrames = null, animacion: StringName = &"default") -> void:
+func mostrar(quien: String, frase: String, duracion: float = 4.0, 
+enemigo: bool = false, marcos: SpriteFrames = null, animacion: StringName = &"default", persistente: bool = true) -> void:
 	_aplicar_estilo(enemigo)
 	_poner_retrato(marcos, animacion)
 	nombre.text = quien
