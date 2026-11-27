@@ -19,6 +19,7 @@ var _panel_interaccion: PanelContainer = null
 var _label_interaccion: Label = null
 var _barra_interaccion: ProgressBar = null
 var _tiempo_efecto_carga: float = 0.0
+var _tiempo_descarga: float = 0.0
 #variable para que no aparezca el hud si no tiene el celular
 var indicadores_bloqueados: bool = false
 
@@ -30,9 +31,15 @@ func _ready() -> void:
 	barra_bateria.min_value = 0.0
 	barra_bateria.max_value = 100.0
 	barra_bateria.value = 100.0
+	barra_bateria.custom_minimum_size = Vector2(390.0, 22.0)
+	barra_bateria.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+
 	barra_estres.min_value = 0.0
 	barra_estres.max_value = 100.0
 	barra_estres.value = 0.0
+	barra_estres.custom_minimum_size = Vector2(390.0, 22.0)
+	barra_estres.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+
 	_buscar_referencias()
 	_actualizar_barras()
 	_crear_celular()
@@ -44,7 +51,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if not is_instance_valid(_nodo_bateria) or not is_instance_valid(_nodo_jugador) or not is_instance_valid(_nodo_interactuar):
 		_buscar_referencias()
-	_actualizar_barras()
+	_actualizar_barras(delta)
 	_actualizar_boton_celular()
 	_actualizar_interaccion(delta)
 
@@ -173,7 +180,7 @@ func _buscar_referencias() -> void:
 		_nodo_interactuar = null
 
 
-func _actualizar_barras() -> void:
+func _actualizar_barras(delta: float = 0.0) -> void:
 	if indicadores_bloqueados:
 		return
 	var tiene: bool = _tiene_celular()
@@ -182,8 +189,68 @@ func _actualizar_barras() -> void:
 	if barra_bateria != null:
 		barra_bateria.visible = tiene
 	if tiene:
-		barra_bateria.value = _leer_bateria()
+		var bat: float = _leer_bateria()
+		barra_bateria.value = bat
+		_actualizar_indicador_descarga(bat, delta)
 	barra_estres.value = _leer_estres()
+
+
+func _actualizar_indicador_descarga(bat: float, delta: float) -> void:
+	if etiqueta_bateria == null:
+		return
+
+	_tiempo_descarga += delta
+
+	var esta_cargando: bool = is_instance_valid(_nodo_interactuar) and _nodo_interactuar.actual is EstacionCarga and _nodo_interactuar.progreso > 0.01
+
+	if esta_cargando:
+		etiqueta_bateria.text = "BATERÍA CELULAR (CARGANDO)"
+		etiqueta_bateria.modulate = Color(1.0, 0.95, 0.5)
+		return
+
+	if bat <= 0.0:
+		etiqueta_bateria.text = "BATERÍA CELULAR (AGOTADA)"
+		etiqueta_bateria.modulate = Color(0.6, 0.6, 0.6)
+		if barra_bateria != null:
+			barra_bateria.modulate = Color(0.5, 0.5, 0.5)
+		return
+
+	# Detectar causas de consumo
+	var linterna_on: bool = is_instance_valid(_nodo_jugador) and bool(_nodo_jugador.get("linterna_encendida"))
+	var audifonos_on: bool = is_instance_valid(_nodo_jugador) and bool(_nodo_jugador.get("audifonos_activos"))
+	var mapa_on: bool = _celular != null and _celular.abierto
+
+	var consumo_alto: bool = linterna_on or audifonos_on or mapa_on
+	var flechas: String = "▼▼" if consumo_alto else "▼"
+
+	var sufijo: String = ""
+	if linterna_on and audifonos_on:
+		sufijo = " [LINTERNA + AUDÍFONOS]"
+	elif linterna_on:
+		sufijo = " [LINTERNA]"
+	elif audifonos_on:
+		sufijo = " [AUDÍFONOS]"
+	elif mapa_on:
+		sufijo = " [MAPA]"
+
+	# Si la batería está crítica (< 20%), alertar al jugador
+	if bat <= 20.0:
+		var pulso_alerta: float = (sin(_tiempo_descarga * 6.0) + 1.0) * 0.5
+		var color_rojo: Color = Color(1.3, 0.35, 0.35).lerp(Color(1.0, 0.8, 0.8), pulso_alerta)
+		etiqueta_bateria.text = "BATERÍA CELULAR %s (BAJA)%s" % [flechas, sufijo]
+		etiqueta_bateria.modulate = color_rojo
+		if barra_bateria != null:
+			barra_bateria.modulate = color_rojo
+	elif bat <= 50.0:
+		etiqueta_bateria.text = "BATERÍA CELULAR %s%s" % [flechas, sufijo]
+		etiqueta_bateria.modulate = Color(1.15, 0.95, 0.5)
+		if barra_bateria != null:
+			barra_bateria.modulate = Color(1.15, 0.95, 0.5)
+	else:
+		etiqueta_bateria.text = "BATERÍA CELULAR %s%s" % [flechas, sufijo]
+		etiqueta_bateria.modulate = Color.WHITE
+		if barra_bateria != null:
+			barra_bateria.modulate = Color.WHITE
 
 
 func _leer_bateria() -> float:

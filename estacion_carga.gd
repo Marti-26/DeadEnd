@@ -85,18 +85,28 @@ func usar() -> void:
 func _pintar() -> void:
 	if _mat == null:
 		return
+	var rotulo: Label3D = get_node_or_null("Rotulo") as Label3D
 	if usada or (Partida != null and Partida.estacion_usada):
 		_mat.emission = Color(0.9, 0.35, 0.6)
 		_mat.emission_energy_multiplier = 0.8
+		if rotulo != null:
+			rotulo.modulate = Color(0.9, 0.35, 0.6)
 	else:
 		_mat.emission = Color(0.45, 1.0, 0.75)
 		_mat.emission_energy_multiplier = 2.0
+		if rotulo != null:
+			rotulo.modulate = Color(0.6, 1.6, 1.15)
 
 
 func _mostrar(texto: String) -> void:
 	if aviso == null:
 		return
+	var rotulo: Label3D = get_node_or_null("Rotulo") as Label3D
+	if rotulo != null:
+		rotulo.visible = false
 	aviso.text = texto
 	aviso.visible = true
 	await get_tree().create_timer(2.0).timeout
 	aviso.visible = false
+	if rotulo != null:
+		rotulo.visible = true
