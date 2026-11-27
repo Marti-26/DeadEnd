@@ -26,7 +26,6 @@
 [ext_resource type="AudioStream" uid="uid://c666lg5t6mmsq" path="res://Sonidos/Ambiente/Luces.wav" id="22_5do8x"]
 [ext_resource type="Script" uid="uid://4mdf5onjb7ag" path="res://bombillo.gd" id="bombillo_luz"]
 [ext_resource type="FontFile" uid="uid://cdufsefxihski" path="res://assets/font/ShareTechMono-Regular.ttf" id="fuente_neon"]
-
 [ext_resource type="PackedScene" path="res://terminal.tscn" id="terminal_extra"]
 
 [sub_resource type="Environment" id="Entorno"]
@@ -190,7 +189,7 @@ limite_x = 5.2
 limite_z = Vector2(-1.2, 2.5)
 
 [node name="EstacionCarga" type="StaticBody3D" parent="." unique_id=943757498 node_paths=PackedStringArray("pantalla", "aviso")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0, -3.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1141202, 0, -3.6)
 script = ExtResource("9_carga")
 pantalla = NodePath("Pantalla")
 aviso = NodePath("Aviso")
@@ -270,11 +269,13 @@ mesh = SubResource("LuzCasillero")
 surface_material_override/0 = SubResource("MatLuzCasillero")
 
 [node name="Rotulo" type="Label3D" parent="EstacionCarga" unique_id=129085769]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85, 0.32)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.04831171, 2.135015, 0.31999993)
 pixel_size = 0.006
 modulate = Color(0.6, 1.6, 1.15, 1)
 outline_modulate = Color(0, 0.1, 0.07, 1)
-text = "CARGA"
+text = "C4rg4 
+d3 c3lul4r3$
+"
 font = ExtResource("fuente_neon")
 font_size = 48
 outline_size = 8
@@ -326,8 +327,8 @@ senalar = NodePath("../EstacionCarga")
 [node name="Bombillo" type="Node3D" parent="ChicoAmable" unique_id=536134219]
 script = ExtResource("bombillo_luz")
 color = Color(0.4, 0.6, 1, 1)
-separacion = Vector3(0.6, 2.8, 0.45)
 alcance = 4.0
+separacion = Vector3(0.6, 2.8, 0.45)
 
 [node name="LucesAmbiente" type="AudioStreamPlayer" parent="." unique_id=1845625369]
 stream = ExtResource("22_5do8x")
@@ -341,6 +342,6 @@ volume_db = -22.0
 autoplay = true
 bus = &"Juego"
 
-[node name="Punto activación 2" parent="." instance=ExtResource("terminal_extra")]
-position = Vector3(10.3, 1.28, -3.98)
+[node name="Punto activación 2" parent="." unique_id=1786136657 instance=ExtResource("terminal_extra")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.3, 1.28, -3.98)
 numero_terminal = 2
