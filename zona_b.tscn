@@ -1753,7 +1753,6 @@ script = ExtResource("19_llegada")
 [node name="Metro" parent="." unique_id=1426459555 node_paths=PackedStringArray("camara_estacion") instance=ExtResource("15_metro")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7.7)
 camara_estacion = NodePath("../Camara")
-solo_descenso = null
 
 [node name="MurosEnemigos" type="StaticBody3D" parent="." unique_id=995549813]
 collision_layer = 4

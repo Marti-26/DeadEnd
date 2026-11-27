@@ -375,7 +375,7 @@ func _actualizar_interaccion(delta: float) -> void:
 			if _tiene_celular():
 				var estacion_agotada: bool = ("usada" in obj_cercano and bool(obj_cercano.get("usada"))) or (Partida != null and Partida.estacion_usada)
 				if estacion_agotada:
-					_label_interaccion.text = "Sin energía"
+					_label_interaccion.text = "Sin energía para cargar"
 					_barra_interaccion.visible = false
 					_panel_interaccion.visible = true
 					return
@@ -385,12 +385,12 @@ func _actualizar_interaccion(delta: float) -> void:
 					_panel_interaccion.visible = true
 					return
 				else:
-					_label_interaccion.text = "[Mantén E] Cargar celular"
+					_label_interaccion.text = "[Mantén E] Para cargar el celular"
 					_barra_interaccion.visible = false
 					_panel_interaccion.visible = true
 					return
 		elif "activada" in obj_cercano and not bool(obj_cercano.get("activada")):
-			_label_interaccion.text = "[Mantén E] Activar terminal"
+			_label_interaccion.text = "[Mantén E] Para activar la terminal"
 			_barra_interaccion.visible = false
 			_panel_interaccion.visible = true
 			return
