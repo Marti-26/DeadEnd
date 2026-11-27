@@ -114,7 +114,7 @@ func _process(delta: float) -> void:
 
 	_actualizar_aviso(delta, escribiendo)
 	_desde_mostrado += delta
-	if _persistente and _desde_mostrado > 0.12 and Input.is_action_just_pressed(tecla_cerrar):
+	if (_persistente or _restante > 0.0) and _desde_mostrado > 0.12 and Input.is_action_just_pressed(tecla_cerrar):
 		if escribiendo:
 			_letras = float(texto.get_total_character_count())
 			texto.visible_characters = texto.get_total_character_count()
@@ -139,11 +139,11 @@ enemigo: bool = false, marcos: SpriteFrames = null, animacion: StringName = &"de
 	texto.visible_characters = 0
 
 	_letras = 0.0
-	_persistente = not enemigo
+	_persistente = persistente and not enemigo
 	_desde_mostrado = 0.0
 	_restante = 0.0 if _persistente else maxf(
 		duracion,
-		frase.length() / letras_por_segundo + 1.5
+		frase.length() / letras_por_segundo + 1.0
 	)
 
 	var estaba_oculto: bool = not cuadro.visible

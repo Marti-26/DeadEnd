@@ -34,7 +34,6 @@ border_color = Color(0.969, 0.714, 0.784, 1)
 corner_radius_top_left = 7
 corner_radius_top_right = 7
 corner_radius_bottom_right = 7
-corner_radius_bottom_left = 7
 corner_radius_bottom_left = 4
 
 [node name="HUD" type="CanvasLayer" unique_id=738534025]
@@ -43,7 +42,7 @@ script = ExtResource("1_hud")
 [node name="Contenedor" type="VBoxContainer" parent="." unique_id=1397373471]
 offset_left = 20.0
 offset_top = 20.0
-offset_right = 260.0
+offset_right = 410.0
 offset_bottom = 128.0
 theme = ExtResource("2_tema")
 theme_override_constants/separation = 6
@@ -53,8 +52,9 @@ layout_mode = 2
 text = "BATERÍA CELULAR"
 
 [node name="BarraBateria" type="ProgressBar" parent="Contenedor" unique_id=1718621100]
-custom_minimum_size = Vector2(240, 22)
+custom_minimum_size = Vector2(390, 22)
 layout_mode = 2
+size_flags_horizontal = 0
 theme_override_styles/background = SubResource("StyleBoxFondo")
 theme_override_styles/fill = SubResource("StyleBoxBateria")
 value = 100.0
@@ -64,27 +64,26 @@ layout_mode = 2
 text = "ESTRÉS"
 
 [node name="BarraEstres" type="ProgressBar" parent="Contenedor" unique_id=1675660878]
-custom_minimum_size = Vector2(240, 22)
+custom_minimum_size = Vector2(390, 22)
 layout_mode = 2
+size_flags_horizontal = 0
 theme_override_styles/background = SubResource("StyleBoxFondo")
 theme_override_styles/fill = SubResource("StyleBoxEstres")
 
-[node name="AvisoMetro" type="PanelContainer" parent="Contenedor"]
-visible = false
+[node name="AvisoMetro" type="PanelContainer" parent="Contenedor" unique_id=2109484686]
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxAvisoMetro")
 
-[node name="Mensaje" type="Label" parent="Contenedor/AvisoMetro"]
+[node name="Mensaje" type="Label" parent="Contenedor/AvisoMetro" unique_id=2058156766]
 layout_mode = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.984, 0.945, 0.902, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0)
 theme_override_constants/outline_size = 0
 theme_override_font_sizes/font_size = 15
 autowrap_mode = 3
 
-[node name="TiempoAvisoMetro" type="Timer" parent="."]
+[node name="TiempoAvisoMetro" type="Timer" parent="." unique_id=1320043804]
 wait_time = 6.0
 one_shot = true
 

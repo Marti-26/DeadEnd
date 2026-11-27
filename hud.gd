@@ -19,6 +19,7 @@ var _panel_interaccion: PanelContainer = null
 var _label_interaccion: Label = null
 var _barra_interaccion: ProgressBar = null
 var _tiempo_efecto_carga: float = 0.0
+var _tiempo_descarga: float = 0.0
 #variable para que no aparezca el hud si no tiene el celular
 var indicadores_bloqueados: bool = false
 
@@ -30,9 +31,15 @@ func _ready() -> void:
 	barra_bateria.min_value = 0.0
 	barra_bateria.max_value = 100.0
 	barra_bateria.value = 100.0
+	barra_bateria.custom_minimum_size = Vector2(390.0, 22.0)
+	barra_bateria.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+
 	barra_estres.min_value = 0.0
 	barra_estres.max_value = 100.0
 	barra_estres.value = 0.0
+	barra_estres.custom_minimum_size = Vector2(390.0, 22.0)
+	barra_estres.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+
 	_buscar_referencias()
 	_actualizar_barras()
 	_crear_celular()
@@ -44,7 +51,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if not is_instance_valid(_nodo_bateria) or not is_instance_valid(_nodo_jugador) or not is_instance_valid(_nodo_interactuar):
 		_buscar_referencias()
-	_actualizar_barras()
+	_actualizar_barras(delta)
 	_actualizar_boton_celular()
 	_actualizar_interaccion(delta)
 
@@ -61,7 +68,7 @@ func _crear_celular() -> void:
 	_boton_celular = Button.new()
 	_boton_celular.flat = true
 	_boton_celular.focus_mode = Control.FOCUS_NONE
-	_boton_celular.custom_minimum_size = Vector2(46.0, 52.0)
+	_boton_celular.custom_minimum_size = Vector2(95.0, 148.0)
 	_boton_celular.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	_boton_celular.tooltip_text = "Mapa (M)"
 	_boton_celular.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
@@ -83,15 +90,15 @@ func _crear_celular() -> void:
 	_indicador_metro.hide()
 	_boton_celular.add_child(_indicador_metro)
 	_indicador_metro.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	_indicador_metro.offset_left = -14.0
-	_indicador_metro.offset_right = -2.0
-	_indicador_metro.offset_top = 2.0
-	_indicador_metro.offset_bottom = 14.0
+	_indicador_metro.offset_left = -22.0
+	_indicador_metro.offset_right = -4.0
+	_indicador_metro.offset_top = 4.0
+	_indicador_metro.offset_bottom = 22.0
 	var estilo := StyleBoxFlat.new()
 	estilo.bg_color = Color(0.86, 0.12, 0.22)
 	estilo.border_color = _celular.color_crema
 	estilo.set_border_width_all(2)
-	estilo.set_corner_radius_all(6)
+	estilo.set_corner_radius_all(9)
 	_indicador_metro.add_theme_stylebox_override("panel", estilo)
 
 
@@ -137,20 +144,21 @@ func _tiene_celular() -> bool:
 
 
 func _dibujar_icono_celular() -> void:
+	var factor_tamano: float = 3.0
 	var encima: bool = _boton_celular.is_hovered() or _celular.abierto
-	var escala: float = 1.08 if encima else 1.0
+	var escala: float = (1.08 if encima else 1.0) * factor_tamano
 	var tam: Vector2 = Vector2(26.0, 44.0) * escala
 	var origen: Vector2 = (_icono_celular.size - tam) * 0.5
 	var cuerpo: StyleBoxFlat = StyleBoxFlat.new()
 	cuerpo.bg_color = _celular.color_rosa
 	cuerpo.border_color = _celular.color_rosa_fuerte
-	cuerpo.set_border_width_all(2)
-	cuerpo.set_corner_radius_all(7)
+	cuerpo.set_border_width_all(int(round(2.0 * factor_tamano)))
+	cuerpo.set_corner_radius_all(int(round(7.0 * factor_tamano)))
 	cuerpo.anti_aliasing = true
 	_icono_celular.draw_style_box(cuerpo, Rect2(origen, tam))
 	var pantalla: StyleBoxFlat = StyleBoxFlat.new()
 	pantalla.bg_color = _celular.color_crema if encima else _celular.color_crema.darkened(0.08)
-	pantalla.set_corner_radius_all(4)
+	pantalla.set_corner_radius_all(int(round(4.0 * factor_tamano)))
 	pantalla.anti_aliasing = true
 	_icono_celular.draw_style_box(pantalla, Rect2(origen + Vector2(4.0, 5.0) * escala, tam - Vector2(8.0, 10.0) * escala))
 	var centro: Vector2 = origen + tam * 0.5
@@ -158,10 +166,10 @@ func _dibujar_icono_celular() -> void:
 	_icono_celular.draw_colored_polygon(PackedVector2Array([centro + Vector2(-3.5, 0.0) * escala, centro + Vector2(3.5, 0.0) * escala, centro + Vector2(0.0, 7.0) * escala]), _celular.color_rosa_fuerte)
 	_icono_celular.draw_circle(centro + Vector2(0.0, -2.0) * escala, 1.6 * escala, _celular.color_crema)
 	var hilo: Vector2 = origen + Vector2(0.0, 12.0) * escala
-	_icono_celular.draw_line(hilo, hilo + Vector2(-6.0, 12.0), _celular.color_rosa_fuerte, 1.5, true)
-	_icono_celular.draw_circle(hilo + Vector2(-6.0, 15.0), 3.5, Color(0.12, 0.08, 0.1))
-	_icono_celular.draw_circle(hilo + Vector2(-7.2, 14.5), 0.9, _celular.color_marcador)
-	_icono_celular.draw_circle(hilo + Vector2(-4.8, 14.5), 0.9, _celular.color_marcador)
+	_icono_celular.draw_line(hilo, hilo + Vector2(-6.0, 12.0) * factor_tamano, _celular.color_rosa_fuerte, 1.5 * factor_tamano, true)
+	_icono_celular.draw_circle(hilo + Vector2(-6.0, 15.0) * factor_tamano, 3.5 * factor_tamano, Color(0.12, 0.08, 0.1))
+	_icono_celular.draw_circle(hilo + Vector2(-7.2, 14.5) * factor_tamano, 0.9 * factor_tamano, _celular.color_marcador)
+	_icono_celular.draw_circle(hilo + Vector2(-4.8, 14.5) * factor_tamano, 0.9 * factor_tamano, _celular.color_marcador)
 
 
 func _buscar_referencias() -> void:
@@ -175,7 +183,7 @@ func _buscar_referencias() -> void:
 		_nodo_interactuar = null
 
 
-func _actualizar_barras() -> void:
+func _actualizar_barras(delta: float = 0.0) -> void:
 	if indicadores_bloqueados:
 		return
 	var tiene: bool = _tiene_celular()
@@ -184,8 +192,68 @@ func _actualizar_barras() -> void:
 	if barra_bateria != null:
 		barra_bateria.visible = tiene
 	if tiene:
-		barra_bateria.value = _leer_bateria()
+		var bat: float = _leer_bateria()
+		barra_bateria.value = bat
+		_actualizar_indicador_descarga(bat, delta)
 	barra_estres.value = _leer_estres()
+
+
+func _actualizar_indicador_descarga(bat: float, delta: float) -> void:
+	if etiqueta_bateria == null:
+		return
+
+	_tiempo_descarga += delta
+
+	var esta_cargando: bool = is_instance_valid(_nodo_interactuar) and _nodo_interactuar.actual is EstacionCarga and _nodo_interactuar.progreso > 0.01
+
+	if esta_cargando:
+		etiqueta_bateria.text = "BATERÍA CELULAR (CARGANDO)"
+		etiqueta_bateria.modulate = Color(1.0, 0.95, 0.5)
+		return
+
+	if bat <= 0.0:
+		etiqueta_bateria.text = "BATERÍA CELULAR (AGOTADA)"
+		etiqueta_bateria.modulate = Color(0.6, 0.6, 0.6)
+		if barra_bateria != null:
+			barra_bateria.modulate = Color(0.5, 0.5, 0.5)
+		return
+
+	# Detectar causas de consumo
+	var linterna_on: bool = is_instance_valid(_nodo_jugador) and bool(_nodo_jugador.get("linterna_encendida"))
+	var audifonos_on: bool = is_instance_valid(_nodo_jugador) and bool(_nodo_jugador.get("audifonos_activos"))
+	var mapa_on: bool = _celular != null and _celular.abierto
+
+	var consumo_alto: bool = linterna_on or audifonos_on or mapa_on
+	var flechas: String = "▼▼" if consumo_alto else "▼"
+
+	var sufijo: String = ""
+	if linterna_on and audifonos_on:
+		sufijo = " [LINTERNA + AUDÍFONOS]"
+	elif linterna_on:
+		sufijo = " [LINTERNA]"
+	elif audifonos_on:
+		sufijo = " [AUDÍFONOS]"
+	elif mapa_on:
+		sufijo = " [MAPA]"
+
+	# Si la batería está crítica (< 20%), alertar al jugador
+	if bat <= 20.0:
+		var pulso_alerta: float = (sin(_tiempo_descarga * 6.0) + 1.0) * 0.5
+		var color_rojo: Color = Color(1.3, 0.35, 0.35).lerp(Color(1.0, 0.8, 0.8), pulso_alerta)
+		etiqueta_bateria.text = "BATERÍA CELULAR %s (BAJA)%s" % [flechas, sufijo]
+		etiqueta_bateria.modulate = color_rojo
+		if barra_bateria != null:
+			barra_bateria.modulate = color_rojo
+	elif bat <= 50.0:
+		etiqueta_bateria.text = "BATERÍA CELULAR %s%s" % [flechas, sufijo]
+		etiqueta_bateria.modulate = Color(1.15, 0.95, 0.5)
+		if barra_bateria != null:
+			barra_bateria.modulate = Color(1.15, 0.95, 0.5)
+	else:
+		etiqueta_bateria.text = "BATERÍA CELULAR %s%s" % [flechas, sufijo]
+		etiqueta_bateria.modulate = Color.WHITE
+		if barra_bateria != null:
+			barra_bateria.modulate = Color.WHITE
 
 
 func _leer_bateria() -> float:
@@ -309,7 +377,7 @@ func _actualizar_interaccion(delta: float) -> void:
 			if _tiene_celular():
 				var estacion_agotada: bool = ("usada" in obj_cercano and bool(obj_cercano.get("usada"))) or (Partida != null and Partida.estacion_usada)
 				if estacion_agotada:
-					_label_interaccion.text = "Sin energía"
+					_label_interaccion.text = "Sin energía para cargar"
 					_barra_interaccion.visible = false
 					_panel_interaccion.visible = true
 					return
@@ -319,12 +387,12 @@ func _actualizar_interaccion(delta: float) -> void:
 					_panel_interaccion.visible = true
 					return
 				else:
-					_label_interaccion.text = "[Mantén E] Cargar celular"
+					_label_interaccion.text = "[Mantén E] Para cargar el celular"
 					_barra_interaccion.visible = false
 					_panel_interaccion.visible = true
 					return
 		elif "activada" in obj_cercano and not bool(obj_cercano.get("activada")):
-			_label_interaccion.text = "[Mantén E] Activar terminal"
+			_label_interaccion.text = "[Mantén E] Para activar la terminal"
 			_barra_interaccion.visible = false
 			_panel_interaccion.visible = true
 			return

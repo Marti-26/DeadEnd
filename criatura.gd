@@ -220,7 +220,7 @@ func golpear() -> void:
 	print(name, " GOLPEA EN EL CUADRO: ", Engine.get_physics_frames())
 
 	if distancia() <= rango_ataque + 0.3:
-		Partida.perder()
+		Partida.perder("criatura")
 
 
 func ir_a(destino: Vector3) -> void:

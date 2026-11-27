@@ -106,7 +106,7 @@ var estres: float = 0.0:
 			_jadeo_disparado = false
 		elif not _jadeo_disparado and previo < ESTRES_MAX:
 			_disparar_jadeo()
-			Partida.perder.call_deferred()
+			Partida.perder.call_deferred("estres")
 
 var estado = Estado.QUIETO
 var ruido = 0.0

@@ -2,7 +2,7 @@ class_name Interactuar
 extends Node
 
 @export var tecla: String = "usar"
-@export var alcance: float = 1.8
+@export var alcance: float = 1.35
 @export var tiempo_necesario: float = 3.0
 @export var bateria_inicial: float = 25.0
 
@@ -58,6 +58,8 @@ func _physics_process(delta: float) -> void:
 func mas_cercano() -> Node:
 	var mejor: Node = null
 	for obj in get_tree().get_nodes_in_group(Grupos.INTERACTIVOS):
+		if not is_instance_valid(obj) or not obj.is_inside_tree() or not obj.is_visible_in_tree():
+			continue
 		var d = distancia_a(obj)
 		if d <= alcance and (mejor == null or d < distancia_a(mejor)):
 			mejor = obj
@@ -65,6 +67,11 @@ func mas_cercano() -> Node:
 
 
 func distancia_a(obj):
+	if pj == null or obj == null:
+		return 9999.0
+	# Si están en pisos distintos o hay diferencia de altura, ignorar
+	if absf(pj.global_position.y - obj.global_position.y) > 1.6:
+		return 9999.0
 	var a = Vector2(pj.global_position.x, pj.global_position.z)
 	var b = Vector2(obj.global_position.x, obj.global_position.z)
 	return a.distance_to(b)
