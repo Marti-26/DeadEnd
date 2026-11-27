@@ -21,6 +21,9 @@ var guardado: Dictionary = {}
 var estacion_usada: bool = false
 var _perdiendo: bool = false
 var _apagon = null
+var _velo: ColorRect = null
+var _tween_velo: Tween = null
+var _ruta_pendiente: String = ""
 
 # Terminales necesarias para viajar a Zona C
 var terminal_1_activada: bool = false
@@ -112,7 +115,39 @@ func cambiar_escena(ruta: String, punto: String = "") -> void:
 		snappedf(estres, 0.1)
 	)
 
-	get_tree().change_scene_to_file.call_deferred(ruta)
+	_ruta_pendiente = ruta
+	_transicion()
+
+
+func _ready() -> void:
+	RenderingServer.set_default_clear_color(Color.BLACK)
+	var capa: CanvasLayer = CanvasLayer.new()
+	capa.layer = 100
+	add_child(capa)
+	_velo = ColorRect.new()
+	_velo.color = Color(0.0, 0.0, 0.0, 0.0)
+	_velo.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_velo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	capa.add_child(_velo)
+
+
+func _transicion() -> void:
+	if _tween_velo != null and _tween_velo.is_valid():
+		_tween_velo.kill()
+	_tween_velo = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_tween_velo.tween_property(_velo, "color:a", 1.0, 0.12 * (1.0 - _velo.color.a))
+	await _tween_velo.finished
+	if _ruta_pendiente == "":
+		return
+	var ruta: String = _ruta_pendiente
+	_ruta_pendiente = ""
+	get_tree().change_scene_to_file(ruta)
+	for i: int in 3:
+		await get_tree().process_frame
+	if _ruta_pendiente != "":
+		return
+	_tween_velo = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_tween_velo.tween_property(_velo, "color:a", 0.0, 0.35)
 
 
 func guardar(punto: String) -> void:
