@@ -36,6 +36,8 @@
 [ext_resource type="PackedScene" path="res://zona_c/detalles_anden.tscn" id="ZC_detalles_anden"]
 [ext_resource type="PackedScene" path="res://zona_c/banca_anden.tscn" id="ZC_banca_anden"]
 [ext_resource type="PackedScene" path="res://zona_c/zarigueya_anden.tscn" id="ZC_zarigueya_anden"]
+[ext_resource type="PackedScene" path="res://zona_c/saxofonista_anden.tscn" id="ZC_saxofonista_anden"]
+[ext_resource type="AudioStream" path="res://Sonidos/Ambiente/91750__dobroide__20100306subwaytunnel.wav" id="ZC_ambiente_tunel"]
 
 [sub_resource type="BoxShape3D" id="ZC_SueloContinuo"]
 size = Vector3(80, 0.4, 9.8)
@@ -486,6 +488,11 @@ size = Vector3(1, 2, 9.8)
 [node name="ZonaCFinal" type="Node3D" unique_id=990845547]
 script = ExtResource("ZC_final")
 
+[node name="AmbienteTunel" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("ZC_ambiente_tunel")
+volume_db = -72.0
+bus = &"Juego"
+
 [node name="SueloContinuo" type="StaticBody3D" parent="." unique_id=766542454]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.19, 1.2)
 
@@ -506,6 +513,9 @@ position = Vector3(26.8, 0, -3.25)
 
 [node name="ZarigueyaAnden" parent="Estacion" instance=ExtResource("ZC_zarigueya_anden")]
 position = Vector3(19.1, 0, -2.88)
+
+[node name="SaxofonistaAnden" parent="Estacion" instance=ExtResource("ZC_saxofonista_anden")]
+position = Vector3(4, 0, -2.55)
 
 [node name="Piso0" type="StaticBody3D" parent="Estacion" unique_id=933392377]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.5, -0.5, 1.2)
