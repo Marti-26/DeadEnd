@@ -96,7 +96,7 @@ func _crear_celular() -> void:
 
 
 func _mostrar_aviso_metro() -> void:
-	if not visible or not _tiene_celular():
+	if not visible or not _tiene_celular() or not Partida.terminales_completadas():
 		return
 	if _celular.abierto:
 		Partida.aviso_metro_leido = true
@@ -118,14 +118,16 @@ func _actualizar_boton_celular() -> void:
 	if _boton_celular == null:
 		return
 	var tiene: bool = _tiene_celular()
+	var metro_habilitado := Partida.terminales_completadas()
 	_boton_celular.visible = tiene
-	var aviso_pendiente := tiene and Partida.terminales_completadas() and not Partida.aviso_metro_leido
+	var aviso_pendiente := tiene and metro_habilitado and not Partida.aviso_metro_leido
 	_indicador_metro.visible = aviso_pendiente
 	_boton_celular.tooltip_text = CelularMapa.AVISO_METRO + " · Mapa (M)" if aviso_pendiente else "Mapa (M)"
-	if not tiene:
+	if not tiene or not metro_habilitado:
 		_aviso_metro.hide()
-		if _celular.abierto:
-			_celular.cerrar()
+		_tiempo_aviso_metro.stop()
+	if not tiene and _celular.abierto:
+		_celular.cerrar()
 
 
 func _tiene_celular() -> bool:
