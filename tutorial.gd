@@ -1186,11 +1186,9 @@ func _crear_barra_carga() -> void:
 
 
 func _mostrar_carga() -> void:
-	if _carga_caja == null:
-		return
-	if _interactuar == null or not is_instance_valid(_interactuar) or _interactuar.progreso <= 0.01 or _interactuar.actual == null:
+	if _carga_caja != null:
 		_carga_caja.visible = false
-		return
+	return
 	var accion: String = "Usando"
 	if _interactuar.actual is EstacionCarga:
 		accion = "Cargando batería"

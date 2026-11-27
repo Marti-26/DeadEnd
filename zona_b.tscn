@@ -34,11 +34,11 @@
 [ext_resource type="AudioStream" uid="uid://dw6nrxsaxx3ph" path="res://Sonidos/Ambiente/Ventilador.wav" id="28_hfju1"]
 [ext_resource type="AudioStream" uid="uid://c666lg5t6mmsq" path="res://Sonidos/Ambiente/Luces.wav" id="29_0slvj"]
 [ext_resource type="Script" uid="uid://4mdf5onjb7ag" path="res://bombillo.gd" id="bombillo_luz"]
+[ext_resource type="PackedScene" path="res://assets/expendedoras/expendedora_pociones.tscn" id="exp_pociones"]
+[ext_resource type="PackedScene" path="res://assets/expendedoras/expendedora_soda.tscn" id="exp_soda"]
 [ext_resource type="Texture2D" uid="uid://btagd5l53p4er" path="res://assets/npcs y posters/poster_atrapada.png" id="poster_atrapada"]
 [ext_resource type="Script" uid="uid://d1yo46kjs76th" path="res://poster_pared.gd" id="poster_pared"]
 [ext_resource type="Texture2D" uid="uid://d0ulr0nxhjyye" path="res://assets/npcs y posters/poster_se_vende.png" id="poster_se_vende"]
-[ext_resource type="PackedScene" path="res://assets/expendedoras/expendedora_pociones.tscn" id="exp_pociones"]
-[ext_resource type="PackedScene" path="res://assets/expendedoras/expendedora_soda.tscn" id="exp_soda"]
 
 [sub_resource type="Environment" id="Environment_dpv7s"]
 background_mode = 1
@@ -393,82 +393,8 @@ size = Vector3(0.06, 0.44, 0.45)
 [sub_resource type="BoxShape3D" id="BoxShape3D_djvre"]
 size = Vector3(2.2, 1, 0.6)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iiakp"]
-albedo_color = Color(0.3, 0.42, 0.42, 1)
-roughness = 0.5
-
-[sub_resource type="BoxMesh" id="BoxMesh_0ajof"]
-size = Vector3(1.1, 2, 0.7)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4b6kw"]
-albedo_color = Color(0, 0, 0, 1)
-roughness = 0.2
-emission_enabled = true
-emission = Color(1, 0.8, 0.58, 1)
-emission_energy_multiplier = 1.1
-
-[sub_resource type="BoxMesh" id="BoxMesh_bt4f1"]
-size = Vector3(0.82, 1.2, 0.03)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_thm06"]
-albedo_color = Color(0.05, 0.06, 0.08, 1)
-roughness = 0.7
-
-[sub_resource type="BoxMesh" id="BoxMesh_ylnbe"]
-material = SubResource("StandardMaterial3D_thm06")
-size = Vector3(0.78, 0.04, 0.02)
-
-[sub_resource type="MultiMesh" id="MultiMesh_pok43"]
-transform_format = 1
-instance_count = 4
-mesh = SubResource("BoxMesh_ylnbe")
-buffer = PackedFloat32Array(1, 0, 0, -0.08, 0, 1, 0, 0.8, 0, 0, 1, 0.33, 1, 0, 0, -0.08, 0, 1, 0, 1.1, 0, 0, 1, 0.33, 1, 0, 0, -0.08, 0, 1, 0, 1.4, 0, 0, 1, 0.33, 1, 0, 0, -0.08, 0, 1, 0, 1.7, 0, 0, 1, 0.33)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uc7jt"]
-albedo_color = Color(0.1, 0.12, 0.15, 1)
-roughness = 0.4
-emission_enabled = true
-emission = Color(0.56078434, 0.8509804, 0.6901961, 1)
-emission_energy_multiplier = 0.4
-
-[sub_resource type="BoxMesh" id="BoxMesh_ewqw5"]
-size = Vector3(0.14, 0.5, 0.03)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wc67e"]
-albedo_color = Color(0.04, 0.05, 0.06, 1)
-roughness = 0.6
-
-[sub_resource type="BoxMesh" id="BoxMesh_j0cmm"]
-size = Vector3(0.7, 0.18, 0.04)
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_2o4mg"]
 size = Vector3(1.1, 2, 0.7)
-
-[sub_resource type="BoxMesh" id="BoxMesh_v37m8"]
-size = Vector3(1.1, 2, 0.7)
-
-[sub_resource type="BoxMesh" id="BoxMesh_cjrbr"]
-size = Vector3(0.82, 1.2, 0.03)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v2f3a"]
-albedo_color = Color(0.05, 0.06, 0.08, 1)
-roughness = 0.7
-
-[sub_resource type="BoxMesh" id="BoxMesh_hrntr"]
-material = SubResource("StandardMaterial3D_v2f3a")
-size = Vector3(0.78, 0.04, 0.02)
-
-[sub_resource type="MultiMesh" id="MultiMesh_jww2l"]
-transform_format = 1
-instance_count = 4
-mesh = SubResource("BoxMesh_hrntr")
-buffer = PackedFloat32Array(1, 0, 0, -0.08, 0, 1, 0, 0.8, 0, 0, 1, 0.33, 1, 0, 0, -0.08, 0, 1, 0, 1.1, 0, 0, 1, 0.33, 1, 0, 0, -0.08, 0, 1, 0, 1.4, 0, 0, 1, 0.33, 1, 0, 0, -0.08, 0, 1, 0, 1.7, 0, 0, 1, 0.33)
-
-[sub_resource type="BoxMesh" id="BoxMesh_mu4i0"]
-size = Vector3(0.14, 0.5, 0.03)
-
-[sub_resource type="BoxMesh" id="BoxMesh_cy13n"]
-size = Vector3(0.7, 0.18, 0.04)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_j1cnc"]
 size = Vector3(1.1, 2, 0.7)
@@ -1156,7 +1082,7 @@ shape = SubResource("BoxShape3D_djvre")
 [node name="Expendedora1" type="Node3D" parent="Estacion" unique_id=1078220248]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6, 0, -3.2)
 
-[node name="Modelo" parent="Estacion/Expendedora1" instance=ExtResource("exp_pociones")]
+[node name="Modelo" parent="Estacion/Expendedora1" unique_id=1112086611 instance=ExtResource("exp_pociones")]
 
 [node name="Choque" type="StaticBody3D" parent="Estacion/Expendedora1" unique_id=2101080450]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -1167,7 +1093,7 @@ shape = SubResource("BoxShape3D_2o4mg")
 [node name="Expendedora2" type="Node3D" parent="Estacion" unique_id=1415881746]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -3.2)
 
-[node name="Modelo" parent="Estacion/Expendedora2" instance=ExtResource("exp_soda")]
+[node name="Modelo" parent="Estacion/Expendedora2" unique_id=2108061418 instance=ExtResource("exp_soda")]
 
 [node name="Choque" type="StaticBody3D" parent="Estacion/Expendedora2" unique_id=1550974291]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
