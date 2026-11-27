@@ -45,6 +45,7 @@ func _ready() -> void:
 	_crear_celular()
 	_crear_panel_interaccion()
 	$Contenedor/AvisoMetro/Mensaje.text = "Terminales activadas\n" + CelularMapa.AVISO_METRO
+	_estilo_aviso_metro()
 	Partida.viaje_zona_c_habilitado.connect(_mostrar_aviso_metro)
 
 
@@ -109,6 +110,12 @@ func _mostrar_aviso_metro() -> void:
 		Partida.aviso_metro_leido = true
 		return
 	_aviso_metro.show()
+	_aviso_metro.reset_size()
+	var pantalla: Vector2 = get_viewport().get_visible_rect().size
+	var x: float = (pantalla.x - _aviso_metro.size.x) * 0.5
+	_aviso_metro.position = Vector2(x, pantalla.y + 20.0)
+	var entrada: Tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	entrada.tween_property(_aviso_metro, "position", Vector2(x, pantalla.y - _aviso_metro.size.y - 28.0), 0.45)
 	_tiempo_aviso_metro.start()
 
 
@@ -396,3 +403,45 @@ func _actualizar_interaccion(delta: float) -> void:
 			return
 
 	_panel_interaccion.visible = false
+
+
+func _estilo_aviso_metro() -> void:
+	var fuente: Font = load("res://assets/font/ShareTechMono-Regular.ttf") as Font
+	var mensaje: Label = _aviso_metro.get_node("Mensaje") as Label
+	$Contenedor.remove_child(_aviso_metro)
+	add_child(_aviso_metro)
+	_aviso_metro.top_level = false
+	_aviso_metro.custom_minimum_size = Vector2(620.0, 0.0)
+	var estilo: StyleBoxFlat = StyleBoxFlat.new()
+	estilo.bg_color = Color(0.984, 0.945, 0.902, 0.96)
+	estilo.border_color = Color(0.847, 0.263, 0.435)
+	estilo.set_border_width_all(3)
+	estilo.set_corner_radius_all(14)
+	estilo.content_margin_left = 16.0
+	estilo.content_margin_right = 16.0
+	estilo.content_margin_top = 10.0
+	estilo.content_margin_bottom = 12.0
+	estilo.shadow_color = Color(0.25, 0.02, 0.1, 0.35)
+	estilo.shadow_size = 10
+	estilo.shadow_offset = Vector2(4.0, 6.0)
+	_aviso_metro.add_theme_stylebox_override("panel", estilo)
+	_aviso_metro.remove_child(mensaje)
+	var columna: VBoxContainer = VBoxContainer.new()
+	columna.add_theme_constant_override("separation", 4)
+	columna.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_aviso_metro.add_child(columna)
+	var titulo: Label = Label.new()
+	titulo.text = "MENSAJE NUEVO · ???"
+	titulo.add_theme_font_size_override("font_size", 18)
+	titulo.add_theme_color_override("font_color", Color(0.847, 0.263, 0.435))
+	columna.add_child(titulo)
+	columna.add_child(mensaje)
+	mensaje.text = "Activaste todos los puntos de activación.\n" + CelularMapa.AVISO_METRO + "."
+	mensaje.add_theme_font_size_override("font_size", 23)
+	mensaje.add_theme_color_override("font_color", Color(0.42, 0.08, 0.2))
+	mensaje.custom_minimum_size = Vector2(580.0, 0.0)
+	if fuente != null:
+		titulo.add_theme_font_override("font", fuente)
+		mensaje.add_theme_font_override("font", fuente)
+	_tiempo_aviso_metro.wait_time = 10.0
+	_aviso_metro.hide()
