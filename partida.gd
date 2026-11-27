@@ -235,23 +235,15 @@ func perder(motivo: String = "estres") -> void:
 	await _apagon.apagar()
 
 	# Mostrar mensaje explícito de causa de muerte con estilo de enemigo (rojo)
-	var dialogo = Dialogo.obtener(get_tree())
-	if dialogo != null:
-		dialogo.layer = 70 # Asegurar que se vea por encima del velo de oscuridad (layer 60)
-		var titulo_muerte: String = "HAS MUERTO"
-		var texto_muerte: String = "No lograste sobrevivir en el metro."
-		
-		if motivo == "estres":
-			titulo_muerte = "COLAPSO NERVIOSO"
-			texto_muerte = "Moriste por llegar al 100% del estrés. El pánico te consumió."
-		elif motivo == "criatura":
-			titulo_muerte = "ATRAPADO"
-			texto_muerte = "Moriste porque la criatura te atrapó en la oscuridad."
-		
-		dialogo.mostrar(titulo_muerte, texto_muerte, 3.5, true, null, &"default", false)
-		await get_tree().create_timer(3.5).timeout
-		dialogo.ocultar()
-		dialogo.layer = 5 # Restaurar la capa original
+	var titulo_muerte: String = "HAS MUERTO"
+	var texto_muerte: String = "No lograste sobrevivir en el metro."
+	if motivo == "estres":
+		titulo_muerte = "COLAPSO NERVIOSO"
+		texto_muerte = "Moriste por llegar al 100% del estrés. El pánico te consumió."
+	elif motivo == "criatura":
+		titulo_muerte = "ATRAPADO"
+		texto_muerte = "Moriste porque la criatura te atrapó en la oscuridad."
+	await _mostrar_muerte(titulo_muerte, texto_muerte, 3.5)
 
 	var escena_actual: Node = get_tree().current_scene
 	if escena_actual != null and escena_actual.scene_file_path == ESCENA_TUTORIAL:
@@ -315,3 +307,46 @@ func _unhandled_input(event: InputEvent) -> void:
 
 		elif key_event.physical_keycode == KEY_F10:
 			perder()
+
+
+func _mostrar_muerte(titulo: String, texto: String, duracion: float) -> void:
+	var fuente: Font = load("res://assets/font/ShareTechMono-Regular.ttf") as Font
+	var capa: CanvasLayer = CanvasLayer.new()
+	capa.layer = 70
+	add_child(capa)
+	var caja: VBoxContainer = VBoxContainer.new()
+	caja.set_anchors_preset(Control.PRESET_FULL_RECT)
+	caja.alignment = BoxContainer.ALIGNMENT_CENTER
+	caja.add_theme_constant_override("separation", 18)
+	caja.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	caja.modulate.a = 0.0
+	capa.add_child(caja)
+	var etiqueta_titulo: Label = _texto_muerte(titulo, fuente, 64, Color(1.0, 0.16, 0.2), Color(0.45, 0.0, 0.04, 0.9), 12)
+	caja.add_child(etiqueta_titulo)
+	var etiqueta_texto: Label = _texto_muerte(texto, fuente, 28, Color(1.0, 0.86, 0.86), Color(0.12, 0.0, 0.02, 0.9), 8)
+	etiqueta_texto.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	etiqueta_texto.custom_minimum_size = Vector2(minf(900.0, get_viewport().get_visible_rect().size.x - 80.0), 0.0)
+	etiqueta_texto.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	caja.add_child(etiqueta_texto)
+	var entrada: Tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	entrada.tween_property(caja, "modulate:a", 1.0, 0.4)
+	await get_tree().create_timer(duracion, true).timeout
+	var salida: Tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	salida.tween_property(caja, "modulate:a", 0.0, 0.35)
+	await salida.finished
+	capa.queue_free()
+
+
+func _texto_muerte(contenido: String, fuente: Font, tamano: int, color: Color, borde: Color, grosor: int) -> Label:
+	var etiqueta: Label = Label.new()
+	etiqueta.text = contenido
+	etiqueta.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	etiqueta.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	etiqueta.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if fuente != null:
+		etiqueta.add_theme_font_override("font", fuente)
+	etiqueta.add_theme_font_size_override("font_size", tamano)
+	etiqueta.add_theme_color_override("font_color", color)
+	etiqueta.add_theme_color_override("font_outline_color", borde)
+	etiqueta.add_theme_constant_override("outline_size", grosor)
+	return etiqueta
