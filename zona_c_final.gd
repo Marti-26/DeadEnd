@@ -6,9 +6,13 @@ extends Node3D
 @onready var estacion: Node3D = $Estacion
 @onready var destello: Sprite3D = $EscalerasSalida/Destello
 @onready var luz_salida: OmniLight3D = $EscalerasSalida/LuzExteriorLateral
+@onready var ambiente_tunel: AudioStreamPlayer = $AmbienteTunel
 
 const INICIO_LUZ: float = -32.0
 const FIN_LUZ: float = 34.0
+const INICIO_AMBIENTE_TUNEL: float = -12.0
+const AMBIENTE_TUNEL_PLENO: float = 11.0
+const VOLUMEN_AMBIENTE_TUNEL_DB: float = -12.0
 const BALDOSA_OSCURA: Color = Color(0.20, 0.28, 0.29)
 const BALDOSA_DORADA: Color = Color(0.69, 0.61, 0.43)
 const JUNTA_OSCURA: Color = Color(0.09, 0.13, 0.14)
@@ -81,6 +85,11 @@ func _process(delta: float) -> void:
 	Partida.estres = 0.0
 	avance_maximo = maxf(avance_maximo, personaje.global_position.x)
 	var progreso: float = smoothstep(INICIO_LUZ, FIN_LUZ, avance_maximo)
+	var nivel_tunel := smoothstep(INICIO_AMBIENTE_TUNEL, AMBIENTE_TUNEL_PLENO, avance_maximo)
+	if nivel_tunel > 0.0:
+		ambiente_tunel.volume_db = VOLUMEN_AMBIENTE_TUNEL_DB + linear_to_db(maxf(nivel_tunel, 0.001))
+		if not ambiente_tunel.playing:
+			ambiente_tunel.play()
 
 	ambiente.environment.ambient_light_energy = lerpf(0.045, 0.70, progreso)
 	ambiente.environment.ambient_light_color = Color(1.0, 0.85, 0.63).lerp(Color(1.0, 0.96, 0.87), progreso)

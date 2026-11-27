@@ -64,10 +64,16 @@ const MAQUINA_BLANCO: Color = Color(0.9, 0.95, 1.0)
 const MAQUINA_CIAN: Color = Color(0.6, 0.9, 1.0)
 const MAQUINA_MAGENTA: Color = Color(1.0, 0.45, 0.8)
 const CUERPO_MAQUINA: Color = Color(0.3, 0.42, 0.42)
+const EXPENDEDORAS: Array[PackedScene] = [
+	preload("res://assets/expendedoras/expendedora_soda.tscn"),
+	preload("res://assets/expendedoras/expendedora_expreso.tscn"),
+	preload("res://assets/expendedoras/expendedora_pociones.tscn"),
+]
 const ASIENTO: Color = Color(0.22, 0.26, 0.42)
 
 var choques: StaticBody3D
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
+var _indice_maquina: int = 0
 var _capa_poster: CanvasLayer = null
 
 
@@ -89,6 +95,7 @@ func _ready() -> void:
 	_baranda(sala)
 	var luces_izq: Array[Color] = [MAQUINA_BLANCO, MAQUINA_MAGENTA, MAQUINA_CIAN]
 	var luces_der: Array[Color] = [MAQUINA_MAGENTA, MAQUINA_BLANCO]
+	_indice_maquina = 0
 	_maquinas(sala, -12.6, luces_izq)
 	_maquinas(sala, 5.6, luces_der)
 	_sillas(sala, Vector3(-6.0, 0, -0.4), 4)
@@ -233,25 +240,18 @@ func _maquinas(p: Node3D, x0: float, luces: Array[Color]) -> void:
 
 
 func _maquina(p: Node3D, pos: Vector3, luz: Color) -> void:
-	_caja(p, Vector3(1.1, 2.0, 0.7), pos + Vector3(0, 1.0, 0), _mat(CUERPO_MAQUINA, Color.BLACK, 0.0, 0.0, 0.5))
+	# Modelos nuevos (assets/expendedoras): se alternan soda, expreso y pociones.
+	var escena: PackedScene = EXPENDEDORAS[_indice_maquina % EXPENDEDORAS.size()]
+	_indice_maquina += 1
+	var maquina: Node3D = escena.instantiate() as Node3D
+	maquina.name = "Expendedora%d" % _indice_maquina
+	maquina.position = pos
+	p.add_child(maquina)
 	_forma(Vector3(1.1, 2.0, 0.7), pos + Vector3(0, 1.0, 0))
-	var vitrina: MeshInstance3D = _caja(p, Vector3(0.82, 1.2, 0.03), pos + Vector3(-0.08, 1.25, 0.36), _mat(Color.BLACK, luz, 1.1, 0.0, 0.2))
-	vitrina.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	var repisa: StandardMaterial3D = _mat(Color(0.12, 0.13, 0.15))
-	for k: int in 4:
-		_caja(p, Vector3(0.78, 0.04, 0.02), pos + Vector3(-0.08, 0.8 + k * 0.3, 0.33), repisa)
-	var panel: MeshInstance3D = _caja(p, Vector3(0.14, 0.5, 0.03), pos + Vector3(0.43, 1.3, 0.36), _mat(Color(0.1, 0.12, 0.15), Color(0.56, 0.85, 0.69), 0.4, 0.0, 0.4))
-	panel.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	var bandeja: MeshInstance3D = _caja(p, Vector3(0.7, 0.18, 0.04), pos + Vector3(-0.08, 0.35, 0.36), _mat(Color(0.04, 0.05, 0.06), Color.BLACK, 0.0, 0.0, 0.6))
-	bandeja.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	var l: OmniLight3D = OmniLight3D.new()
-	l.light_color = luz
-	l.light_energy = 1.8
-	l.light_specular = 0.3
-	l.omni_range = 2.8
-	l.omni_attenuation = 2.0
-	l.position = pos + Vector3(0, 1.0, 0.9)
-	p.add_child(l)
+	# La luz propia del modelo se mezcla un poco con el color de la sala para que combine.
+	var l: OmniLight3D = maquina.get_node_or_null("Luz") as OmniLight3D
+	if l != null:
+		l.light_color = l.light_color.lerp(luz, 0.3)
 
 
 func _sillas(p: Node3D, pos: Vector3, n: int) -> void:
