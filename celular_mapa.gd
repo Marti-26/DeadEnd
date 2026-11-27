@@ -425,7 +425,7 @@ func _construir() -> void:
 	_hora_x = _hora.position.x
 	_fecha_x = _fecha.position.x
 
-	var tam_mapa: Vector2 = Vector2(ancho_p - 28.0, alto_p - 128.0 - 150.0)
+	var tam_mapa: Vector2 = Vector2(ancho_p - 28.0, alto_p - 128.0 - 176.0)
 	_viewport = SubViewport.new()
 	_viewport.size = Vector2i(int(tam_mapa.x * 1.5), int(tam_mapa.y * 1.5))
 	_viewport.debug_draw = Viewport.DEBUG_DRAW_UNSHADED
@@ -477,10 +477,11 @@ func _construir() -> void:
 	_construir_pisos(pantalla, Vector2(14.0, _mapa.position.y + tam_mapa.y + 10.0), tam_mapa.x)
 
 	_estilo_terminales = _estilo(color_rosa.lightened(0.45), color_rosa_medio, 1, 7)
-	var tarjeta_terminales := _panel(pantalla, _estilo_terminales, Vector2(14.0, alto_p - 54.0), Vector2(tam_mapa.x, 31.0))
-	_terminales = _etiqueta(tarjeta_terminales, "", 13, color_vino, Vector2.ZERO, Vector2(tam_mapa.x, 15.0), HORIZONTAL_ALIGNMENT_CENTER)
-	_estado_terminales = _etiqueta(tarjeta_terminales, "", 13, color_vino, Vector2(0.0, 15.0), Vector2(tam_mapa.x, 15.0), HORIZONTAL_ALIGNMENT_CENTER)
-	_panel(pantalla, _estilo(color_rosa_fuerte, Color.TRANSPARENT, 0, 3), Vector2(ancho_p * 0.5 - 45.0, alto_p - 20.0), Vector2(90.0, 5.0))
+	var y_tarjeta: float = _mapa.position.y + tam_mapa.y + 10.0 + 8.0 + float(PISOS.size()) * 24.0 + 10.0
+	var tarjeta_terminales := _panel(pantalla, _estilo_terminales, Vector2(14.0, y_tarjeta), Vector2(tam_mapa.x, 44.0))
+	_terminales = _etiqueta(tarjeta_terminales, "", 13, color_vino, Vector2(0.0, 5.0), Vector2(tam_mapa.x, 17.0), HORIZONTAL_ALIGNMENT_CENTER)
+	_estado_terminales = _etiqueta(tarjeta_terminales, "", 13, color_vino, Vector2(0.0, 22.0), Vector2(tam_mapa.x, 17.0), HORIZONTAL_ALIGNMENT_CENTER)
+	_panel(pantalla, _estilo(color_rosa_fuerte, Color.TRANSPARENT, 0, 3), Vector2(ancho_p * 0.5 - 45.0, alto_p - 13.0), Vector2(90.0, 5.0))
 
 	_charm = Control.new()
 	_charm.position = Vector2(-3.0, 96.0)
@@ -493,9 +494,73 @@ func _construir() -> void:
 func _dibujar_marcador() -> void:
 	var c: Vector2 = _marcador.size * 0.5
 	var pulso: float = 0.5 + 0.5 * sin(_tiempo * 3.2)
+	_dibujar_guia_segura(c)
 	_marcador.draw_circle(c, 9.0 + pulso * 9.0, Color(color_marcador, 0.35 * (1.0 - pulso)))
 	_marcador.draw_circle(c, 7.0, color_vino)
 	_marcador.draw_circle(c, 5.0, color_marcador)
+
+
+func _dibujar_guia_segura(c: Vector2) -> void:
+	var guia: Node = get_parent().get_node_or_null("GuiaZonaSegura") if get_parent() != null else null
+	if guia == null or not guia.has_method("destino_actual"):
+		return
+	var destino = guia.call("destino_actual")
+	var jugador: Node3D = get_tree().get_first_node_in_group(Grupos.JUGADOR) as Node3D
+	if destino == null or jugador == null:
+		return
+	var por_metro: float = _marcador.size.y / maxf(metros_visibles, 0.1)
+	var diferencia: Vector3 = (destino as Vector3) - jugador.global_position
+	var objetivo: Vector2 = c + Vector2(diferencia.x, diferencia.z) * por_metro
+	var margen: float = 22.0
+	var caja: Rect2 = Rect2(Vector2(margen, margen), _marcador.size - Vector2(margen, margen) * 2.0)
+	var dentro: bool = caja.has_point(objetivo)
+	var direccion: Vector2 = (objetivo - c).normalized()
+	if direccion == Vector2.ZERO:
+		direccion = Vector2.RIGHT
+	var punto: Vector2 = objetivo
+	if not dentro:
+		var escala_x: float = (caja.size.x * 0.5) / maxf(absf(direccion.x), 0.0001)
+		var escala_y: float = (caja.size.y * 0.5) / maxf(absf(direccion.y), 0.0001)
+		punto = c + direccion * minf(escala_x, escala_y)
+	var largo: float = c.distance_to(punto)
+	var paso: float = 9.0
+	var avance: float = fmod(_tiempo * 14.0, paso)
+	var d: float = 14.0 + avance
+	while d < largo - 16.0:
+		_marcador.draw_circle(c + direccion * d, 1.6, Color(color_rosa_fuerte, 0.55))
+		d += paso
+	var vaiven: float = sin(_tiempo * 2.4) * 2.0
+	var centro: Vector2 = punto + (direccion * vaiven if not dentro else Vector2(0.0, vaiven))
+	_marcador.draw_circle(centro, 13.0, Color(color_crema, 0.9))
+	_marcador.draw_circle(centro, 11.0, color_rosa_fuerte)
+	if dentro:
+		var casa: PackedVector2Array = PackedVector2Array([
+			centro + Vector2(0.0, -6.5), centro + Vector2(6.0, -1.0), centro + Vector2(4.0, -1.0),
+			centro + Vector2(4.0, 5.0), centro + Vector2(-4.0, 5.0), centro + Vector2(-4.0, -1.0), centro + Vector2(-6.0, -1.0),
+		])
+		_marcador.draw_colored_polygon(casa, color_crema)
+	else:
+		var giro: Transform2D = Transform2D(direccion.angle(), centro)
+		var flecha: PackedVector2Array = PackedVector2Array([
+			giro * Vector2(6.0, 0.0), giro * Vector2(-4.0, 5.5), giro * Vector2(-1.5, 0.0), giro * Vector2(-4.0, -5.5),
+		])
+		_marcador.draw_colored_polygon(flecha, color_crema)
+	var fuente: Font = _zona.get_theme_font("font") if _zona != null else ThemeDB.fallback_font
+	var texto: String = "ZONA SEGURA"
+	var tam: int = 10
+	var ancho_texto: float = fuente.get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1.0, tam).x
+	var pastilla: Vector2 = Vector2(ancho_texto + 12.0, 16.0)
+	var hacia_adentro: Vector2 = (c - centro).normalized() if not dentro else Vector2(0.0, 1.0)
+	var origen: Vector2 = centro + hacia_adentro * 24.0 - pastilla * 0.5
+	origen.x = clampf(origen.x, 2.0, _marcador.size.x - pastilla.x - 2.0)
+	origen.y = clampf(origen.y, 2.0, _marcador.size.y - pastilla.y - 2.0)
+	var estilo: StyleBoxFlat = StyleBoxFlat.new()
+	estilo.bg_color = Color(color_vino, 0.92)
+	estilo.border_color = color_rosa
+	estilo.set_border_width_all(1)
+	estilo.set_corner_radius_all(8)
+	_marcador.draw_style_box(estilo, Rect2(origen, pastilla))
+	_marcador.draw_string(fuente, origen + Vector2(6.0, 12.0), texto, HORIZONTAL_ALIGNMENT_LEFT, -1.0, tam, color_crema)
 
 
 func _dibujar_charm() -> void:
