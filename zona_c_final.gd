@@ -36,6 +36,25 @@ var terminado: bool = false
 var _tiempo_luz: float = 0.0
 
 const Z_BORDE_ORIGINAL: float = 5.85
+const POSICIONES_X: Dictionary = {
+	"Banca3": -27.5,
+	"Banca1": -18.5,
+	"Expendedora1": -10.0,
+	"Banca2": -2.0,
+	"Expendedora2": 7.5,
+	"CanecaCaida": 8.9,
+	"Banca5": 21.0,
+	"Carteles/PosterKitsuny": -34.5,
+	"Carteles/PosterAtrapada": -30.5,
+	"Carteles/PosterRatini": -6.5,
+	"Carteles/PosterFelidae": 16.5,
+	"Carteles/PosterSeVende": 25.0,
+	"DetallesAnden/Intercomunicador": 2.5,
+}
+const RANGO_CAMARA: Vector2 = Vector2(-31.6, 38.2)
+const X_FINAL_ANDEN: float = -39.05
+const TINTE_POSTER: Color = Color(1.0, 0.96, 0.9)
+const LUZ_POSTER: Color = Color(1.0, 0.88, 0.7)
 const Z_BORDE: float = 5.1
 const BORDE_INICIO: float = -39.5
 const BORDE_FIN: float = -10.0
@@ -48,6 +67,11 @@ func _ready() -> void:
 	ambiente.environment.ambient_light_energy = 0.045
 	Partida.estres = 0.0
 	_ocultar_indicadores_hud.call_deferred()
+	_completar_muro()
+	_cerrar_extremo_izquierdo()
+	_limitar_camara()
+	_distribuir_anden()
+	_ajustar_posters()
 	_retirar_barandas()
 	_cerrar_borde_anden()
 	_preparar_atmosfera()
@@ -289,3 +313,90 @@ func _retirar_barandas() -> void:
 		var es_baranda: bool = nombre.begins_with("Barrera") or nombre in ["PostesBarrera", "MuroBarrera", "BarandasExtremos", "BarandaPasilloDespuesMetro"]
 		if es_baranda and nodo is Node3D:
 			(nodo as Node3D).position.z += desplazo
+
+
+func _completar_muro() -> void:
+	var muro: StaticBody3D = StaticBody3D.new()
+	muro.name = "MuroFondoCompleto"
+	var forma: CollisionShape3D = CollisionShape3D.new()
+	var caja: BoxShape3D = BoxShape3D.new()
+	caja.size = Vector3(76.0, 5.0, 0.6)
+	forma.shape = caja
+	muro.add_child(forma)
+	estacion.add_child(muro)
+	muro.global_position = Vector3(-3.0, 2.5, -3.7)
+
+
+func _distribuir_anden() -> void:
+	for ruta: String in POSICIONES_X:
+		var nodo: Node3D = estacion.get_node_or_null(ruta) as Node3D
+		if nodo != null:
+			nodo.position.x = float(POSICIONES_X[ruta])
+
+
+func _ajustar_posters() -> void:
+	var carteles: Node = estacion.get_node_or_null("Carteles")
+	if carteles == null:
+		return
+	for poster: Node in carteles.get_children():
+		if poster.get("tinte") == null:
+			continue
+		poster.set("tinte", TINTE_POSTER)
+		poster.set("saturacion", 0.95)
+		poster.set("color_luz", LUZ_POSTER)
+		poster.set("luz", maxf(float(poster.get("luz")), 0.5))
+
+
+func _limitar_camara() -> void:
+	var camara: Camera3D = get_node_or_null("Camara") as Camera3D
+	if camara == null or camara.get("rango_x") == null:
+		return
+	camara.set("rango_x", RANGO_CAMARA)
+	if camara.has_method("saltar"):
+		camara.call("saltar")
+
+
+func _cerrar_extremo_izquierdo() -> void:
+	var raiz: Node3D = Node3D.new()
+	raiz.name = "ExtremoIzquierdo"
+	estacion.add_child(raiz)
+	var muro_mat: Material = null
+	var tramo: MeshInstance3D = estacion.get_node_or_null("ParedTramos/Tramo00") as MeshInstance3D
+	if tramo != null and tramo.material_override is ShaderMaterial:
+		var mat: ShaderMaterial = (tramo.material_override as ShaderMaterial).duplicate() as ShaderMaterial
+		mat.set_shader_parameter("color_ladrillo", PARED_OSCURA.darkened(0.25))
+		mat.set_shader_parameter("color_junta", PARED_JUNTA_OSCURA)
+		muro_mat = mat
+	else:
+		var simple: StandardMaterial3D = StandardMaterial3D.new()
+		simple.albedo_color = PARED_OSCURA.darkened(0.25)
+		muro_mat = simple
+	var concreto: StandardMaterial3D = StandardMaterial3D.new()
+	concreto.albedo_color = Color(0.07, 0.09, 0.1)
+	concreto.roughness = 0.95
+	var vacio: StandardMaterial3D = StandardMaterial3D.new()
+	vacio.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	vacio.albedo_color = Color(0.008, 0.01, 0.014)
+	var x: float = X_FINAL_ANDEN
+	_caja_extremo(raiz, Vector3(7.0, 6.0, 10.4), Vector3(x - 3.5, 1.8, 0.95), muro_mat)
+	_caja_extremo(raiz, Vector3(7.2, 0.4, 18.8), Vector3(x - 3.5, 4.95, 5.05), concreto)
+	_caja_extremo(raiz, Vector3(0.6, 1.6, 8.3), Vector3(x - 0.3, 3.95, 10.3), concreto)
+	_caja_extremo(raiz, Vector3(0.6, 6.5, 0.6), Vector3(x - 0.3, 1.6, 14.45), concreto)
+	_caja_extremo(raiz, Vector3(6.0, 6.5, 8.4), Vector3(x - 3.6, 0.8, 10.3), vacio)
+	var luz: OmniLight3D = OmniLight3D.new()
+	luz.light_color = Color(0.55, 0.65, 0.75)
+	luz.light_energy = 0.35
+	luz.omni_range = 5.0
+	luz.shadow_enabled = false
+	raiz.add_child(luz)
+	luz.global_position = Vector3(X_FINAL_ANDEN + 1.2, 3.4, -1.5)
+
+
+func _caja_extremo(padre: Node3D, tam: Vector3, pos: Vector3, material: Material) -> void:
+	var malla: MeshInstance3D = MeshInstance3D.new()
+	var caja: BoxMesh = BoxMesh.new()
+	caja.size = tam
+	malla.mesh = caja
+	malla.material_override = material
+	padre.add_child(malla)
+	malla.global_position = pos
