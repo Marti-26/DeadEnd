@@ -248,10 +248,10 @@ func _maquina(p: Node3D, pos: Vector3, luz: Color) -> void:
 	maquina.position = pos
 	p.add_child(maquina)
 	_forma(Vector3(1.1, 2.0, 0.7), pos + Vector3(0, 1.0, 0))
-	# La luz propia del modelo se mezcla un poco con el color de la sala para que combine.
+	# La luz propia del modelo toma casi todo el color de la sala para que combine.
 	var l: OmniLight3D = maquina.get_node_or_null("Luz") as OmniLight3D
 	if l != null:
-		l.light_color = l.light_color.lerp(luz, 0.3)
+		l.light_color = l.light_color.lerp(luz, 0.7)
 
 
 func _sillas(p: Node3D, pos: Vector3, n: int) -> void:
