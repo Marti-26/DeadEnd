@@ -32,6 +32,10 @@
 [ext_resource type="Texture2D" path="res://assets/npcs y posters/RATINI1.jpg.jpeg" id="ZC_poster_ratini"]
 [ext_resource type="Texture2D" path="res://assets/npcs y posters/felidae1.png" id="ZC_poster_felidae"]
 [ext_resource type="Texture2D" path="res://assets/npcs y posters/poster_kitsuny.png" id="ZC_poster_kitsuny"]
+[ext_resource type="PackedScene" path="res://zona_c/senalizacion_anden.tscn" id="ZC_senalizacion"]
+[ext_resource type="PackedScene" path="res://zona_c/detalles_anden.tscn" id="ZC_detalles_anden"]
+[ext_resource type="PackedScene" path="res://zona_c/banca_anden.tscn" id="ZC_banca_anden"]
+[ext_resource type="PackedScene" path="res://zona_c/zarigueya_anden.tscn" id="ZC_zarigueya_anden"]
 
 [sub_resource type="BoxShape3D" id="ZC_SueloContinuo"]
 size = Vector3(80, 0.4, 9.8)
@@ -489,6 +493,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.19, 1.2)
 shape = SubResource("ZC_SueloContinuo")
 
 [node name="Estacion" type="Node3D" parent="." unique_id=606961767]
+
+[node name="SenalizacionAnden" parent="Estacion" instance=ExtResource("ZC_senalizacion")]
+
+[node name="DetallesAnden" parent="Estacion" instance=ExtResource("ZC_detalles_anden")]
+
+[node name="Banca4" parent="Estacion" instance=ExtResource("ZC_banca_anden")]
+position = Vector3(11.5, 0, -3.25)
+
+[node name="Banca5" parent="Estacion" instance=ExtResource("ZC_banca_anden")]
+position = Vector3(26.8, 0, -3.25)
+
+[node name="ZarigueyaAnden" parent="Estacion" instance=ExtResource("ZC_zarigueya_anden")]
+position = Vector3(19.1, 0, -2.88)
 
 [node name="Piso0" type="StaticBody3D" parent="Estacion" unique_id=933392377]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.5, -0.5, 1.2)
@@ -1485,13 +1502,13 @@ texture = ExtResource("ZC_ExitPixelTexture")
 [node name="Carteles" type="Node3D" parent="Estacion"]
 
 [node name="PosterAtrapada" type="Node3D" parent="Estacion/Carteles"]
-position = Vector3(-20.5, 2, -3.66)
+position = Vector3(18, 2, -3.66)
 script = ExtResource("ZC_poster")
 textura = ExtResource("ZC_poster_atrapada")
 alto = 1.35
 
 [node name="PosterSeVende" type="Node3D" parent="Estacion/Carteles"]
-position = Vector3(-8.3, 1.95, -3.66)
+position = Vector3(24.4, 1.95, -3.66)
 script = ExtResource("ZC_poster")
 textura = ExtResource("ZC_poster_se_vende")
 alto = 1.05
@@ -1905,9 +1922,6 @@ position = Vector3(0, 0, 1.45)
 
 [node name="Torniquete4" parent="Torniquetes" instance=ExtResource("ZC_torniquete")]
 position = Vector3(0, 0, 3.5)
-
-[node name="Torniquete5" parent="Torniquetes" instance=ExtResource("ZC_torniquete")]
-position = Vector3(0, 0, 5.68)
 
 [node name="EscalerasSalida" parent="." instance=ExtResource("ZC_escaleras")]
 position = Vector3(34, 0, 1.2)
