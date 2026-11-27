@@ -30,7 +30,7 @@ const PASOS: Array[Dictionary] = [
 	{"id": "sigilo", "desde_x": -24.5, "texto": "Mantén SHIFT mientras caminas para ir en sigilo: vas más lento, pero no haces ruido.\nÚsalo cerca de las criaturas que oyen. Si te escuchan, te persiguen."},
 	{"id": "dash", "desde_x": -23.5, "texto": "Presiona ESPACIO para hacer un dash: es rápido, pero hace mucho ruido.\nEvítalo cerca de las criaturas."},
 	{"id": "cartel", "desde_x": -21.5, "texto": "¿Ves el cartel que señala la flecha? Puedes hacer clic sobre los carteles para leerlos.\nÁbrelo con un clic y ciérralo haciendo clic afuera."},
-	{"id": "terminal", "desde_x": -12.0, "texto": "La pantalla de la pared es un punto de activación. Mantén E para activarla.\nSi no las activas todas, el metro solo te llevara en circulos y no podrás seguir."},
+	{"id": "terminal", "desde_x": -12.0, "texto": "Esa pantalla es un punto de activación. Mantén E para activarlo.\nActívalos todos para que el metro te deje avanzar."},
 	{"id": "chico", "desde_x": -6.0, "texto": "Hay alguien más adelante.\nAcércate y presiona R para hablar con él."},
 	{"id": "esconderse", "desde_x": -2.0, "texto": "Haz lo que te dijo: escóndete bajo la banca que señala la flecha.\nSolo camina hacia ella y entrarás sola. Para salir, muévete o presiona E."},
 	{"id": "salida", "desde_x": 1.5, "texto": "Eso es todo.\nSube por la escalera del fondo, desde aqui estas por tú cuenta."},
