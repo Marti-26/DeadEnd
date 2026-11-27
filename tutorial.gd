@@ -116,6 +116,7 @@ var _hud: Node = null
 var _aviso_bloqueo: float = 0.0
 var _guias: Array[Dictionary] = []
 var _guia_tiempo: float = 0.0
+var _barrera_escalera: StaticBody3D = null
 
 
 func _ready() -> void:
@@ -172,6 +173,7 @@ func _ready() -> void:
 	_crear_cartel(escena)
 	_crear_marcadores(escena)
 	_crear_guias(escena)
+	_crear_entrada_escalera(escena)
 	var celular: Node3D = escena.get_node_or_null("Celular") as Node3D
 	if celular != null:
 		_poner_destellos(celular, Vector3(0.0, 0.05, 0.0), 0.18)
@@ -285,9 +287,6 @@ func _al_llegar_salida(cuerpo: Node3D) -> void:
 	if _paso >= PASOS.size() - 1:
 		_terminar()
 		return
-	if _jugador != null:
-		_jugador.global_position.x -= 1.6
-		_jugador.velocity = Vector3.ZERO
 	_pista.text = "Todavía no puedes subir.\nTermina primero lo que te falta del tutorial."
 	_pista.modulate.a = 1.0
 	_aviso_bloqueo = 3.0
@@ -1290,3 +1289,30 @@ func _guiar(delta: float) -> void:
 		g["alfa"] = alfa
 		mat.set_shader_parameter("alfa", alfa)
 		flecha.visible = alfa > 0.01
+
+
+func _crear_entrada_escalera(escena: Node) -> void:
+	var escalera: Node3D = escena.get_node_or_null("Escalera/SubidaSegundoPiso") as Node3D
+	var centro_x: float = fin_pasillo - 2.3
+	if escalera != null:
+		centro_x = escalera.global_position.x
+	_barrera_escalera = StaticBody3D.new()
+	_barrera_escalera.name = "BarreraEscalera"
+	var forma: CollisionShape3D = CollisionShape3D.new()
+	var caja: BoxShape3D = BoxShape3D.new()
+	caja.size = Vector3(3.4, 4.0, 0.4)
+	forma.shape = caja
+	_barrera_escalera.add_child(forma)
+	escena.add_child(_barrera_escalera)
+	_barrera_escalera.global_position = Vector3(centro_x, 2.0, -3.55)
+	var entrada: Area3D = Area3D.new()
+	entrada.name = "EntradaEscalera"
+	entrada.monitorable = false
+	var zona: CollisionShape3D = CollisionShape3D.new()
+	var caja_zona: BoxShape3D = BoxShape3D.new()
+	caja_zona.size = Vector3(3.0, 2.5, 1.0)
+	zona.shape = caja_zona
+	entrada.add_child(zona)
+	escena.add_child(entrada)
+	entrada.global_position = Vector3(centro_x, 1.25, -2.95)
+	entrada.body_entered.connect(_al_llegar_salida)
