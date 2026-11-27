@@ -9,6 +9,10 @@ func _ready() -> void:
 	metro.distancia = 3.0
 	metro.tiempo_frenado = 3.0
 	metro.tiempo_detenido = 99999.0
+	metro.sonido_llegada.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
+	metro.sonido_llegada.unit_size = 18.0
+	metro.sonido_llegada.max_distance = 55.0
+	metro.sonido_llegada.volume_db = -2.0
 	metro.tren.position.x = metro.x_parada + metro.distancia
 	metro._x_antes = metro.tren.position.x
 	var lugar: Vector3 = Partida.get_meta("posicion_vagon_final", Vector3(0.0, 0.3, 0.0))

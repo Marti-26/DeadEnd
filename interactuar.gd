@@ -16,6 +16,7 @@ var bateria: float:
 
 var progreso: float = 0.0
 var actual: Node = null
+var cercano: Node = null
 
 
 func _ready() -> void:
@@ -27,6 +28,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	var obj: Node = mas_cercano()
+	cercano = obj
 	if not Input.is_action_pressed(tecla) or obj == null:
 		progreso = 0.0
 		actual = null

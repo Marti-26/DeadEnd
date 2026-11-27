@@ -14,6 +14,11 @@ var _boton_celular: Button = null
 var _icono_celular: Control = null
 var _indicador_metro: Panel = null
 var _celular: CelularMapa = null
+var _nodo_interactuar: Interactuar = null
+var _panel_interaccion: PanelContainer = null
+var _label_interaccion: Label = null
+var _barra_interaccion: ProgressBar = null
+var _tiempo_efecto_carga: float = 0.0
 #variable para que no aparezca el hud si no tiene el celular
 var indicadores_bloqueados: bool = false
 
@@ -31,15 +36,17 @@ func _ready() -> void:
 	_buscar_referencias()
 	_actualizar_barras()
 	_crear_celular()
+	_crear_panel_interaccion()
 	$Contenedor/AvisoMetro/Mensaje.text = "Terminales activadas\n" + CelularMapa.AVISO_METRO
 	Partida.viaje_zona_c_habilitado.connect(_mostrar_aviso_metro)
 
 
-func _process(_delta: float) -> void:
-	if not is_instance_valid(_nodo_bateria) or not is_instance_valid(_nodo_jugador):
+func _process(delta: float) -> void:
+	if not is_instance_valid(_nodo_bateria) or not is_instance_valid(_nodo_jugador) or not is_instance_valid(_nodo_interactuar):
 		_buscar_referencias()
 	_actualizar_barras()
 	_actualizar_boton_celular()
+	_actualizar_interaccion(delta)
 
 
 func _unhandled_input(evento: InputEvent) -> void:
@@ -160,8 +167,10 @@ func _buscar_referencias() -> void:
 	_nodo_bateria = get_tree().get_first_node_in_group(Grupos.BATERIA)
 	if is_instance_valid(_nodo_jugador):
 		_nodo_dash = _nodo_jugador.get_node_or_null("Dash")
+		_nodo_interactuar = _nodo_jugador.get_node_or_null("Interactuar") as Interactuar
 	else:
 		_nodo_dash = null
+		_nodo_interactuar = null
 
 
 func _actualizar_barras() -> void:
@@ -197,3 +206,125 @@ func _leer_estres() -> float:
 	if is_instance_valid(_nodo_dash) and "estres" in _nodo_dash:
 		return clampf(float(_nodo_dash.get("estres")), 0.0, 100.0)
 	return 0.0
+
+
+func _crear_panel_interaccion() -> void:
+	_panel_interaccion = PanelContainer.new()
+	_panel_interaccion.name = "PanelInteraccion"
+	_panel_interaccion.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_panel_interaccion.set_anchors_preset(Control.PRESET_CENTER)
+	_panel_interaccion.offset_left = -160.0
+	_panel_interaccion.offset_right = 160.0
+	_panel_interaccion.offset_top = 80.0
+	_panel_interaccion.offset_bottom = 145.0
+
+	var estilo: StyleBoxFlat = StyleBoxFlat.new()
+	estilo.bg_color = Color(0.04, 0.06, 0.08, 0.88)
+	estilo.border_color = Color(0.3, 0.85, 0.75, 1.0)
+	estilo.set_border_width_all(2)
+	estilo.set_corner_radius_all(8)
+	estilo.content_margin_left = 12.0
+	estilo.content_margin_right = 12.0
+	estilo.content_margin_top = 8.0
+	estilo.content_margin_bottom = 8.0
+	_panel_interaccion.add_theme_stylebox_override("panel", estilo)
+	if $Contenedor.theme != null:
+		_panel_interaccion.theme = $Contenedor.theme
+
+	var columna: VBoxContainer = VBoxContainer.new()
+	columna.add_theme_constant_override("separation", 6)
+	_panel_interaccion.add_child(columna)
+
+	_label_interaccion = Label.new()
+	_label_interaccion.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_label_interaccion.add_theme_color_override("font_color", Color(0.95, 0.98, 1.0))
+	_label_interaccion.add_theme_font_size_override("font_size", 16)
+	columna.add_child(_label_interaccion)
+
+	_barra_interaccion = ProgressBar.new()
+	_barra_interaccion.min_value = 0.0
+	_barra_interaccion.max_value = 100.0
+	_barra_interaccion.show_percentage = false
+	_barra_interaccion.custom_minimum_size = Vector2(280.0, 12.0)
+
+	var fondo_barra: StyleBoxFlat = StyleBoxFlat.new()
+	fondo_barra.bg_color = Color(0.12, 0.15, 0.18, 0.9)
+	fondo_barra.set_corner_radius_all(5)
+
+	var relleno_barra: StyleBoxFlat = StyleBoxFlat.new()
+	relleno_barra.bg_color = Color(0.45, 0.85, 0.69, 1.0)
+	relleno_barra.set_corner_radius_all(5)
+
+	_barra_interaccion.add_theme_stylebox_override("background", fondo_barra)
+	_barra_interaccion.add_theme_stylebox_override("fill", relleno_barra)
+	columna.add_child(_barra_interaccion)
+
+	_panel_interaccion.visible = false
+	add_child(_panel_interaccion)
+
+
+func _actualizar_interaccion(delta: float) -> void:
+	if _panel_interaccion == null:
+		return
+
+	if not is_instance_valid(_nodo_interactuar):
+		_panel_interaccion.visible = false
+		if barra_bateria != null and barra_bateria.modulate != Color.WHITE:
+			barra_bateria.modulate = Color.WHITE
+		return
+
+	var progreso: float = _nodo_interactuar.progreso
+	var cargando: bool = progreso > 0.01 and _nodo_interactuar.actual != null
+
+	if cargando:
+		var porcentaje: int = int(round(clampf(progreso, 0.0, 1.0) * 100.0))
+		var obj: Node = _nodo_interactuar.actual
+		if obj is EstacionCarga:
+			_label_interaccion.text = "Cargando celular... %d%%" % porcentaje
+			# Pulso dorado/verde en la barra de batería del HUD
+			_tiempo_efecto_carga += delta * 8.0
+			var pulso: float = (sin(_tiempo_efecto_carga) + 1.0) * 0.5
+			if barra_bateria != null:
+				barra_bateria.modulate = Color.WHITE.lerp(Color(1.6, 1.4, 0.4), pulso)
+		else:
+			_label_interaccion.text = "Interactuando... %d%%" % porcentaje
+			if barra_bateria != null and barra_bateria.modulate != Color.WHITE:
+				barra_bateria.modulate = Color.WHITE
+
+		_barra_interaccion.value = float(porcentaje)
+		_barra_interaccion.visible = true
+		_panel_interaccion.visible = true
+		return
+
+	# Si no está en progreso, restaurar color de la batería
+	if barra_bateria != null and barra_bateria.modulate != Color.WHITE:
+		barra_bateria.modulate = Color.WHITE
+
+	# Revisar si está cerca de algún objeto interactivo
+	var obj_cercano: Node = _nodo_interactuar.cercano
+	if obj_cercano != null and is_instance_valid(obj_cercano):
+		if obj_cercano is EstacionCarga:
+			if _tiene_celular():
+				var estacion_agotada: bool = ("usada" in obj_cercano and bool(obj_cercano.get("usada"))) or (Partida != null and Partida.estacion_usada)
+				if estacion_agotada:
+					_label_interaccion.text = "Sin energía"
+					_barra_interaccion.visible = false
+					_panel_interaccion.visible = true
+					return
+				elif _leer_bateria() >= 100.0:
+					_label_interaccion.text = "Batería al 100%"
+					_barra_interaccion.visible = false
+					_panel_interaccion.visible = true
+					return
+				else:
+					_label_interaccion.text = "[Mantén E] Cargar celular"
+					_barra_interaccion.visible = false
+					_panel_interaccion.visible = true
+					return
+		elif "activada" in obj_cercano and not bool(obj_cercano.get("activada")):
+			_label_interaccion.text = "[Mantén E] Activar terminal"
+			_barra_interaccion.visible = false
+			_panel_interaccion.visible = true
+			return
+
+	_panel_interaccion.visible = false
