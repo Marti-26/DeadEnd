@@ -65,6 +65,7 @@ func entrar(b):
 
 	_esperando_soltar = Input.get_vector("move_left", "move_right", "move_up", "move_down").length() > 0.1
 	pj.add_to_group(Grupos.ESCONDIDOS)
+	pj.sonido_pasos.stop()
 	pj.set_physics_process(false)
 	pj.velocity = Vector3.ZERO
 	pj.avance = Vector3.ZERO
