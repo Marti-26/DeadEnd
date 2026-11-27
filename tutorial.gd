@@ -14,6 +14,7 @@ extends Node
 @export var ancho_notificacion: float = 620.0
 @export_range(0.0, 1.0) var factor_estres: float = 0.35
 @export var tiempo_interaccion: float = 1.5
+@export var x_punto_activacion: float = -6.0
 @export var posicion_cartel: Vector3 = Vector3(-18.6, 2.0, -3.68)
 
 const FUENTE: FontFile = preload("res://assets/font/ShareTechMono-Regular.ttf")
@@ -29,7 +30,7 @@ const PASOS: Array[Dictionary] = [
 	{"id": "sigilo", "desde_x": -24.5, "texto": "Mantén SHIFT mientras caminas para ir en sigilo: vas más lento, pero no haces ruido.\nÚsalo cerca de las criaturas que oyen. Si te escuchan, te persiguen."},
 	{"id": "dash", "desde_x": -23.5, "texto": "Presiona ESPACIO para hacer un dash: es rápido, pero hace mucho ruido.\nEvítalo cerca de las criaturas."},
 	{"id": "cartel", "desde_x": -21.5, "texto": "¿Ves el cartel que señala la flecha? Puedes hacer clic sobre los carteles para leerlos.\nÁbrelo con un clic y ciérralo haciendo clic afuera."},
-	{"id": "terminal", "desde_x": -14.0, "texto": "La pantalla de la pared es un punto de activación. Mantén E para activarla.\nSi no las activas todas, el metro solo te llevara en circulos y no podrás seguir."},
+	{"id": "terminal", "desde_x": -12.0, "texto": "La pantalla de la pared es un punto de activación. Mantén E para activarla.\nSi no las activas todas, el metro solo te llevara en circulos y no podrás seguir."},
 	{"id": "chico", "desde_x": -6.0, "texto": "Hay alguien más adelante.\nAcércate y presiona R para hablar con él."},
 	{"id": "esconderse", "desde_x": -2.0, "texto": "Haz lo que te dijo: escóndete bajo la banca que señala la flecha.\nSolo camina hacia ella y entrarás sola. Para salir, muévete o presiona E."},
 	{"id": "salida", "desde_x": 1.5, "texto": "Eso es todo.\nSube por la escalera del fondo, desde aqui estas por tú cuenta."},
@@ -163,6 +164,8 @@ func _ready() -> void:
 				_interactuar.tiempo_necesario = tiempo_interaccion
 	_estres_previo = Partida.estres
 	_terminal = escena.get_node_or_null("Estacion/Puntoactivación1")
+	if _terminal is Node3D:
+		(_terminal as Node3D).global_position.x = x_punto_activacion
 	var subida: Area3D = escena.get_node_or_null("Escalera/SubidaSegundoPiso") as Area3D
 	if subida != null:
 		subida.body_entered.connect(_al_llegar_salida)

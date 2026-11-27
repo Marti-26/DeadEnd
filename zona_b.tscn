@@ -1080,7 +1080,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("BoxShape3D_djvre")
 
 [node name="Expendedora1" type="Node3D" parent="Estacion" unique_id=1078220248]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6, 0, -3.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, -3.2)
 
 [node name="Modelo" parent="Estacion/Expendedora1" unique_id=1112086611 instance=ExtResource("exp_pociones")]
 
@@ -1228,7 +1228,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("BoxShape3D_wqwhx")
 
 [node name="Puntoactivación1" parent="Estacion" unique_id=1331929070 node_paths=PackedStringArray("pared_soporte") instance=ExtResource("2_qnp7s")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 1.28, -3.68)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.9, 1.28, -3.68)
 pared_soporte = NodePath("../MuroFondo")
 
 [node name="Tubos" type="Node3D" parent="." unique_id=1074896370]
