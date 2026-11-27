@@ -38,6 +38,8 @@
 [ext_resource type="PackedScene" path="res://zona_c/zarigueya_anden.tscn" id="ZC_zarigueya_anden"]
 [ext_resource type="PackedScene" path="res://zona_c/saxofonista_anden.tscn" id="ZC_saxofonista_anden"]
 [ext_resource type="AudioStream" path="res://Sonidos/Ambiente/91750__dobroide__20100306subwaytunnel.wav" id="ZC_ambiente_tunel"]
+[ext_resource type="PackedScene" path="res://assets/expendedoras/expendedora_expreso.tscn" id="exp_expreso"]
+[ext_resource type="PackedScene" path="res://assets/expendedoras/expendedora_pociones.tscn" id="exp_pociones"]
 
 [sub_resource type="BoxShape3D" id="ZC_SueloContinuo"]
 size = Vector3(80, 0.4, 9.8)
@@ -1212,31 +1214,7 @@ shape = SubResource("BoxShape3D_0h2le")
 [node name="Expendedora1" type="Node3D" parent="Estacion" unique_id=1798963672]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6, 0, -3.2)
 
-[node name="Cuerpo" type="MeshInstance3D" parent="Estacion/Expendedora1" unique_id=1896182083]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-material_override = SubResource("StandardMaterial3D_luacw")
-mesh = SubResource("BoxMesh_q15k4")
-
-[node name="Vitrina" type="MeshInstance3D" parent="Estacion/Expendedora1" unique_id=908274491]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08, 1.25, 0.36)
-material_override = SubResource("StandardMaterial3D_afep0")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_aenpw")
-
-[node name="Repisas" type="MultiMeshInstance3D" parent="Estacion/Expendedora1" unique_id=668918881]
-multimesh = SubResource("MultiMesh_gijk1")
-
-[node name="Panel" type="MeshInstance3D" parent="Estacion/Expendedora1" unique_id=373710066]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.43, 1.3, 0.36)
-material_override = SubResource("StandardMaterial3D_un4qu")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_m5ovv")
-
-[node name="Bandeja" type="MeshInstance3D" parent="Estacion/Expendedora1" unique_id=198448070]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08, 0.35, 0.36)
-material_override = SubResource("StandardMaterial3D_04qew")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_2el5d")
+[node name="Modelo" parent="Estacion/Expendedora1" instance=ExtResource("exp_expreso")]
 
 [node name="Choque" type="StaticBody3D" parent="Estacion/Expendedora1" unique_id=633628875]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -1244,56 +1222,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 [node name="Forma" type="CollisionShape3D" parent="Estacion/Expendedora1/Choque" unique_id=792387786]
 shape = SubResource("BoxShape3D_3u6eg")
 
-[node name="Luz" type="OmniLight3D" parent="Estacion/Expendedora1" unique_id=1121482970]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0.9)
-light_color = Color(1, 0.8, 0.6, 1)
-light_energy = 1.8
-light_specular = 0.3
-omni_range = 2.8
-omni_attenuation = 2.0
-
 [node name="Expendedora2" type="Node3D" parent="Estacion" unique_id=1271355131]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -3.2)
 
-[node name="Cuerpo" type="MeshInstance3D" parent="Estacion/Expendedora2" unique_id=1899271530]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-material_override = SubResource("StandardMaterial3D_luacw")
-mesh = SubResource("BoxMesh_vdaxm")
-
-[node name="Vitrina" type="MeshInstance3D" parent="Estacion/Expendedora2" unique_id=1132871521]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08, 1.25, 0.36)
-material_override = SubResource("StandardMaterial3D_afep0")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_7kk0y")
-
-[node name="Repisas" type="MultiMeshInstance3D" parent="Estacion/Expendedora2" unique_id=2021632914]
-multimesh = SubResource("MultiMesh_hlxgx")
-
-[node name="Panel" type="MeshInstance3D" parent="Estacion/Expendedora2" unique_id=323751632]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.43, 1.3, 0.36)
-material_override = SubResource("StandardMaterial3D_un4qu")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_tyv4c")
-
-[node name="Bandeja" type="MeshInstance3D" parent="Estacion/Expendedora2" unique_id=1193499340]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08, 0.35, 0.36)
-material_override = SubResource("StandardMaterial3D_04qew")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_6cuq5")
+[node name="Modelo" parent="Estacion/Expendedora2" instance=ExtResource("exp_pociones")]
 
 [node name="Choque" type="StaticBody3D" parent="Estacion/Expendedora2" unique_id=1212323448]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="Forma" type="CollisionShape3D" parent="Estacion/Expendedora2/Choque" unique_id=1624721687]
 shape = SubResource("BoxShape3D_1mi03")
-
-[node name="Luz" type="OmniLight3D" parent="Estacion/Expendedora2" unique_id=1136210783]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0.9)
-light_color = Color(1, 0.8, 0.6, 1)
-light_energy = 1.8
-light_specular = 0.3
-omni_range = 2.8
-omni_attenuation = 2.0
 
 [node name="CanecaCaida" type="MeshInstance3D" parent="Estacion" unique_id=1081208721]
 transform = Transform3D(-3.7855173e-08, -0.8660254, 0.5, 1, -4.371139e-08, 0, 2.1855694e-08, 0.5, 0.8660254, 8.3, 0.25, -2.6)
