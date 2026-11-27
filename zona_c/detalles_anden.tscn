@@ -1,0 +1,139 @@
+[gd_scene format=3]
+
+[ext_resource type="FontFile" path="res://assets/font/ShareTechMono-Regular.ttf" id="Fuente"]
+
+[sub_resource type="StandardMaterial3D" id="Metal"]
+albedo_color = Color(0.31, 0.35, 0.34, 1)
+metallic = 0.38
+roughness = 0.69
+
+[sub_resource type="StandardMaterial3D" id="Sombra"]
+albedo_color = Color(0.076, 0.093, 0.092, 1)
+roughness = 0.91
+
+[sub_resource type="StandardMaterial3D" id="Rojo"]
+albedo_color = Color(0.62, 0.12, 0.075, 1)
+roughness = 0.59
+
+[sub_resource type="StandardMaterial3D" id="Piloto"]
+albedo_color = Color(0.66, 0.22, 0.1, 1)
+emission_enabled = true
+emission = Color(0.74, 0.29, 0.13, 1)
+emission_energy_multiplier = 0.7
+
+[sub_resource type="BoxMesh" id="CajaIntercomunicador"]
+material = SubResource("Metal")
+size = Vector3(0.64, 0.82, 0.12)
+
+[sub_resource type="BoxMesh" id="Ranura"]
+material = SubResource("Sombra")
+size = Vector3(0.29, 0.025, 0.015)
+
+[sub_resource type="BoxMesh" id="Boton"]
+material = SubResource("Rojo")
+size = Vector3(0.15, 0.15, 0.035)
+
+[sub_resource type="BoxMesh" id="Indicador"]
+material = SubResource("Piloto")
+size = Vector3(0.054, 0.043, 0.014)
+
+[sub_resource type="BoxMesh" id="HuecoRejilla"]
+material = SubResource("Sombra")
+size = Vector3(1.1, 0.014, 0.42)
+
+[sub_resource type="BoxMesh" id="BarraRejilla"]
+material = SubResource("Metal")
+size = Vector3(0.96, 0.018, 0.029)
+
+[sub_resource type="BoxMesh" id="Canaleta"]
+material = SubResource("Metal")
+size = Vector3(17, 0.11, 0.2)
+
+[sub_resource type="BoxMesh" id="Registro"]
+material = SubResource("Metal")
+size = Vector3(0.91, 0.02, 0.52)
+
+[node name="DetallesAnden" type="Node3D"]
+
+[node name="Intercomunicador" type="MeshInstance3D" parent="."]
+position = Vector3(5.75, 1.42, -3.64)
+mesh = SubResource("CajaIntercomunicador")
+
+[node name="Etiqueta" type="Label3D" parent="Intercomunicador"]
+position = Vector3(0, 0.28, 0.067)
+pixel_size = 0.004
+shaded = true
+outline_size = 0
+font = ExtResource("Fuente")
+font_size = 21
+text = "SOS"
+
+[node name="RanuraSuperior" type="MeshInstance3D" parent="Intercomunicador"]
+position = Vector3(0, 0.12, 0.064)
+mesh = SubResource("Ranura")
+
+[node name="RanuraCentral" type="MeshInstance3D" parent="Intercomunicador"]
+position = Vector3(0, 0.05, 0.064)
+mesh = SubResource("Ranura")
+
+[node name="RanuraInferior" type="MeshInstance3D" parent="Intercomunicador"]
+position = Vector3(0, -0.02, 0.064)
+mesh = SubResource("Ranura")
+
+[node name="BotonRojo" type="MeshInstance3D" parent="Intercomunicador"]
+position = Vector3(0, -0.23, 0.075)
+mesh = SubResource("Boton")
+
+[node name="LuzIndicadora" type="MeshInstance3D" parent="Intercomunicador"]
+position = Vector3(0.19, -0.22, 0.065)
+mesh = SubResource("Indicador")
+
+[node name="Rejilla" type="MeshInstance3D" parent="."]
+position = Vector3(13.3, 0.008, 4.63)
+cast_shadow = 0
+mesh = SubResource("HuecoRejilla")
+
+[node name="Barra1" type="MeshInstance3D" parent="Rejilla"]
+position = Vector3(0, 0.009, -0.145)
+cast_shadow = 0
+mesh = SubResource("BarraRejilla")
+
+[node name="Barra2" type="MeshInstance3D" parent="Rejilla"]
+position = Vector3(0, 0.009, -0.0725)
+cast_shadow = 0
+mesh = SubResource("BarraRejilla")
+
+[node name="Barra3" type="MeshInstance3D" parent="Rejilla"]
+position = Vector3(0, 0.009, 0)
+cast_shadow = 0
+mesh = SubResource("BarraRejilla")
+
+[node name="Barra4" type="MeshInstance3D" parent="Rejilla"]
+position = Vector3(0, 0.009, 0.0725)
+cast_shadow = 0
+mesh = SubResource("BarraRejilla")
+
+[node name="Barra5" type="MeshInstance3D" parent="Rejilla"]
+position = Vector3(0, 0.009, 0.145)
+cast_shadow = 0
+mesh = SubResource("BarraRejilla")
+
+[node name="CanaletaTecnica" type="MeshInstance3D" parent="."]
+position = Vector3(17.5, -0.68, 6.43)
+mesh = SubResource("Canaleta")
+
+[node name="RegistroMantenimiento" type="MeshInstance3D" parent="."]
+position = Vector3(22.8, 0.012, 4.63)
+cast_shadow = 0
+mesh = SubResource("Registro")
+
+[node name="Identificador" type="Label3D" parent="RegistroMantenimiento"]
+position = Vector3(0, 0.015, 0)
+rotation = Vector3(-1.5707964, 0, 0)
+pixel_size = 0.008
+shaded = true
+modulate = Color(0.81, 0.78, 0.68, 1)
+outline_size = 0
+font = ExtResource("Fuente")
+font_size = 23
+text = "M-02"
