@@ -19,7 +19,17 @@ func _ready() -> void:
 		aviso.visible = false
 	_pintar()
 
+#metodos para informar si se puede interactuar con la estacion de carga
+func puede_usar(jugador: Personaje) -> bool:
+	return jugador != null and jugador.tiene_celular
 
+func rechazar_uso() -> void:
+	_mostrar("SIN CELULAR")
+	Dialogo.obtener(get_tree()).mostrar(
+		"ESTACIÓN DE CARGA",
+		"Necesitas el celular para recargar la batería.",
+		3.5, false, null, &"default", false
+	)
 
 func usar() -> void:
 	var pj: Personaje = get_tree().get_first_node_in_group(Grupos.JUGADOR) as Personaje

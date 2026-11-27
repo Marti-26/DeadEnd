@@ -31,6 +31,14 @@ func _physics_process(delta: float) -> void:
 		progreso = 0.0
 		actual = null
 		return
+	# Si el objeto no se puede usar, rechazar de inmediato
+	if obj.has_method("puede_usar") and not obj.puede_usar(pj):
+		if Input.is_action_just_pressed(tecla) or obj != actual:
+			actual = obj
+			if obj.has_method("rechazar_uso"):
+				obj.rechazar_uso()
+		progreso = 0.0
+		return
 	if obj != actual:
 		actual = obj
 		progreso = 0.0
