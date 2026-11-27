@@ -2,6 +2,8 @@
 
 [ext_resource type="Shader" uid="uid://f3mgq7yukk58" path="res://zona_b/ladrillo.gdshader" id="1_q4wug"]
 [ext_resource type="Script" uid="uid://bvblnav03id4i" path="res://camara_fija.gd" id="20_yfmon"]
+[ext_resource type="PackedScene" path="res://assets/expendedoras/expendedora_expreso.tscn" id="exp_expreso"]
+[ext_resource type="PackedScene" path="res://assets/expendedoras/expendedora_pociones.tscn" id="exp_pociones"]
 [ext_resource type="Script" uid="uid://1jydpg4suwgi" path="res://personaje_zona_c.gd" id="ZC_6_r0ps7"]
 [ext_resource type="PackedScene" uid="uid://j5agalseuliu" path="res://gatita.tscn" id="ZC_7_61dqb"]
 [ext_resource type="Script" uid="uid://bh2bylh8kjoo8" path="res://dash.gd" id="ZC_9_dash"]
@@ -18,31 +20,83 @@
 [ext_resource type="AudioStream" uid="uid://xesjpdslfwad" path="res://Sonidos/Efectos/Celular.mp3" id="ZC_18_nvaji"]
 [ext_resource type="AudioStream" uid="uid://b24hk0wedmjao" path="res://Sonidos/Jugador/meow.wav" id="ZC_19_c70ak"]
 [ext_resource type="AudioStream" uid="uid://c6xn87qsspf2s" path="res://Sonidos/Jugador/meow2.mp3" id="ZC_20_58kpb"]
+[ext_resource type="AudioStream" uid="uid://tpy7d1xfq5wn" path="res://Sonidos/Final/anuncio_llegada_metro.mp3" id="ZC_anuncio_metro"]
+[ext_resource type="PackedScene" path="res://zona_c/banca_anden.tscn" id="ZC_banca_anden"]
+[ext_resource type="PackedScene" path="res://zona_c/detalles_anden.tscn" id="ZC_detalles_anden"]
+[ext_resource type="PackedScene" path="res://zona_c/escaleras_salida.tscn" id="ZC_escaleras"]
 [ext_resource type="Texture2D" uid="uid://b0nwn6powkllx" path="res://zona_c/exit_pixel_verde.png" id="ZC_ExitPixelTexture"]
 [ext_resource type="Script" uid="uid://cusc3wuj0ko33" path="res://zona_c_final.gd" id="ZC_final"]
 [ext_resource type="Script" uid="uid://cnvq1n54jkdfm" path="res://zona_c_llegada.gd" id="ZC_llegada_script"]
 [ext_resource type="PackedScene" uid="uid://nhfwj0jc7mm4" path="res://metro.tscn" id="ZC_metro_llegada"]
-[ext_resource type="Script" uid="uid://b56ntbuf7spsx" path="res://salida.gd" id="ZC_salida"]
-[ext_resource type="PackedScene" path="res://zona_c/escaleras_salida.tscn" id="ZC_escaleras"]
-[ext_resource type="Script" path="res://zona_c/pasajeros_anden.gd" id="ZC_peatones"]
-[ext_resource type="PackedScene" path="res://zona_c/torniquete_anden.tscn" id="ZC_torniquete"]
+[ext_resource type="AudioStream" uid="uid://cq14q0xmps1i3" path="res://Sonidos/Final/murmullo_anden.wav" id="ZC_murmullo_anden"]
 [ext_resource type="Script" uid="uid://d1yo46kjs76th" path="res://poster_pared.gd" id="ZC_poster"]
 [ext_resource type="Texture2D" uid="uid://btagd5l53p4er" path="res://assets/npcs y posters/poster_atrapada.png" id="ZC_poster_atrapada"]
+[ext_resource type="Texture2D" uid="uid://c54y6ya4w8n3p" path="res://assets/npcs y posters/felidae1.png" id="ZC_poster_felidae"]
+[ext_resource type="Texture2D" uid="uid://sl408r1mkru6" path="res://assets/npcs y posters/poster_kitsuny.png" id="ZC_poster_kitsuny"]
+[ext_resource type="Texture2D" uid="uid://smlynt3yjliy" path="res://assets/npcs y posters/RATINI1.jpg.jpeg" id="ZC_poster_ratini"]
 [ext_resource type="Texture2D" uid="uid://d0ulr0nxhjyye" path="res://assets/npcs y posters/poster_se_vende.png" id="ZC_poster_se_vende"]
-[ext_resource type="Texture2D" path="res://assets/npcs y posters/RATINI1.jpg.jpeg" id="ZC_poster_ratini"]
-[ext_resource type="Texture2D" path="res://assets/npcs y posters/felidae1.png" id="ZC_poster_felidae"]
-[ext_resource type="Texture2D" path="res://assets/npcs y posters/poster_kitsuny.png" id="ZC_poster_kitsuny"]
+[ext_resource type="Script" uid="uid://b56ntbuf7spsx" path="res://salida.gd" id="ZC_salida"]
 [ext_resource type="PackedScene" path="res://zona_c/senalizacion_anden.tscn" id="ZC_senalizacion"]
-[ext_resource type="PackedScene" path="res://zona_c/detalles_anden.tscn" id="ZC_detalles_anden"]
-[ext_resource type="PackedScene" path="res://zona_c/banca_anden.tscn" id="ZC_banca_anden"]
-[ext_resource type="PackedScene" path="res://zona_c/zarigueya_anden.tscn" id="ZC_zarigueya_anden"]
-[ext_resource type="PackedScene" path="res://zona_c/saxofonista_anden.tscn" id="ZC_saxofonista_anden"]
-[ext_resource type="AudioStream" path="res://Sonidos/Ambiente/91750__dobroide__20100306subwaytunnel.wav" id="ZC_ambiente_tunel"]
-[ext_resource type="PackedScene" path="res://assets/expendedoras/expendedora_expreso.tscn" id="exp_expreso"]
-[ext_resource type="PackedScene" path="res://assets/expendedoras/expendedora_pociones.tscn" id="exp_pociones"]
+[ext_resource type="PackedScene" path="res://zona_c/torniquete_anden.tscn" id="ZC_torniquete"]
 
 [sub_resource type="BoxShape3D" id="ZC_SueloContinuo"]
 size = Vector3(80, 0.4, 9.8)
+
+[sub_resource type="GDScript" id="GDScript_espera_metro"]
+script/source = "extends Node3D
+
+const PASAJEROS := [
+	[&\"Ardilla\", preload(\"res://assets/npcs y posters/ardilla_idle_frente_1.png\"), 1.6 / 465.0, 12.0],
+	[&\"Hamster\", preload(\"res://assets/npcs y posters/hamster_idle_frente_1.png\"), 1.6 / 502.0, 18.0],
+	[&\"Zorro\", preload(\"res://assets/npcs y posters/zorro_idle_frente_1.png\"), 1.65 / 785.0, 16.0],
+	[&\"Gato\", preload(\"res://assets/npcs y posters/gato_2_idle_frente_1 (1).png\"), 1.85 / (644.0 - 25.0), 12.0],
+	[&\"Caniche\", preload(\"res://assets/npcs y posters/caniche_idle_frente_1.png\"), 1.45 / (688.0 - 24.0), 16.0],
+]
+
+
+const CANTIDAD_ANDEN := 24
+const CANTIDAD_ESCALERAS := 6
+
+func _ready() -> void:
+	var letrero := get_node(^\"../LetreroExitUnico/CartelExitPixel\") as Node3D
+	var inicio := to_local(letrero.global_position).x + 20.0
+	var lugares_anden: Array[Vector3] = []
+	for fondo in [-1.6, 1.8, 4.2]:
+		for columna in range(9):
+			var x := inicio + columna * 2.75 + randf_range(-0.45, 0.45)
+			var z := float(fondo) + randf_range(-0.45, 0.45)
+			lugares_anden.append(Vector3(x, 0.0, z))
+	lugares_anden.shuffle()
+	lugares_anden.resize(CANTIDAD_ANDEN)
+
+	var escaleras := get_node(^\"../../EscalerasSalida\") as Node3D
+	var lugares_escaleras: Array[Vector3] = []
+	for numero in [2, 4, 6, 8, 10, 12]:
+		var escalon := escaleras.get_node(\"Escalon%d\" % numero) as MeshInstance3D
+		var superficie := escalon.get_aabb().end.y
+		for lado in [-1.0, 1.0]:
+			var punto := Vector3(randf_range(-0.20, 0.20), superficie, float(lado) * randf_range(2.8, 3.9))
+			lugares_escaleras.append(to_local(escalon.to_global(punto)))
+	lugares_escaleras.shuffle()
+	lugares_escaleras.resize(CANTIDAD_ESCALERAS)
+	lugares_anden.append_array(lugares_escaleras)
+
+	for i in range(lugares_anden.size()):
+		var datos: Array = PASAJEROS[i % PASAJEROS.size()]
+		var lugar := lugares_anden[i]
+		var sprite := Sprite3D.new()
+		sprite.name = \"%s%d\" % [datos[0], i + 1]
+		sprite.texture = datos[1]
+		sprite.pixel_size = datos[2]
+		sprite.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+		sprite.shaded = true
+		sprite.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
+		sprite.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		sprite.flip_h = randf() < 0.5
+		var altura := (sprite.texture.get_height() * 0.5 - float(datos[3])) * sprite.pixel_size
+		sprite.position = lugar + Vector3.UP * (altura + 0.02)
+		add_child(sprite)
+"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gdjdl"]
 render_priority = 0
@@ -373,82 +427,8 @@ size = Vector3(0.06, 0.44, 0.45)
 [sub_resource type="BoxShape3D" id="BoxShape3D_0h2le"]
 size = Vector3(2.2, 1, 0.6)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_luacw"]
-albedo_color = Color(0.3, 0.42, 0.42, 1)
-roughness = 0.5
-
-[sub_resource type="BoxMesh" id="BoxMesh_q15k4"]
-size = Vector3(1.1, 2, 0.7)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_afep0"]
-albedo_color = Color(0, 0, 0, 1)
-roughness = 0.2
-emission_enabled = true
-emission = Color(1, 0.8, 0.58, 1)
-emission_energy_multiplier = 1.1
-
-[sub_resource type="BoxMesh" id="BoxMesh_aenpw"]
-size = Vector3(0.82, 1.2, 0.03)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d6myg"]
-albedo_color = Color(0.05, 0.06, 0.08, 1)
-roughness = 0.7
-
-[sub_resource type="BoxMesh" id="BoxMesh_ylnbe"]
-material = SubResource("StandardMaterial3D_d6myg")
-size = Vector3(0.78, 0.04, 0.02)
-
-[sub_resource type="MultiMesh" id="MultiMesh_gijk1"]
-transform_format = 1
-instance_count = 4
-mesh = SubResource("BoxMesh_ylnbe")
-buffer = PackedFloat32Array(1, 0, 0, -0.08, 0, 1, 0, 0.8, 0, 0, 1, 0.33, 1, 0, 0, -0.08, 0, 1, 0, 1.1, 0, 0, 1, 0.33, 1, 0, 0, -0.08, 0, 1, 0, 1.4, 0, 0, 1, 0.33, 1, 0, 0, -0.08, 0, 1, 0, 1.7, 0, 0, 1, 0.33)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_un4qu"]
-albedo_color = Color(0.1, 0.12, 0.15, 1)
-roughness = 0.4
-emission_enabled = true
-emission = Color(0.56078434, 0.8509804, 0.6901961, 1)
-emission_energy_multiplier = 0.4
-
-[sub_resource type="BoxMesh" id="BoxMesh_m5ovv"]
-size = Vector3(0.14, 0.5, 0.03)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_04qew"]
-albedo_color = Color(0.04, 0.05, 0.06, 1)
-roughness = 0.6
-
-[sub_resource type="BoxMesh" id="BoxMesh_2el5d"]
-size = Vector3(0.7, 0.18, 0.04)
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_3u6eg"]
 size = Vector3(1.1, 2, 0.7)
-
-[sub_resource type="BoxMesh" id="BoxMesh_vdaxm"]
-size = Vector3(1.1, 2, 0.7)
-
-[sub_resource type="BoxMesh" id="BoxMesh_7kk0y"]
-size = Vector3(0.82, 1.2, 0.03)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1y1mp"]
-albedo_color = Color(0.05, 0.06, 0.08, 1)
-roughness = 0.7
-
-[sub_resource type="BoxMesh" id="BoxMesh_hrntr"]
-material = SubResource("StandardMaterial3D_1y1mp")
-size = Vector3(0.78, 0.04, 0.02)
-
-[sub_resource type="MultiMesh" id="MultiMesh_hlxgx"]
-transform_format = 1
-instance_count = 4
-mesh = SubResource("BoxMesh_hrntr")
-buffer = PackedFloat32Array(1, 0, 0, -0.08, 0, 1, 0, 0.8, 0, 0, 1, 0.33, 1, 0, 0, -0.08, 0, 1, 0, 1.1, 0, 0, 1, 0.33, 1, 0, 0, -0.08, 0, 1, 0, 1.4, 0, 0, 1, 0.33, 1, 0, 0, -0.08, 0, 1, 0, 1.7, 0, 0, 1, 0.33)
-
-[sub_resource type="BoxMesh" id="BoxMesh_tyv4c"]
-size = Vector3(0.14, 0.5, 0.03)
-
-[sub_resource type="BoxMesh" id="BoxMesh_6cuq5"]
-size = Vector3(0.7, 0.18, 0.04)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1mi03"]
 size = Vector3(1.1, 2, 0.7)
@@ -490,9 +470,14 @@ size = Vector3(1, 2, 9.8)
 [node name="ZonaCFinal" type="Node3D" unique_id=990845547]
 script = ExtResource("ZC_final")
 
-[node name="AmbienteTunel" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("ZC_ambiente_tunel")
-volume_db = -72.0
+[node name="MurmulloAnden" type="AudioStreamPlayer" parent="." unique_id=898514879]
+stream = ExtResource("ZC_murmullo_anden")
+volume_db = -60.0
+bus = &"Juego"
+
+[node name="AnuncioMetro" type="AudioStreamPlayer" parent="." unique_id=1735287556]
+stream = ExtResource("ZC_anuncio_metro")
+volume_db = -5.0
 bus = &"Juego"
 
 [node name="SueloContinuo" type="StaticBody3D" parent="." unique_id=766542454]
@@ -503,21 +488,18 @@ shape = SubResource("ZC_SueloContinuo")
 
 [node name="Estacion" type="Node3D" parent="." unique_id=606961767]
 
-[node name="SenalizacionAnden" parent="Estacion" instance=ExtResource("ZC_senalizacion")]
+[node name="SenalizacionAnden" parent="Estacion" unique_id=2088804057 instance=ExtResource("ZC_senalizacion")]
 
-[node name="DetallesAnden" parent="Estacion" instance=ExtResource("ZC_detalles_anden")]
+[node name="DetallesAnden" parent="Estacion" unique_id=1304901187 instance=ExtResource("ZC_detalles_anden")]
 
-[node name="Banca4" parent="Estacion" instance=ExtResource("ZC_banca_anden")]
-position = Vector3(11.5, 0, -3.25)
+[node name="Banca4" parent="Estacion" unique_id=630204528 instance=ExtResource("ZC_banca_anden")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0, -3.25)
 
-[node name="Banca5" parent="Estacion" instance=ExtResource("ZC_banca_anden")]
-position = Vector3(26.8, 0, -3.25)
+[node name="Banca5" parent="Estacion" unique_id=1756649639 instance=ExtResource("ZC_banca_anden")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.8, 0, -3.25)
 
-[node name="ZarigueyaAnden" parent="Estacion" instance=ExtResource("ZC_zarigueya_anden")]
-position = Vector3(19.1, 0, -2.88)
-
-[node name="SaxofonistaAnden" parent="Estacion" instance=ExtResource("ZC_saxofonista_anden")]
-position = Vector3(4, 0, -2.55)
+[node name="NpcEsperandoMetro" type="Node3D" parent="Estacion" unique_id=268954756]
+script = SubResource("GDScript_espera_metro")
 
 [node name="Piso0" type="StaticBody3D" parent="Estacion" unique_id=933392377]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.5, -0.5, 1.2)
@@ -756,8 +738,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.49388, 2.3, -3.9)
 material_override = SubResource("ShaderMaterial_3wdyd")
 mesh = SubResource("ZC_ParedTramoMesh")
 
-[node name="TramoSalida" type="MeshInstance3D" parent="Estacion/ParedTramos"]
-position = Vector3(43.49388, 2.3, -3.9)
+[node name="TramoSalida" type="MeshInstance3D" parent="Estacion/ParedTramos" unique_id=75555495]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43.49388, 2.3, -3.9)
 material_override = SubResource("ShaderMaterial_3wdyd")
 mesh = SubResource("ZC_ParedTramoMesh")
 
@@ -935,7 +917,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.575, 0, 0)
 shape = SubResource("BoxShape3D_o64cw")
 
 [node name="Borde" type="MeshInstance3D" parent="Estacion" unique_id=1146634566]
-position = Vector3(-3, -0.55, 6.15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -0.55, 6.15)
 material_override = SubResource("StandardMaterial3D_ki7i3")
 cast_shadow = 0
 mesh = SubResource("BoxMesh_y1l4h")
@@ -1033,19 +1015,17 @@ shape = SubResource("ZC_Ext_Colision")
 disabled = true
 
 [node name="PrincipalDerecha" type="MeshInstance3D" parent="Estacion/BarandasExtremos" unique_id=911637441]
-position = Vector3(26.9, 0.62, 5.85)
-scale = Vector3(0.7666667, 1, 1)
+transform = Transform3D(0.7666667, 0, 0, 0, 1, 0, 0, 0, 1, 26.9, 0.62, 5.85)
 material_override = SubResource("ShaderMaterial_l7v0x")
 mesh = SubResource("ZC_Ext_Barrera")
 
 [node name="SuperiorDerecha" type="MeshInstance3D" parent="Estacion/BarandasExtremos" unique_id=938631745]
-position = Vector3(26.9, 0.8, 5.85)
-scale = Vector3(0.7666667, 1, 1)
+transform = Transform3D(0.7666667, 0, 0, 0, 1, 0, 0, 0, 1, 26.9, 0.8, 5.85)
 material_override = SubResource("StandardMaterial3D_lwqmj")
 mesh = SubResource("ZC_Ext_Superior")
 
 [node name="ColisionDerecha" type="StaticBody3D" parent="Estacion/BarandasExtremos" unique_id=1334976968]
-position = Vector3(26.9, 1, 5.85)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.9, 1, 5.85)
 
 [node name="Forma" type="CollisionShape3D" parent="Estacion/BarandasExtremos/ColisionDerecha" unique_id=1842635363]
 shape = SubResource("ZC_Ext_ColisionSalida")
@@ -1214,7 +1194,7 @@ shape = SubResource("BoxShape3D_0h2le")
 [node name="Expendedora1" type="Node3D" parent="Estacion" unique_id=1798963672]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6, 0, -3.2)
 
-[node name="Modelo" parent="Estacion/Expendedora1" instance=ExtResource("exp_expreso")]
+[node name="Modelo" parent="Estacion/Expendedora1" unique_id=377433108 instance=ExtResource("exp_expreso")]
 
 [node name="Choque" type="StaticBody3D" parent="Estacion/Expendedora1" unique_id=633628875]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -1225,7 +1205,7 @@ shape = SubResource("BoxShape3D_3u6eg")
 [node name="Expendedora2" type="Node3D" parent="Estacion" unique_id=1271355131]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -3.2)
 
-[node name="Modelo" parent="Estacion/Expendedora2" instance=ExtResource("exp_pociones")]
+[node name="Modelo" parent="Estacion/Expendedora2" unique_id=1946975935 instance=ExtResource("exp_pociones")]
 
 [node name="Choque" type="StaticBody3D" parent="Estacion/Expendedora2" unique_id=1212323448]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -1447,22 +1427,22 @@ shaded = true
 texture_filter = 0
 texture = ExtResource("ZC_ExitPixelTexture")
 
-[node name="Carteles" type="Node3D" parent="Estacion"]
+[node name="Carteles" type="Node3D" parent="Estacion" unique_id=1008733500]
 
-[node name="PosterAtrapada" type="Node3D" parent="Estacion/Carteles"]
-position = Vector3(18, 2, -3.66)
+[node name="PosterAtrapada" type="Node3D" parent="Estacion/Carteles" unique_id=1692822649]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 2, -3.66)
 script = ExtResource("ZC_poster")
 textura = ExtResource("ZC_poster_atrapada")
 alto = 1.35
 
-[node name="PosterSeVende" type="Node3D" parent="Estacion/Carteles"]
-position = Vector3(24.4, 1.95, -3.66)
+[node name="PosterSeVende" type="Node3D" parent="Estacion/Carteles" unique_id=2087550588]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.4, 1.95, -3.66)
 script = ExtResource("ZC_poster")
 textura = ExtResource("ZC_poster_se_vende")
 alto = 1.05
 
-[node name="PosterRatini" type="Node3D" parent="Estacion/Carteles"]
-position = Vector3(4, 1.86, -3.66)
+[node name="PosterRatini" type="Node3D" parent="Estacion/Carteles" unique_id=448765255]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1.86, -3.66)
 script = ExtResource("ZC_poster")
 textura = ExtResource("ZC_poster_ratini")
 alto = 1.85
@@ -1472,8 +1452,8 @@ color_luz = Color(1, 0.86, 0.95, 1)
 tinte = Color(1, 1, 1, 1)
 saturacion = 1.0
 
-[node name="PosterFelidae" type="Node3D" parent="Estacion/Carteles"]
-position = Vector3(15.5, 1.86, -3.66)
+[node name="PosterFelidae" type="Node3D" parent="Estacion/Carteles" unique_id=620794443]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 1.86, -3.66)
 script = ExtResource("ZC_poster")
 textura = ExtResource("ZC_poster_felidae")
 alto = 1.85
@@ -1483,8 +1463,8 @@ color_luz = Color(1, 0.86, 0.95, 1)
 tinte = Color(1, 1, 1, 1)
 saturacion = 1.0
 
-[node name="PosterKitsuny" type="Node3D" parent="Estacion/Carteles"]
-position = Vector3(26.2, 1.86, -3.66)
+[node name="PosterKitsuny" type="Node3D" parent="Estacion/Carteles" unique_id=918530982]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.2, 1.86, -3.66)
 script = ExtResource("ZC_poster")
 textura = ExtResource("ZC_poster_kitsuny")
 alto = 1.7
@@ -1676,8 +1656,8 @@ mesh = SubResource("BoxMesh_fguuj")
 
 [node name="Camara" type="Camera3D" parent="." unique_id=923045290 node_paths=PackedStringArray("objetivo")]
 transform = Transform3D(1, 0, 0, 0, 0.76604444, 0.6427876, 0, -0.6427876, 0.76604444, -5.2, 14.141312, 16.052979)
-projection = 1
 keep_aspect = 0
+projection = 1
 current = true
 size = 17.6
 script = ExtResource("20_yfmon")
@@ -1769,11 +1749,11 @@ light_energy = 3.2
 omni_range = 9.0
 omni_attenuation = 1.5
 
-[node name="Personaje" type="CharacterBody3D" parent="." unique_id=241134809 node_paths=PackedStringArray("camara", "escaleras") groups=["jugador"]]
+[node name="Personaje" type="CharacterBody3D" parent="." unique_id=241134809 node_paths=PackedStringArray("escaleras", "camara") groups=["jugador"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0.25, 7)
 script = ExtResource("ZC_6_r0ps7")
-camara = NodePath("../Camara")
 escaleras = NodePath("../EscalerasSalida")
+camara = NodePath("../Camara")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Personaje" unique_id=1801526638]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
@@ -1843,45 +1823,35 @@ bus = &"Juego"
 [node name="MetroLlegada" parent="." unique_id=596009858 node_paths=PackedStringArray("camara_estacion") instance=ExtResource("ZC_metro_llegada")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7)
 camara_estacion = NodePath("../Camara")
+tiempo_fuera = 3.0
 primera_llegada = 99999.0
 x_parada = -23.0
-tiempo_fuera = 3.0
 solo_descenso = true
 
 [node name="ControlLlegada" type="Node" parent="." unique_id=281579106]
 script = ExtResource("ZC_llegada_script")
 
 [node name="Torniquetes" type="Area3D" parent="." unique_id=237516017]
-position = Vector3(32, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 0, 0)
 collision_layer = 0
 monitorable = false
 script = ExtResource("ZC_salida")
 
-[node name="Cruce" type="CollisionShape3D" parent="Torniquetes"]
-position = Vector3(0, 1, 1.2)
+[node name="Cruce" type="CollisionShape3D" parent="Torniquetes" unique_id=1257189925]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1.2)
 shape = SubResource("ZC_CruceTorniquetes")
 
-[node name="Torniquete1" parent="Torniquetes" instance=ExtResource("ZC_torniquete")]
-position = Vector3(0, 0, -3.38)
+[node name="Torniquete1" parent="Torniquetes" unique_id=660239385 instance=ExtResource("ZC_torniquete")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.38)
 
-[node name="Torniquete2" parent="Torniquetes" instance=ExtResource("ZC_torniquete")]
-position = Vector3(0, 0, -0.83)
+[node name="Torniquete2" parent="Torniquetes" unique_id=1284925728 instance=ExtResource("ZC_torniquete")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.83)
 
-[node name="Torniquete3" parent="Torniquetes" instance=ExtResource("ZC_torniquete")]
-position = Vector3(0, 0, 1.45)
+[node name="Torniquete3" parent="Torniquetes" unique_id=927386634 instance=ExtResource("ZC_torniquete")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.45)
 
-[node name="Torniquete4" parent="Torniquetes" instance=ExtResource("ZC_torniquete")]
-position = Vector3(0, 0, 3.5)
+[node name="Torniquete4" parent="Torniquetes" unique_id=1848524381 instance=ExtResource("ZC_torniquete")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.5)
 
-[node name="EscalerasSalida" parent="." instance=ExtResource("ZC_escaleras")]
-position = Vector3(34, 0, 1.2)
-
-[node name="PasajerosAnden" type="Node3D" parent="." node_paths=PackedStringArray("jugador", "camara", "letrero_exit", "escaleras", "torniquetes")]
-script = ExtResource("ZC_peatones")
-jugador = NodePath("../Personaje")
-camara = NodePath("../Camara")
-letrero_exit = NodePath("../Estacion/LetreroExitUnico/CartelExitPixel")
-escaleras = NodePath("../EscalerasSalida")
-torniquetes = NodePath("../Torniquetes")
-
-[connection signal="body_entered" from="EscalerasSalida/Meta" to="." method="_on_salida_superficie_body_entered"]
+[node name="EscalerasSalida" parent="." unique_id=548696222 instance=ExtResource("ZC_escaleras")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34, 0, 1.2)

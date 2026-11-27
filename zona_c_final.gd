@@ -6,13 +6,14 @@ extends Node3D
 @onready var estacion: Node3D = $Estacion
 @onready var destello: Sprite3D = $EscalerasSalida/Destello
 @onready var luz_salida: OmniLight3D = $EscalerasSalida/LuzExteriorLateral
-@onready var ambiente_tunel: AudioStreamPlayer = $AmbienteTunel
+
+@onready var letrero_exit: Node3D = $Estacion/LetreroExitUnico/CartelExitPixel
+@onready var murmullo_anden: AudioStreamPlayer = $MurmulloAnden
+@onready var anuncio_metro: AudioStreamPlayer = $AnuncioMetro
+@onready var metro: Metro = $MetroLlegada
 
 const INICIO_LUZ: float = -32.0
 const FIN_LUZ: float = 34.0
-const INICIO_AMBIENTE_TUNEL: float = -12.0
-const AMBIENTE_TUNEL_PLENO: float = 11.0
-const VOLUMEN_AMBIENTE_TUNEL_DB: float = -12.0
 const BALDOSA_OSCURA: Color = Color(0.20, 0.28, 0.29)
 const BALDOSA_DORADA: Color = Color(0.69, 0.61, 0.43)
 const JUNTA_OSCURA: Color = Color(0.09, 0.13, 0.14)
@@ -30,7 +31,14 @@ var paredes: Array[Dictionary] = []
 var ventanas: Array[Dictionary] = []
 var parteluces: Array[Dictionary] = []
 var avance_maximo: float = INICIO_LUZ
+var anuncio_reproducido := false
 var terminado: bool = false
+var _tiempo_luz: float = 0.0
+
+const Z_BORDE: float = 5.85
+const BORDE_INICIO: float = -39.5
+const BORDE_FIN: float = -10.0
+const ANCHO_HUECO_PUERTA: float = 1.6
 
 func _ready() -> void:
 	ambiente.environment = ambiente.environment.duplicate(true)
@@ -39,6 +47,8 @@ func _ready() -> void:
 	ambiente.environment.ambient_light_energy = 0.045
 	Partida.estres = 0.0
 	_ocultar_indicadores_hud.call_deferred()
+	_cerrar_borde_anden()
+	_preparar_atmosfera()
 
 	for luz in luces.get_children():
 		if luz is OmniLight3D:
@@ -84,20 +94,19 @@ func _process(delta: float) -> void:
 
 	Partida.estres = 0.0
 	avance_maximo = maxf(avance_maximo, personaje.global_position.x)
+	_actualizar_audio_anden()
 	var progreso: float = smoothstep(INICIO_LUZ, FIN_LUZ, avance_maximo)
-	var nivel_tunel := smoothstep(INICIO_AMBIENTE_TUNEL, AMBIENTE_TUNEL_PLENO, avance_maximo)
-	if nivel_tunel > 0.0:
-		ambiente_tunel.volume_db = VOLUMEN_AMBIENTE_TUNEL_DB + linear_to_db(maxf(nivel_tunel, 0.001))
-		if not ambiente_tunel.playing:
-			ambiente_tunel.play()
 
 	ambiente.environment.ambient_light_energy = lerpf(0.045, 0.70, progreso)
 	ambiente.environment.ambient_light_color = Color(1.0, 0.85, 0.63).lerp(Color(1.0, 0.96, 0.87), progreso)
+	_tiempo_luz += delta
+	_actualizar_atmosfera(progreso)
 
 	for luz in energias:
 		var cercania: float = smoothstep(-9.0, 7.0, avance_maximo - luz.global_position.x)
 		var intensidad: float = lerpf(0.65, 1.3, progreso)
-		var objetivo: float = energias[luz] * cercania * intensidad
+		var respiro: float = 1.0 - 0.035 * (1.0 - progreso) * (0.5 + 0.5 * sin(_tiempo_luz * 1.3 + luz.global_position.x))
+		var objetivo: float = energias[luz] * cercania * intensidad * respiro
 		luz.light_energy = move_toward(luz.light_energy, objetivo, delta * 2.5)
 
 	for baldosa in baldosas:
@@ -134,6 +143,23 @@ func _process(delta: float) -> void:
 		parteluz["mezcla"] = move_toward(parteluz["mezcla"], objetivo, delta * 0.65)
 		var material: StandardMaterial3D = parteluz["material"]
 		material.albedo_color = parteluz["inicial"].lerp(PARTELUZ_DORADO, parteluz["mezcla"])
+
+func _actualizar_audio_anden() -> void:
+	var distancia := personaje.global_position.x - letrero_exit.global_position.x
+	if distancia <= 0.0:
+		murmullo_anden.stop()
+		return
+
+	var mezcla := smoothstep(0.0, 10.0, distancia)
+	murmullo_anden.volume_db = lerpf(-2.0, 8.0, mezcla)
+	if not murmullo_anden.playing:
+		murmullo_anden.play(1.0)
+
+	if distancia >= 7.0 and not anuncio_reproducido:
+		anuncio_reproducido = true
+		anuncio_metro.play()
+		if metro.estado == Metro.Estado.FUERA:
+			metro.proxima = metro.reloj
 
 func _ocultar_indicadores_hud() -> void:
 	var hud := get_tree().get_first_node_in_group(Grupos.GRUPO_HUD)
@@ -179,3 +205,76 @@ func _on_salida_superficie_body_entered(cuerpo: Node3D) -> void:
 	cierre.tween_interval(0.16)
 	cierre.tween_property(fondo, "color", Color(0.02, 0.03, 0.05), 0.75)
 	cierre.parallel().tween_property(mensaje, "modulate:a", 1.0, 0.75)
+
+
+func _cerrar_borde_anden() -> void:
+	var puertas: Array[float] = []
+	if metro != null:
+		for px: float in metro.puertas_x:
+			puertas.append(metro.global_position.x + metro.x_parada + px)
+	puertas.sort()
+	var tramos: Array[Vector2] = []
+	var desde: float = BORDE_INICIO
+	for px: float in puertas:
+		if px - ANCHO_HUECO_PUERTA * 0.5 > desde and px < BORDE_FIN:
+			tramos.append(Vector2(desde, px - ANCHO_HUECO_PUERTA * 0.5))
+			desde = px + ANCHO_HUECO_PUERTA * 0.5
+	if desde < BORDE_FIN:
+		tramos.append(Vector2(desde, BORDE_FIN))
+	var barra: MeshInstance3D = estacion.get_node_or_null("Barrera3") as MeshInstance3D
+	var barra_arriba: MeshInstance3D = estacion.get_node_or_null("BarreraArriba3") as MeshInstance3D
+	var postes: MultiMeshInstance3D = estacion.get_node_or_null("PostesBarrera") as MultiMeshInstance3D
+	var raiz: Node3D = Node3D.new()
+	raiz.name = "BordeAndenSeguro"
+	estacion.add_child(raiz)
+	var choque: StaticBody3D = StaticBody3D.new()
+	choque.name = "Choque"
+	raiz.add_child(choque)
+	for tramo: Vector2 in tramos:
+		var largo: float = tramo.y - tramo.x
+		var centro: float = (tramo.x + tramo.y) * 0.5
+		var forma: CollisionShape3D = CollisionShape3D.new()
+		var caja: BoxShape3D = BoxShape3D.new()
+		caja.size = Vector3(largo, 2.0, 0.3)
+		forma.shape = caja
+		choque.add_child(forma)
+		forma.global_position = Vector3(centro, 1.0, Z_BORDE)
+		if barra != null:
+			_barra_borde(raiz, Vector3(largo, 0.32, 0.05), Vector3(centro, 0.62, Z_BORDE), barra.material_override)
+		if barra_arriba != null:
+			_barra_borde(raiz, Vector3(largo, 0.05, 0.07), Vector3(centro, 0.8, Z_BORDE), barra_arriba.material_override)
+		if postes != null and postes.multimesh != null and postes.multimesh.mesh != null:
+			var x: float = tramo.x
+			while x <= tramo.y + 0.01:
+				var poste: MeshInstance3D = MeshInstance3D.new()
+				poste.mesh = postes.multimesh.mesh
+				raiz.add_child(poste)
+				poste.global_position = Vector3(x, 0.42, Z_BORDE)
+				x += minf(2.5, maxf(largo, 0.1))
+
+
+func _barra_borde(padre: Node3D, tam: Vector3, pos: Vector3, material: Material) -> void:
+	var malla: MeshInstance3D = MeshInstance3D.new()
+	var caja: BoxMesh = BoxMesh.new()
+	caja.size = tam
+	malla.mesh = caja
+	malla.material_override = material
+	padre.add_child(malla)
+	malla.global_position = pos
+
+
+func _preparar_atmosfera() -> void:
+	var entorno: Environment = ambiente.environment
+	entorno.glow_enabled = true
+	entorno.glow_intensity = 0.25
+	entorno.glow_bloom = 0.0
+	entorno.glow_hdr_threshold = 1.2
+	entorno.fog_enabled = false
+
+
+func _actualizar_atmosfera(progreso: float) -> void:
+	var entorno: Environment = ambiente.environment
+	entorno.tonemap_exposure = lerpf(1.05, 1.15, progreso)
+	entorno.glow_intensity = lerpf(0.2, 0.35, progreso)
+	if luz_salida != null and not terminado:
+		luz_salida.light_energy = maxf(luz_salida.light_energy, lerpf(0.0, 0.6, smoothstep(0.55, 1.0, progreso)))
