@@ -37,7 +37,7 @@ theme_override_constants/separation = 6
 
 [node name="EtiquetaBateria" type="Label" parent="Contenedor" unique_id=1317538023]
 layout_mode = 2
-text = "BATERÍA"
+text = "BATERÍA CELULAR"
 
 [node name="BarraBateria" type="ProgressBar" parent="Contenedor" unique_id=1718621100]
 custom_minimum_size = Vector2(240, 22)
