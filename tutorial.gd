@@ -22,7 +22,7 @@ const PASOS: Array[Dictionary] = [
 	{"id": "mover", "pista": true, "texto": "Muévete con W A S D o con las flechas del teclado."},
 	{"id": "celular", "pista": true, "texto": "Eso que brilla en amarillo es un celular.\nAcércate y presiona E para recogerlo."},
 	{"id": "linterna", "texto": "Aquí abajo casi no se ve.\nPresiona F para prender la linterna."},
-	{"id": "mapa", "desde_x": -31.5, "texto": "Haz clic en el ícono del celular, arriba a la izquierda (o presiona M), para abrir el mapa.\nAhí ves en qué piso y en qué zona estás. Vuelve a hacer clic en el ícono para cerrarlo."},
+	{"id": "mapa", "desde_x": -31.5, "texto": "Presiona M para abrir el mapa y ver dónde estás.\nPresiona M otra vez para cerrarlo."},
 	{"id": "carga", "desde_x": -30.0, "texto": "Te queda poca batería.\nVe a la estación de carga que señala la flecha y mantén E. La barra te muestra cuánto falta."},
 	{"id": "audifonos", "desde_x": -26.0, "texto": "Presiona Q para ponerte los audífonos. Te calman, pero dejas de oír lo que pasa alrededor.\nPóntelos y vuelve a presionar Q para quitártelos."},
 	{"id": "estres", "importante": true, "texto": "La barra roja de arriba es tu estrés: sube en la oscuridad y cerca de las criaturas.\nSi llega a 100 perderás y reaparecerás en el último punto de guardado. Para bajarlo: audífonos, esconderte o una zona segura."},
@@ -895,7 +895,6 @@ func _resaltar_paso(id: String) -> void:
 			_resaltar(_terminal as Node3D, 1.2)
 		"mapa":
 			_resaltar(null, 0.0)
-			_boton_mapa = _buscar_boton_mapa(get_tree().root)
 		_:
 			_resaltar(null, 0.0)
 
