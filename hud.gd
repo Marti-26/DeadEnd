@@ -4,12 +4,15 @@ extends CanvasLayer
 @onready var etiqueta_bateria: Label = $Contenedor/EtiquetaBateria as Label
 @onready var barra_bateria: ProgressBar = $Contenedor/BarraBateria as ProgressBar
 @onready var barra_estres: ProgressBar = $Contenedor/BarraEstres as ProgressBar
+@onready var _aviso_metro: PanelContainer = $Contenedor/AvisoMetro
+@onready var _tiempo_aviso_metro: Timer = $TiempoAvisoMetro
 
 var _nodo_bateria: Node = null
 var _nodo_jugador: Node = null
 var _nodo_dash: Node = null
 var _boton_celular: Button = null
 var _icono_celular: Control = null
+var _indicador_metro: Panel = null
 var _celular: CelularMapa = null
 #variable para que no aparezca el hud si no tiene el celular
 var indicadores_bloqueados: bool = false
@@ -28,6 +31,8 @@ func _ready() -> void:
 	_buscar_referencias()
 	_actualizar_barras()
 	_crear_celular()
+	$Contenedor/AvisoMetro/Mensaje.text = "Terminales activadas\n" + CelularMapa.AVISO_METRO
+	Partida.viaje_zona_c_habilitado.connect(_mostrar_aviso_metro)
 
 
 func _process(_delta: float) -> void:
@@ -55,6 +60,7 @@ func _crear_celular() -> void:
 	_boton_celular.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	_boton_celular.pressed.connect(_celular.alternar)
 	$Contenedor.add_child(_boton_celular)
+	$Contenedor.move_child(_boton_celular, _aviso_metro.get_index())
 	_icono_celular = Control.new()
 	_icono_celular.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_icono_celular.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -62,7 +68,43 @@ func _crear_celular() -> void:
 	_boton_celular.add_child(_icono_celular)
 	_boton_celular.mouse_entered.connect(_icono_celular.queue_redraw)
 	_boton_celular.mouse_exited.connect(_icono_celular.queue_redraw)
-	_celular.abierto_cambiado.connect(func(_esta_abierto: bool) -> void: _icono_celular.queue_redraw())
+	_celular.abierto_cambiado.connect(_al_alternar_celular)
+
+	_indicador_metro = Panel.new()
+	_indicador_metro.name = "IndicadorMetro"
+	_indicador_metro.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_indicador_metro.hide()
+	_boton_celular.add_child(_indicador_metro)
+	_indicador_metro.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	_indicador_metro.offset_left = -14.0
+	_indicador_metro.offset_right = -2.0
+	_indicador_metro.offset_top = 2.0
+	_indicador_metro.offset_bottom = 14.0
+	var estilo := StyleBoxFlat.new()
+	estilo.bg_color = Color(0.86, 0.12, 0.22)
+	estilo.border_color = _celular.color_crema
+	estilo.set_border_width_all(2)
+	estilo.set_corner_radius_all(6)
+	_indicador_metro.add_theme_stylebox_override("panel", estilo)
+
+
+func _mostrar_aviso_metro() -> void:
+	if not visible or not _tiene_celular():
+		return
+	if _celular.abierto:
+		Partida.aviso_metro_leido = true
+		return
+	_aviso_metro.show()
+	_tiempo_aviso_metro.start()
+
+
+func _al_alternar_celular(esta_abierto: bool) -> void:
+	_icono_celular.queue_redraw()
+	if esta_abierto:
+		if Partida.terminales_completadas():
+			Partida.aviso_metro_leido = true
+		_aviso_metro.hide()
+		_tiempo_aviso_metro.stop()
 
 
 func _actualizar_boton_celular() -> void:
@@ -70,8 +112,13 @@ func _actualizar_boton_celular() -> void:
 		return
 	var tiene: bool = _tiene_celular()
 	_boton_celular.visible = tiene
-	if not tiene and _celular.abierto:
-		_celular.cerrar()
+	var aviso_pendiente := tiene and Partida.terminales_completadas() and not Partida.aviso_metro_leido
+	_indicador_metro.visible = aviso_pendiente
+	_boton_celular.tooltip_text = CelularMapa.AVISO_METRO + " · Mapa (M)" if aviso_pendiente else "Mapa (M)"
+	if not tiene:
+		_aviso_metro.hide()
+		if _celular.abierto:
+			_celular.cerrar()
 
 
 func _tiene_celular() -> bool:

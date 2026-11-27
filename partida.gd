@@ -1,10 +1,13 @@
 
 extends Node
 
+signal viaje_zona_c_habilitado
+
 const ESCENA_INICIO: String = "res://zona_b.tscn"
 const ESCENA_TUTORIAL: String = "res://tutorial.tscn"
 const LIMITE_ESTRES: float = 70.0
 const ESTRES_AL_VOLVER: float = 50.0
+const TOTAL_TERMINALES: int = 2
 
 # Estado del personaje
 var bateria: float = -1.0
@@ -21,10 +24,15 @@ var _apagon = null
 # Terminales necesarias para viajar a Zona C
 var terminal_1_activada: bool = false
 var terminal_2_activada: bool = false
+var aviso_metro_leido: bool = false
+
+
+func contar_terminales_activadas() -> int:
+	return int(terminal_1_activada) + int(terminal_2_activada)
 
 
 func terminales_completadas() -> bool:
-	return terminal_1_activada and terminal_2_activada
+	return contar_terminales_activadas() == TOTAL_TERMINALES
 
 
 func activar_terminal(numero: int) -> void:
@@ -46,8 +54,10 @@ func activar_terminal(numero: int) -> void:
 			return
 
 	if terminales_completadas():
+		aviso_metro_leido = false
 		print("AMBAS TERMINALES ACTIVADAS")
 		print("El metro ya puede llevarte a Zona C")
+		viaje_zona_c_habilitado.emit()
 
 func guardar_estado_personaje(p: Personaje) -> void:
 	if p == null:

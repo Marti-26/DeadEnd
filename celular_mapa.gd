@@ -35,6 +35,8 @@ const PISOS: Array[Array] = [
 	["zona_c_final", ">", "ZONA C"],
 ]
 
+const AVISO_METRO: String = "Ya puedes tomar el metro"
+
 const CODIGO_SHADER: String = """
 shader_type canvas_item;
 uniform vec4 oscuro : source_color;
@@ -78,6 +80,10 @@ var _congelado: float = 0.0
 var _bateria: Label = null
 var _zona: Label = null
 var _nivel: Label = null
+var _terminales: Label = null
+var _estado_terminales: Label = null
+var _estilo_terminales: StyleBoxFlat = null
+var _terminales_mostradas: int = -1
 var _tween: Tween = null
 var _tiempo: float = 0.0
 var _impulso_charm: float = 0.0
@@ -225,6 +231,27 @@ func _actualizar_textos(delta: float) -> void:
 	_nivel.text = str(NIVELES.get(clave, ""))
 	_zona.text = lugar
 	_actualizar_pisos(clave)
+	_actualizar_terminales()
+
+
+func _actualizar_terminales() -> void:
+	var activadas := Partida.contar_terminales_activadas()
+	if activadas == _terminales_mostradas:
+		return
+	_terminales_mostradas = activadas
+	_terminales.text = "TERMINALES · %d/%d ACTIVADAS" % [activadas, Partida.TOTAL_TERMINALES]
+	var faltan := Partida.TOTAL_TERMINALES - activadas
+	var color_texto := color_crema if faltan == 0 else color_vino
+	_estilo_terminales.bg_color = color_vino if faltan == 0 else color_rosa.lightened(0.45)
+	_terminales.add_theme_color_override("font_color", color_texto)
+	_estado_terminales.add_theme_color_override("font_color", color_texto)
+	match faltan:
+		0:
+			_estado_terminales.text = AVISO_METRO
+		1:
+			_estado_terminales.text = "Falta 1 punto de activación"
+		_:
+			_estado_terminales.text = "Faltan %d puntos de activación" % faltan
 
 
 func _construir_pisos(pantalla: Control, pos: Vector2, ancho_caja: float) -> void:
@@ -449,7 +476,10 @@ func _construir() -> void:
 
 	_construir_pisos(pantalla, Vector2(14.0, _mapa.position.y + tam_mapa.y + 10.0), tam_mapa.x)
 
-	_etiqueta(pantalla, "· TÚ ESTÁS AQUÍ ·", 12, color_rosa_fuerte, Vector2(0.0, alto_p - 52.0), Vector2(ancho_p, 18.0), HORIZONTAL_ALIGNMENT_CENTER)
+	_estilo_terminales = _estilo(color_rosa.lightened(0.45), color_rosa_medio, 1, 7)
+	var tarjeta_terminales := _panel(pantalla, _estilo_terminales, Vector2(14.0, alto_p - 54.0), Vector2(tam_mapa.x, 31.0))
+	_terminales = _etiqueta(tarjeta_terminales, "", 13, color_vino, Vector2.ZERO, Vector2(tam_mapa.x, 15.0), HORIZONTAL_ALIGNMENT_CENTER)
+	_estado_terminales = _etiqueta(tarjeta_terminales, "", 13, color_vino, Vector2(0.0, 15.0), Vector2(tam_mapa.x, 15.0), HORIZONTAL_ALIGNMENT_CENTER)
 	_panel(pantalla, _estilo(color_rosa_fuerte, Color.TRANSPARENT, 0, 3), Vector2(ancho_p * 0.5 - 45.0, alto_p - 20.0), Vector2(90.0, 5.0))
 
 	_charm = Control.new()
