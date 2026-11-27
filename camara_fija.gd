@@ -3,6 +3,7 @@ extends Camera3D
 @export var objetivo: Node3D
 @export var desfase := Vector3(0, 14.141, 15.253)
 @export var limite_x := 10.2
+@export var rango_x := Vector2.ZERO
 @export var limite_z := Vector2(-1.2, 3.7)
 @export var suavizado := 4.0
 @export var fijar_encuadre_en_limite := false
@@ -26,6 +27,11 @@ func _process(delta: float) -> void:
 func _meta() -> Vector3:
 	var p := objetivo.global_position
 	var z := clampf(p.z, limite_z.x, limite_z.y)
+	var minimo := -limite_x
+	var maximo := limite_x
+	if rango_x != Vector2.ZERO:
+		minimo = rango_x.x
+		maximo = rango_x.y
 	if fijar_encuadre_en_limite:
-		z = lerpf(z, (limite_z.x + limite_z.y) * 0.5, smoothstep(limite_x - 2.0, limite_x, p.x))
-	return Vector3(clampf(p.x, -limite_x, limite_x), 0.0, z) + desfase
+		z = lerpf(z, (limite_z.x + limite_z.y) * 0.5, smoothstep(maximo - 2.0, maximo, p.x))
+	return Vector3(clampf(p.x, minimo, maximo), 0.0, z) + desfase
