@@ -216,6 +216,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func alternar_audifonos() -> void:
+	if not tiene_celular:
+		return
 	if bateria <= 0.0:
 		return
 	audifonos_activos = not audifonos_activos
@@ -323,6 +325,8 @@ func _actualizar_bombillo() -> void:
 
 func _consumir_bateria(delta: float) -> void:
 	if bateria <= 0.0:
+		return
+	if not tiene_celular:
 		return
 
 	var tasa: float = TASA_BATERIA_REPOSO
